@@ -1,0 +1,231 @@
+/* === NAVIGATION === */
+.main-nav {
+    position: absolute; /* pour qu’elle soit au-dessus de l’image */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: transparent; /* ⛔️ plus de fond noir */
+    z-index: 1000;
+    padding: 1.5rem 0;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #0e071b;
+    top: 30px;
+    left: 0;
+    z-index: 999;
+    min-width: 140px;
+    border: 1px solid #333;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: white;
+    text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* === HERO FULL SCREEN === */
+.hero-full {
+    height: 100vh;
+    background: url('../images/page.jpg') center/cover no-repeat;
+    position: relative;
+}
+
+.overlay {
+    background-color: rgba(0, 0, 0, 0.5); /* couche sombre semi-transparente */
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+
+.hero-content {
+    color: white;
+    max-width: 600px;
+    padding: 0 2rem;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.btn.dark {
+    background-color: white;
+    color: black;
+}
+
+.btn.light {
+    border: 2px solid white;
+    color: white;
+    background: transparent;
+}
+
+.btn.small {
+    background-color: #a78bfa;
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+.btn.violet {
+    background-color: #a78bfa;
+    color: white;
+}
+
+.btn.violet:hover {
+    background-color: #7c5cd0;
+}
+
+/* === FEATURE SECTION === */
+.features-section {
+    background-color: #0e071b;
+    color: white;
+    padding: 6rem 1rem;
+    text-align: center;
+}
+
+.features-section .section-label {
+    color: #a78bfa;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.features-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.features-section .section-desc {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    color: #ccc;
+}
+
+.features-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.feature-card {
+    background-color: #1a112e;
+    border-radius: 12px;
+    overflow: hidden;
+    padding-bottom: 1rem;
+}
+
+.feature-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.feature-card h3 {
+    margin: 1rem;
+}
+
+.feature-card p {
+    margin: 0 1rem;
+    color: #bbb;
+}
+
+/* === CTA === */
+.cta-section {
+    background-color: #111;
+    color: white;
+    padding: 5rem 1rem;
+    text-align: center;
+}
+
+/* === FOOTER === */
+.footer {
+    background-color: #0e071b;
+    color: white;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.footer-subscribe p {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Assure que tout prend 100% de hauteur */
+html, body {
+    height: 100%;
+}
+
+.welcome-user {
+    color: white;
+    margin-right: 10px;
+    font-weight: 500;
+}

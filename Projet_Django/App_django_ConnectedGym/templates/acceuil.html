@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Accueil - ConnectedGym{% endblock %}
+
+{% block content %}
+
+<!-- Navigation -->
+<header class="main-nav">
+    <div class="container nav-container">
+        <div class="logo">
+            {% if user.is_authenticated %}
+                Bienvenue dans la Salle de Sport 2.0 {{ user.first_name }}
+            {% else %}
+                ConnectedGym
+            {% endif %}
+        </div>
+        
+        <nav class="nav-links">
+            <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+            <a href="#a-propos">À Propos</a>
+            <a href="#contact">Contactez Nous</a>
+            <div class="dropdown">
+                <a href="#">Fonctionnalités &#9662;</a>
+                <div class="dropdown-content">
+                    <a href="#tracking">Suivi</a>
+                    <a href="#coaching">Coaching</a>
+                    <a href="#personnalisation">Personnalisation</a>
+                </div>
+            </div>
+            {% if user.is_authenticated %}
+            <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+        {% else %}
+            <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+            <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+        {% endif %}
+        
+        </nav>
+    </div>
+</header>
+
+<!-- Hero avec image de fond -->
+<section class="hero-full">
+    <div class="overlay">
+        <div class="container hero-content">
+            <h1>Découvrez notre salle de sport connectée</h1>
+            <p>
+                Rejoignez une expérience d'entraînement révolutionnaire grâce à notre technologie connectée.
+                Suivez vos performances et optimisez vos séances comme jamais auparavant.
+            </p>
+            
+            {% if not user.is_authenticated %}
+            <div class="hero-buttons">
+                <a href="{% url 'connexion' %}" class="btn dark">Se connecter</a>
+                <a href="{% url 'inscription' %}" class="btn light">S’inscrire</a>
+            </div>
+            {% endif %}
+            
+        </div>
+    </div>
+</section>
+
+<!-- Fonctionnalités -->
+<section class="features-section" id="tracking">
+    <div class="container">
+        <p class="section-label">Connecté</p>
+        <h2>Accédez facilement à vos fonctionnalités clés</h2>
+        <p class="section-desc">
+            Notre plateforme vous permet de vous connecter rapidement à vos équipements.
+            Suivez vos performances et optimisez votre entraînement en quelques clics.
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <img src="{% static 'images/performance.jpg' %}" alt="Suivi" />
+                <h3>Suivi des performances en temps réel</h3>
+                <p>Visualisez vos progrès grâce à des graphiques interactifs.</p>
+            </div>
+            <div class="feature-card" id="coaching">
+                <img src="{% static 'images/objets.jpg' %}" alt="Objets connectés" />
+                <h3>Gestion simplifiée des objets connectés</h3>
+                <p>Activez et désactivez vos équipements en un clic.</p>
+            </div>
+            <div class="feature-card" id="personnalisation">
+                <img src="{% static 'images/perso.jpg' %}" alt="Personnalisation" />
+                <h3>Personnalisez vos paramètres d'entraînement</h3>
+                <p>Adaptez votre expérience selon vos préférences.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <h2>Rejoignez notre salle connectée</h2>
+        <p>Créez votre compte pour accéder à des fonctionnalités exclusives et optimiser votre entraînement.</p>
+    
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container footer-content">
+        <div class="footer-links">
+            <a href="#">À propos</a>
+            <a href="#contact">Contactez-nous</a>
+            <a href="#">Aide en ligne</a>
+            <a href="#">Blog sportif</a>
+            <a href="#">Nos services</a>
+        </div>
+        <div class="footer-subscribe">
+            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+        </div>
+    </div>
+</footer>
+
+{% endblock %}

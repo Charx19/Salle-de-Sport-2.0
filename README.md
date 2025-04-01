@@ -34,3 +34,11 @@ Elle permet à une salle de sport d’offrir une **expérience connectée** à s
 ```bash
 git clone https://github.com/Charx19/Salle-de-Sport-2.0.git
 cd Salle-de-Sport-2.0
+
+## 📦 4. Installer les dépendances
+pip install -r requirements.txt
+
+ ## Lancer le serveur local
+ python manage.py runserver
+
+

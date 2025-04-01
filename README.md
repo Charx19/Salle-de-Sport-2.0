@@ -1,14 +1,36 @@
-# Salle-de-Sport-2.0
+# 🏋️ Salle de Sport 2.0
 
-# Developpement team :
-BELHADJ Ahmed,
-DELPECH Charles,
-TRAORE Moussa,
-YAZIDI Asma
+Bienvenue dans **Salle de Sport 2.0**, une plateforme web intelligente développée avec **Django** et **Supabase**.  
+Elle permet à une salle de sport d’offrir une **expérience connectée** à ses utilisateurs via des objets intelligents.
 
-# Help : How to Submit Changes from a Local Repository :
-1. Always perform a `git pull` before `git add` to avoid overwriting others' work.
-2. Use `git add .` to stage all changes.
-3. Commit your changes with a descriptive message : `git commit -m "Message describing the changes"`
-4. Before pushing to the main branch, test your changes and have them reviewed by the team.
-5. Push your changes : `git push origin main`
+---
+
+## 🚀 Fonctionnalités principales
+
+- Authentification des utilisateurs (inscription / connexion / déconnexion)
+- Gestion des profils avec sexe, date de naissance, niveau d'expérience
+- Page d'accueil dynamique selon l’état de connexion
+- Affichage personnalisé : "Bienvenue Moussa" si connecté
+- Objets connectés centralisés (tapis, balance, lumière, etc.)
+- Historique des interactions utilisateurs ↔ équipements
+- Interface admin Django complète
+
+---
+
+## 🔧 Technologies utilisées
+
+- ⚙️ **Backend** : Django 5.x
+- 🧠 **Base de données** : Supabase (PostgreSQL)
+- 🎨 **Frontend** : HTML + CSS (avec images statiques)
+- 🔐 **Authentification** : Django + gestion de profil étendu
+- ☁️ **Déploiement possible** : Railway, Render, ou VPS personnel
+
+---
+
+## 📦 Installation locale
+
+1. Cloner le dépôt :
+
+```bash
+git clone https://github.com/Charx19/Salle-de-Sport-2.0.git
+cd Salle-de-Sport-2.0

@@ -35,10 +35,19 @@ Elle permet à une salle de sport d’offrir une **expérience connectée** à s
 git clone https://github.com/Charx19/Salle-de-Sport-2.0.git
 cd Salle-de-Sport-2.0
 
-## 📦 4. Installer les dépendances
+ ##🔒 2. Créer un environnement virtuel 
+ python -m venv env
+env\Scripts\activate          # (Windows)
+# ou
+source env/bin/activate       # (Mac/Linux)
+
+
+## 📦 3. Installer les dépendances
 pip install -r requirements.txt
 
  ## Lancer le serveur local
  python manage.py runserver
+
+
 
 

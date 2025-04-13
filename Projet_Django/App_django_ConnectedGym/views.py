@@ -49,3 +49,14 @@ def visite(request):
 
 def profil(request):
     return render(request, 'profil.html')
+
+@login_required
+def modifier_infos(request):
+    if request.method == "POST":
+        user = request.user
+        user.first_name = request.POST.get("first_name", user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.email = request.POST.get("email", user.email)
+        user.save()
+        messages.success(request, "Vos informations ont été mises à jour.")
+        return redirect("profil")

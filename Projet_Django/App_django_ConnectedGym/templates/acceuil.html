@@ -11,7 +11,10 @@
         <div class="logo">ConnectedGym</div>
 
         <!-- Bouton burger -->
-        <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Ouvrir le menu principal">☰</button>
+        <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+            <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+
+        </button>
 
         <!-- Overlay + Menu mobile -->
         <div class="mobile-menu" id="mobileMenu">
@@ -90,11 +93,11 @@
                 Suivez vos performances et optimisez vos séances comme jamais auparavant.
             </p>
 
-            {% if not user.is_authenticated %}
+
             <div class="hero-buttons">
                 <a href="{% url 'visite' %}" class="btn dark">Visite de la salle</a>
             </div>
-            {% endif %}
+
 
         </div>
     </div>
@@ -172,7 +175,8 @@
                 <li>Présentation de la salle</li>
                 <li>Sans inscription requise</li>
             </ul>
-            <button class="profile-btn">Explorer</button>
+            <a href="{% url 'visite' %}" class="profile-btn">Visite de la salle</a>
+
         </div>
 
         <div class="profile-card">

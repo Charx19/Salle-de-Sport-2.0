@@ -40,3 +40,9 @@ def deconnexion(request):
     logout(request)
     messages.success(request, "Vous avez été déconnecté.")
     return redirect('acceuil')  # 👈 redirection vers l’accueil après déconnexion
+
+def equipe(request):
+    return render(request, 'equipe.html')
+
+def visite(request):
+    return render(request, 'visite.html')

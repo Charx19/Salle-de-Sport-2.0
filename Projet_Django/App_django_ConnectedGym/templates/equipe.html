@@ -1,0 +1,227 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Notre équipe</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background-color: #c6daf0;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: black;
+        }
+
+        .home-icon img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .container {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1e1e1e;
+            margin-bottom: 2rem;
+        }
+
+        .team {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .member {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 220px;
+        }
+
+        .member img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+
+        .member h3 {
+            margin: 0.5rem 0;
+        }
+
+        .member p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .footer-section {
+            background-color: #fff;
+            padding: 60px 20px 30px;
+            border-top: 1px solid #ddd;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .footer-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .footer-col {
+            flex: 1 1 200px;
+            margin: 10px 20px;
+        }
+
+        .footer-col h4 {
+            font-size: 16px;
+            color: #111;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col ul li a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .footer-col ul li a:hover {
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            margin-right: 10px;
+            color: #555;
+            font-size: 18px;
+            text-decoration: none;
+        }
+
+        .social-icons a:hover {
+            color: #000;
+        }
+
+        .footer-bottom {
+            background-color: #c6daf0;
+            color: black;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+</head>
+
+<body>
+    <header>
+        <div class="logo">ConnectedGym</div>
+        <a href="/" class="home-icon">
+            <img src="{% static 'images/altere.png' %}" alt="Accueil">
+        </a>
+    </header>
+
+    <div class="container">
+        <h1>Notre équipe</h1>
+        <div class="team">
+            <div class="member">
+                <img src="{% static 'images/profil2.png' %}" alt="Asma">
+                <h3>Asma Yazidi</h3>
+                <p>qlqc</p>
+            </div>
+            <div class="member">
+                <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
+                <h3>qlqn</h3>
+                <p>qlqc</p>
+            </div>
+            <div class="member">
+                <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
+                <h3>qlqn</h3>
+                <p>qlqc</p>
+            </div>
+            <div class="member">
+                <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
+                <h3>qlqn</h3>
+                <p>qlqc</p>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Footer -->
+<footer class="footer-section">
+    <div class="footer-container">
+        <div class="footer-col">
+            <h4>Service & Info</h4>
+            <ul>
+                <li><a href="#">Service client</a></li>
+                <li><a href="#">Règlement</a></li>
+                <li><a href="#">Horaires</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Promotions</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>À propos</h4>
+            <ul>
+                <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                <li><a href="#">Objectifs</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Nos clubs</h4>
+            <ul>
+                <li><a href="#">Paris</a></li>
+                <li><a href="#">Cergy</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Suivez-nous</h4>
+            <div class="social-icons">
+                <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+    </div>
+</footer>
+
+</html>

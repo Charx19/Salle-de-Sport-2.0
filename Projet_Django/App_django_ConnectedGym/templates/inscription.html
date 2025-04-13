@@ -1,24 +1,157 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscription</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            width: 100%;
+            background: url("{% static 'images/page.jpg' %}") no-repeat center center;
+            background-size: cover;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: black;
+        }
+
+        .home-icon img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 60px;
+            padding: 30px;
+        }
+
+        .form {
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 7px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            color: #4a00e0;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 17px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #c6daf0;
+            color: black;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 25px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+            color: white
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #4a00e0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error {
+            background-color: red;
+            color: #fff;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
+
+    <header>
+        <div class="logo">ConnectedGym</div>
+        <a href="/" class="home-icon">
+            <img src="{% static 'images/altere.png' %}" alt="Accueil">
+        </a>
+    </header>
+
     <div class="container">
         <div class="form">
             {% if messages %}
-                <div class="error-messages">
-                    {% for message in messages %}
-                        <p class="error">{{ message }}</p>
-                    {% endfor %}
-                </div>
+            <div class="error-messages">
+                {% for message in messages %}
+                <p class="error">{{ message }}</p>
+                {% endfor %}
+            </div>
             {% endif %}
 
+            <h1>Inscription</h1>
             <form method="post" action="{% url 'inscription' %}">
                 {% csrf_token %}
-                <h1>Inscription</h1>
 
                 <label for="id_first_name">Prénom</label>
                 {{ form.first_name }}
@@ -54,82 +187,6 @@
         </div>
     </div>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            width: 100%;
-            background: #009579;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .container {
-            width: 400px;
-            background: #fff;
-            border-radius: 7px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .form {
-            padding: 30px;
-        }
-
-        label {
-            display: block;
-            margin-top: 10px;
-            color: #009579;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 10px;
-            font-size: 17px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            outline: none;
-            margin-top: 5px;
-        }
-
-        button {
-            color: #fff;
-            background: #009579;
-            width: 100%;
-            padding: 10px;
-            font-size: 17px;
-            margin-top: 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #006653;
-        }
-
-        .link {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .error {
-            background-color: red;
-            color: #fff;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;      
-            text-align: center; 
-        }
-    </style>
 </body>
+
 </html>

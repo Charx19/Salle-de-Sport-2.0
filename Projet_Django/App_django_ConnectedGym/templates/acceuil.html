@@ -39,7 +39,7 @@
                     <a href="#">Contact</a>
 
                     {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}">Mon espace</a>
+                    <a href="{% url 'profil' %}">Mon espace</a>
                     <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
                     {% else %}
                     <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
@@ -68,8 +68,8 @@
             <a href="#">Contact</a>
 
             {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}">Mon espace</a>
-            <a href="{% url 'deconnexion' %}">Déconnexion</a>
+            <a href="{% url 'profil' %}">Mon espace</a>
+            <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
             {% else %}
             <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
             <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>

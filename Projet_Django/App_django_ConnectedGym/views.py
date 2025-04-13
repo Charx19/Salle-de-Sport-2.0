@@ -46,3 +46,6 @@ def equipe(request):
 
 def visite(request):
     return render(request, 'visite.html')
+
+def profil(request):
+    return render(request, 'profil.html')

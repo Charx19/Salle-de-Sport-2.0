@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Visite de la salle</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Barre du haut -->
+    <header class="main-nav" style="background-color: white;">
+        <div class="nav-container" style="padding: 0 2rem; justify-content: space-between;">
+            <div class="logo" style="font-weight: bold; font-size: 1.5rem;">ConnectedGym</div>
+            <a href="/" class="home-icon">
+                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="width: 28px; height: 28px;">
+            </a>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <section class="hero-full">
+        <div class="overlay" style="background: rgba(0,0,0,0.5); padding: 50px;">
+            <div class="container hero-content" style="text-align: center; color: white;">
+                <h1>Bienvenue dans notre salle connectée</h1>
+                <p style="margin-bottom: 20px;">Explore toutes les fonctionnalités et équipements de notre salle !</p>
+                <a href="#" class="btn light">Commencer la visite</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer rapide -->
+    <footer class="footer-section" style="margin-top: 100px;">
+        <div class="footer-bottom" style="background-color: #c6daf0; text-align: center; padding: 10px 0;">
+            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

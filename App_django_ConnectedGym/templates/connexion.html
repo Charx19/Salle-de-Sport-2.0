@@ -1,0 +1,142 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #c6daf0;
+        }
+
+        header {
+            background-color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.4rem;
+            color: black;
+        }
+
+        .home-icon img {
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .form-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 80px);
+        }
+
+        .form-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #121212;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #c6daf0;
+            color: black;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-top: 25px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #3700b3;
+            color: white
+        }
+
+        .link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        .link a {
+            color: #4a00e0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">ConnectedGym</div>
+        <a href="/" class="home-icon">
+            <img src="{% static 'images/altere.png' %}" alt="Accueil">
+        </a>
+    </header>
+
+    <div class="form-container">
+        <div class="form-box">
+            <h1>Connexion</h1>
+            <form method="post" action="{% url 'connexion' %}">
+                {% csrf_token %}
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" name="username" required>
+
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Se connecter</button>
+            </form>
+            <p class="link">Pas encore inscrit ? <a href="{% url 'inscription' %}">S'inscrire</a></p>
+        </div>
+    </div>
+
+</body>
+
+</html>

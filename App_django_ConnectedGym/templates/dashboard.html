@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mon Espace{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 1rem;">
+    <h2>Bienvenue dans ton espace {{ request.user.first_name }} 👋</h2>
+
+    <div style="margin-top: 30px;">
+        <p>Voici les fonctionnalités disponibles selon ton niveau :</p>
+
+        <ul>
+            <li><a href="{% url 'mon_profil' %}">➡️ Voir ou modifier mon profil</a></li>
+            <li><a href="{% url 'mon_historique' %}">📊 Mon historique</a></li>
+            {% if request.user.profilutilisateur.niveau_experience in 'avancé expert' %}
+            <li><a href="{% url 'liste_objets' %}">⚙️ Gérer les objets connectés</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

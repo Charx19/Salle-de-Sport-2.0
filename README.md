@@ -51,3 +51,84 @@ pip install -r requirements.txt
 
 
 
+🔧 GUIDE COMPLET GIT + GITHUB (VS CODE) — MOUSSA 💻
+
+===========================================
+1. ✅ OUVRIR TON PROJET VS CODE
+===========================================
+cd "C:\Users\mouss\OneDrive\Bureau\GITHUB\Salle-de-Sport-2.0"
+code .
+
+===========================================
+2. ✅ VÉRIFIER L'ÉTAT DE TON CODE
+===========================================
+git status
+
+===========================================
+3. ✅ AJOUTER LES FICHIERS MODIFIÉS
+===========================================
+➕ Tous les fichiers :
+git add .
+
+➕ Fichier spécifique :
+git add chemin/fichier.py
+
+===========================================
+4. ✅ ENREGISTRER (COMMIT)
+===========================================
+git commit -m "Message clair ici"
+
+Exemple :
+git commit -m "Mise à jour de profil.html"
+
+===========================================
+5. ✅ ENVOYER VERS GITHUB (PUSH)
+===========================================
+git push origin main
+
+(si tu travailles dans une autre branche)
+git push origin dev
+
+===========================================
+6. ✅ VOIR LES BRANCHES EXISTANTES
+===========================================
+git branch -a
+
+===========================================
+7. ✅ SE PLACER SUR UNE AUTRE BRANCHE
+===========================================
+git checkout nom-de-la-branche
+
+Exemple :
+git checkout dev
+
+===========================================
+8. ✅ CRÉER UNE NOUVELLE BRANCHE
+===========================================
+git checkout -b nouvelle-branche
+
+Exemple :
+git checkout -b ajout-accueil-responsive
+
+===========================================
+9. ✅ FUSIONNER UNE BRANCHE DANS MAIN
+===========================================
+git checkout main
+git pull origin main
+git merge nom-de-la-branche
+git push origin main
+
+===========================================
+10. 🔁 RÉSOUDRE CONFLIT SI NÉCESSAIRE
+===========================================
+1. Ouvrir le fichier en conflit
+2. Choisir la bonne version
+3. Supprimer les lignes <<<<<<< / ======= / >>>>>>>
+4. Ensuite :
+   git add .
+   git rebase --continue
+   git push origin main
+
+
+
+

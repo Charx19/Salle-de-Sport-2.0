@@ -55,8 +55,35 @@
                         {% endif %}
                     </nav>
 
+
                 </div>
             </div>
+            <!-- Menu desktop -->
+            <nav class="nav-links desktop-only">
+                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                <div class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                    <div class="dropdown-content" id="dropdown-services">
+                        <a href="#">Nos équipements</a>
+                        <a href="#">Suivi des performances</a>
+                        <a href="#">Personnalisation</a>
+                    </div>
+                </div>
+
+
+                <a href="#">Contact</a>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'profil' %}">Mon espace</a>
+                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                {% endif %}
+            </nav>
+
         </div>
     </header>
 
@@ -74,7 +101,7 @@
             </div>
         </div>
     </section>
-    <section class="objet-simple">
+    <section class="objet-simple" id="objets">
         <div class="objet-block">
             <div class="objet-text">
                 <h2>Tapis de course</h2>

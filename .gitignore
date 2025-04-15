@@ -4,3 +4,5 @@ __pycache__/
 env/
 *.sqlite3
 db.sqlite3
+# dans .gitignore
+/media/

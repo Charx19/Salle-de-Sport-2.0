@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 
+
 <head>
     <meta charset="UTF-8">
     <title>Visite de la salle</title>
@@ -87,77 +88,45 @@
         </div>
     </header>
 
-
-
     <!-- Contenu principal -->
-    <section class="hero-full">
-        <div class="overlay" style="background: rgba(0,0,0,0.5); padding: 50px;">
-            <div class="container hero-content" style="text-align: center; color: white;">
-                <h1>Bienvenue dans notre salle connectée</h1>
-                <p style="margin-bottom: 20px;">Explore toutes les fonctionnalités et équipements de notre salle !</p>
-                <a href="#objets" class="btn light">
-                    Commencer la visite <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-    </section>
-    <section class="objet-simple" id="objets">
-        <div class="objet-block">
-            <div class="objet-text">
-                <h2>Tapis de course</h2>
-                <p><strong>Type :</strong> Tapis</p>
-                <p><strong>État :</strong> Très bon état</p>
-            </div>
-            <div class="objet-image">
-                <img src="{% static 'images/tapis-de-course.jpg' %}" alt="Tapis de course">
-            </div>
-        </div>
+    <main class="main-content objectifs-page">
+        <div class="container">
+            <h1>Objectifs de la salle</h1>
+            <p>
+                Notre salle de sport <strong>ConnectedGym</strong> est dédiée à vous aider à atteindre vos objectifs de
+                fitness.
+                Que vous souhaitiez perdre du poids, gagner en muscle ou simplement rester en forme, nous avons les
+                ressources et le soutien nécessaires pour vous y aider.
+            </p>
 
-        <div class="objet-block reverse">
-            <div class="objet-text">
-                <h2>Balance connectée</h2>
-                <p><strong>Type :</strong> Balance</p>
-                <p><strong>État :</strong> État moyen</p>
-            </div>
-            <div class="objet-image">
-                <img src="{% static 'images/balance.jpg' %}" alt="Balance connectée">
+            <div class="objectifs-list">
+                <div class="objectif">
+                    <h2>🏋️ Améliorer la condition physique</h2>
+                    <p>Grâce à des programmes personnalisés et des équipements connectés, chaque utilisateur peut suivre
+                        ses progrès en temps réel.</p>
+                </div>
+
+                <div class="objectif">
+                    <h2>📊 Suivi intelligent des performances</h2>
+                    <p>Nos objets connectés permettent une analyse précise de vos entraînements pour ajuster vos
+                        efforts.</p>
+                </div>
+
+                <div class="objectif">
+                    <h2>🌐 Expérience utilisateur moderne</h2>
+                    <p>Interface intuitive, profil personnalisé, recommandations basées sur vos données : tout est pensé
+                        pour votre confort.</p>
+                </div>
+
+                <div class="objectif">
+                    <h2>🤝 Accessibilité & motivation</h2>
+                    <p>Un environnement motivant pour tous les niveaux, avec la possibilité de progresser selon son
+                        rythme.</p>
+                </div>
             </div>
         </div>
+    </main>
 
-        <div class="objet-block">
-            <div class="objet-text">
-                <h2>Ventilateur intelligent</h2>
-                <p><strong>Type :</strong> Ventilateur</p>
-                <p><strong>État :</strong> Très bon état</p>
-            </div>
-            <div class="objet-image">
-                <img src="{% static 'images/ventilateur.jpg' %}" alt="Ventilateur intelligent">
-            </div>
-        </div>
-
-        <div class="objet-block reverse">
-            <div class="objet-text">
-                <h2>Éclairage LED</h2>
-                <p><strong>Type :</strong> Éclairage</p>
-                <p><strong>État :</strong> Mauvais état</p>
-            </div>
-            <div class="objet-image">
-                <img src="{% static 'images/eclairage.jpg' %}" alt="Éclairage LED">
-            </div>
-        </div>
-
-        <div class="objet-block">
-            <div class="objet-text">
-                <h2>Enceinte connectée</h2>
-                <p><strong>Type :</strong> Enceinte</p>
-                <p><strong>État :</strong> Très bon état</p>
-            </div>
-            <div class="objet-image">
-                <img src="{% static 'images/enceinte.jpg' %}" alt="Enceinte connectée">
-            </div>
-        </div>
-
-    </section>
 
 
     <!-- Footer -->

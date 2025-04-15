@@ -60,3 +60,6 @@ def modifier_infos(request):
         user.save()
         messages.success(request, "Vos informations ont été mises à jour.")
         return redirect("profil")
+
+def objectif(request):
+    return render(request, 'objectif.html')

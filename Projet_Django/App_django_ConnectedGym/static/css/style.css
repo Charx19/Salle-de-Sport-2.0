@@ -751,3 +751,31 @@ body {
 html {
     scroll-behavior: smooth;
 }
+
+.objectifs-page {
+    padding: 40px 0;
+}
+
+.objectifs-list {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.objectif {
+    background-color: #f5f7ff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.objectif h2 {
+    color: #3a00c2;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.objectif p {
+    margin: 0;
+}

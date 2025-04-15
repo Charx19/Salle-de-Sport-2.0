@@ -29,12 +29,11 @@
                     <div class="dropdown-mobile">
                         <a href="#" id="servicesToggle">Nos services</a>
                         <div class="dropdown-content-mobile" id="dropdownServices">
-                            <a href="#">Nos équipements</a>
-                            <a href="#">Suivi des performances</a>
-                            <a href="#">Personnalisation</a>
+                            <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                            <a href="{% url 'performances' %}">Suivi des performances</a>
+                            <a href="{% url 'personnalisation' %}">Personnalisation</a>
                         </div>
                     </div>
-
 
                     <a href="#">Contact</a>
 
@@ -46,7 +45,6 @@
                     <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
                     {% endif %}
                 </nav>
-
             </div>
         </div>
 
@@ -58,12 +56,11 @@
             <div class="dropdown">
                 <a href="#" onclick="toggleDropdown(event)">Nos services</a>
                 <div class="dropdown-content" id="dropdown-services">
-                    <a href="#">Nos équipements</a>
-                    <a href="#">Suivi des performances</a>
-                    <a href="#">Personnalisation</a>
+                    <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                    <a href="{% url 'performances' %}">Suivi des performances</a>
+                    <a href="{% url 'personnalisation' %}">Personnalisation</a>
                 </div>
             </div>
-
 
             <a href="#">Contact</a>
 
@@ -75,10 +72,8 @@
             <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
             {% endif %}
         </nav>
-
     </div>
 </header>
-
 
 <!-- Hero avec image de fond -->
 <section class="hero-full">
@@ -95,7 +90,6 @@
                 <a href="{% url 'visite' %}" class="btn dark">Visite de la salle</a>
             </div>
             {% endif %}
-
         </div>
     </div>
 </section>
@@ -105,8 +99,7 @@
     <div class="smart-search-inner">
         <h2 class="section-title">Trouvez l'expérience qui vous correspond</h2>
         <form class="smart-search-form">
-            <input type="text" id="recherche" placeholder="Tapez un mot-clé (ex: balance, coaching...)"
-                class="search-full" />
+            <input type="text" id="recherche" placeholder="Tapez un mot-clé (ex: balance, coaching...)" class="search-full" />
             <div class="form-row">
                 <select id="profil">
                     <option value="">Choisissez un profil</option>
@@ -127,18 +120,13 @@
                 <button type="submit">Recherche</button>
             </div>
         </form>
-
-
     </div>
 </section>
 
-
-
 <!-- Fonctionnalités -->
 <section class="features-section">
-    <h2 class="section-title">Nos fonctionnalités</h2>
+    <h2 class="section-title">Nos services</h2>
     <div class="features-container">
-
         <div class="feature-card">
             <img src="{% static 'images/performance.jpg' %}" alt="Suivi des performances" class="feature-img">
             <h3>Suivi des performances</h3>
@@ -156,14 +144,12 @@
             <h3>Personnalisation</h3>
             <p>Adaptez votre entraînement à vos besoins et préférences.</p>
         </div>
-
     </div>
 </section>
 
 <section class="profile-section">
     <h2 class="section-title">Nos profils</h2>
     <div class="profile-cards">
-
         <div class="profile-card">
             <h3>Visiteur</h3>
             <p class="profile-access">Accès libre à la salle</p>
@@ -210,7 +196,6 @@
             </ul>
             <button class="profile-btn">S’entraîner</button>
         </div>
-
     </div>
 </section>
 
@@ -247,7 +232,6 @@
     <div class="container">
         <h2>Rejoignez notre salle connectée</h2>
         <p>Créez votre compte pour accéder à des fonctionnalités exclusives et optimiser votre entraînement.</p>
-
     </div>
 </section>
 
@@ -291,6 +275,5 @@
         <p>© 2025 ConnectedGym. Tous droits réservés.</p>
     </div>
 </footer>
-
 
 {% endblock %}

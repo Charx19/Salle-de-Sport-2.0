@@ -6,6 +6,9 @@ class ProfilUtilisateur(models.Model):
     sexe = models.CharField(max_length=10, null=True, blank=True)
     date_naissance = models.DateField(null=True, blank=True)
     niveau_experience = models.CharField(max_length=50, default='débutant')
+    photo_profil = models.ImageField(upload_to='photos_profil/', null=True, blank=True)
+    points = models.IntegerField(default=1)  # Débutant a 1 point par défaut
+
 
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"

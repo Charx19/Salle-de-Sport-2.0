@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Personnalisation{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 1rem; text-align: center;">
+    <h2>Personnalisation de votre entraînement</h2>
+    <p>Ajustez votre programme selon vos préférences et vos objectifs.</p>
+    <img src="{% static 'images/perso.jpg' %}" alt="Personnalisation" style="width: 300px; margin-top: 20px;">
+</div>
+{% endblock %}

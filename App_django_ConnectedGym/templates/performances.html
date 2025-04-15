@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Suivi des Performances{% endblock %}
+
+{% block content %}
+<div class="container" style="padding: 4rem 1rem; text-align: center;">
+    <h2>Suivi des performances</h2>
+    <p>Consultez ici vos statistiques et progrès physiques en temps réel.</p>
+    <img src="{% static 'images/performance.jpg' %}" alt="Performances" style="width: 300px; margin-top: 20px;">
+</div>
+{% endblock %}

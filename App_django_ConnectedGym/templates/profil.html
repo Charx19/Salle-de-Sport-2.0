@@ -272,14 +272,14 @@
 
     <div class="profile-container">
         {% if profil.photo_profil %}
-            <img src="{{ profil.photo_profil.url }}" alt="Photo de profil" class="profile-pic">
+        <img src="{{ profil.photo_profil.url }}" alt="Photo de profil" class="profile-pic">
         {% else %}
-            <img src="{% static 'images/profil2.png' %}" alt="Photo de profil par défaut" class="profile-pic">
+        <img src="{% static 'images/profil2.png' %}" alt="Photo de profil par défaut" class="profile-pic">
         {% endif %}
 
         <!-- Solde de points -->
-<div style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
-    <div style="
+        <div style="margin-top: 20px; display: flex; align-items: center; justify-content: center;">
+            <div style="
         background-color: white;
         border-radius: 12px;
         padding: 15px 25px;
@@ -288,7 +288,7 @@
         align-items: center;
         gap: 15px;
     ">
-        <div style="
+                <div style="
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -300,56 +300,56 @@
             align-items: center;
             justify-content: center;
         ">
-            {{ profil.points }} pts
+                    {{ profil.points }} pts
+                </div>
+                <div>
+                    <h3 style="margin: 0; color: #3a00c2;">Mon solde de points</h3>
+                    <p style="margin: 0; color: #555;">Suivez votre progression</p>
+                </div>
+            </div>
         </div>
-        <div>
-            <h3 style="margin: 0; color: #3a00c2;">Mon solde de points</h3>
-            <p style="margin: 0; color: #555;">Suivez votre progression</p>
-        </div>
-    </div>
-</div>
 
-    
+
         <h1>Bienvenue sur votre profil</h1>
-    
+
         {% if messages %}
-            {% for message in messages %}
-                <p style="color: green;"><strong>{{ message }}</strong></p>
-            {% endfor %}
+        {% for message in messages %}
+        <p style="color: green;"><strong>{{ message }}</strong></p>
+        {% endfor %}
         {% endif %}
-    
+
         {% if edit %}
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="info">
-                    <p><strong>Nom :</strong> {{ form.last_name }}</p>
-                    <p><strong>Prénom :</strong> {{ form.first_name }}</p>
-                    <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
-                    <p><strong>Email :</strong> {{ form.email }}</p>
-                    <p><strong>Sexe :</strong> {{ form.sexe }}</p>
-                    <p><strong>Date de naissance :</strong> {{ form.date_naissance }}</p>
-                    <p><strong>Photo de profil :</strong> {{ form.photo_profil }}</p>
-                </div>
-                <div class="actions">
-                    <button type="submit" class="btn">Enregistrer les modifications</button>
-                </div>
-            </form>
-        {% else %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="info">
-                <p><strong>Nom :</strong> {{ user.last_name }}</p>
-                <p><strong>Prénom :</strong> {{ user.first_name }}</p>
+                <p><strong>Nom :</strong> {{ form.last_name }}</p>
+                <p><strong>Prénom :</strong> {{ form.first_name }}</p>
                 <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
-                <p><strong>Email :</strong> {{ user.email }}</p>
+                <p><strong>Email :</strong> {{ form.email }}</p>
+                <p><strong>Sexe :</strong> {{ form.sexe }}</p>
+                <p><strong>Date de naissance :</strong> {{ form.date_naissance }}</p>
+                <p><strong>Photo de profil :</strong> {{ form.photo_profil }}</p>
             </div>
-    
-            <div style="margin-top: 30px; background-color: #eef2ff; padding: 1rem; border-radius: 10px;">
-                <p style="margin: 0; font-size: 1.1rem;"><strong>Type de profil :</strong>
-                    <span style="color: #3a00c2;">{{ profil.niveau_experience|capfirst }}</span>
-                </p>
-                <div class="actions" style="margin-top: 15px;">
-                    <a href="?edit=1" class="btn">Mettre à jour mon profil</a>
-                </div>
+            <div class="actions">
+                <button type="submit" class="btn">Enregistrer les modifications</button>
             </div>
+        </form>
+        {% else %}
+        <div class="info">
+            <p><strong>Nom :</strong> {{ user.last_name }}</p>
+            <p><strong>Prénom :</strong> {{ user.first_name }}</p>
+            <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
+            <p><strong>Email :</strong> {{ user.email }}</p>
+        </div>
+
+        <div style="margin-top: 30px; background-color: #eef2ff; padding: 1rem; border-radius: 10px;">
+            <p style="margin: 0; font-size: 1.1rem;"><strong>Type de profil :</strong>
+                <span style="color: #3a00c2;">{{ profil.niveau_experience|capfirst }}</span>
+            </p>
+            <div class="actions" style="margin-top: 15px;">
+                <a href="?edit=1" class="btn">Mettre à jour mon profil</a>
+            </div>
+        </div>
         {% endif %}
 
         {% if profil.niveau_experience == "expert" %}
@@ -426,9 +426,9 @@
         <div class="footer-col">
             <h4>Suivez-nous</h4>
             <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
             </div>
         </div>
     </div>

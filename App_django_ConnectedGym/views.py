@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
-from .models import ProfilUtilisateur
+from .models import ProfilUtilisateur, ObjetConnecte
 
 def inscription(request):
     if request.method == 'POST':
@@ -49,7 +49,8 @@ def equipe(request):
 
 
 def visite(request):
-    return render(request, 'visite.html')
+    objets = ObjetConnecte.objects.all()
+    return render(request, 'visite.html', {'objets': objets})
 
 
 @login_required

@@ -85,11 +85,11 @@
                 Suivez vos performances et optimisez vos séances comme jamais auparavant.
             </p>
 
-            {% if not user.is_authenticated %}
+
             <div class="hero-buttons">
                 <a href="{% url 'visite' %}" class="btn dark">Visite de la salle</a>
             </div>
-            {% endif %}
+
         </div>
     </div>
 </section>
@@ -99,7 +99,8 @@
     <div class="smart-search-inner">
         <h2 class="section-title">Trouvez l'expérience qui vous correspond</h2>
         <form class="smart-search-form">
-            <input type="text" id="recherche" placeholder="Tapez un mot-clé (ex: balance, coaching...)" class="search-full" />
+            <input type="text" id="recherche" placeholder="Tapez un mot-clé (ex: balance, coaching...)"
+                class="search-full" />
             <div class="form-row">
                 <select id="profil">
                     <option value="">Choisissez un profil</option>
@@ -268,9 +269,9 @@
         <div class="footer-col">
             <h4>Suivez-nous</h4>
             <div class="social-icons">
-                <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
             </div>
         </div>
     </div>

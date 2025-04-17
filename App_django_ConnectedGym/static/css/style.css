@@ -663,3 +663,54 @@ body {
     border-radius: 6px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
+
+.objet-simple {
+    padding: 60px 20px;
+    background-color: #f9f9f9;
+}
+
+.objet-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1000px;
+    margin: 40px auto;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.objet-block.reverse {
+    flex-direction: row-reverse;
+}
+
+.objet-text {
+    flex: 1;
+}
+
+.objet-text h2 {
+    font-size: 1.8rem;
+    color: #3a00c2;
+    margin-bottom: 10px;
+}
+
+.objet-text p {
+    font-size: 1.1rem;
+    color: #333;
+    margin: 6px 0;
+}
+
+.objet-image {
+    flex: 1;
+    text-align: center;
+}
+
+.objet-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+html {
+    scroll-behavior: smooth;
+}

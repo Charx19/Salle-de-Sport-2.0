@@ -1,4 +1,6 @@
 {% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -10,14 +12,83 @@
 
 <body>
     <!-- Barre du haut -->
-    <header class="main-nav" style="background-color: white;">
-        <div class="nav-container" style="padding: 0 2rem; justify-content: space-between;">
-            <div class="logo" style="font-weight: bold; font-size: 1.5rem;">ConnectedGym</div>
-            <a href="/" class="home-icon">
-                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="width: 28px; height: 28px;">
-            </a>
+    <header class="main-nav">
+        <div class="container nav-container">
+            <div class="logo">ConnectedGym</div>
+
+            <!-- Bouton burger -->
+            <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+
+            </button>
+
+            <!-- Overlay + Menu mobile -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="menu-overlay" id="menuOverlay"></div>
+                <div class="menu-panel">
+                    <div class="menu-header">
+                        <span class="logo">ConnectedGym</span>
+                        <button class="close-menu" id="closeMenu">✕</button>
+                    </div>
+
+                    <nav class="menu-body">
+                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                        <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                        <div class="dropdown-mobile">
+                            <a href="#" id="servicesToggle">Nos services</a>
+                            <div class="dropdown-content-mobile" id="dropdownServices">
+                                <a href="#">Nos équipements</a>
+                                <a href="#">Suivi des performances</a>
+                                <a href="#">Personnalisation</a>
+                            </div>
+                        </div>
+
+
+                        <a href="#">Contact</a>
+
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'profil' %}">Mon espace</a>
+                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                        {% else %}
+                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                        {% endif %}
+                    </nav>
+
+
+                </div>
+            </div>
+            <!-- Menu desktop -->
+            <nav class="nav-links desktop-only">
+                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                <div class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                    <div class="dropdown-content" id="dropdown-services">
+                        <a href="#">Nos équipements</a>
+                        <a href="#">Suivi des performances</a>
+                        <a href="#">Personnalisation</a>
+                    </div>
+                </div>
+
+
+                <a href="#">Contact</a>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'profil' %}">Mon espace</a>
+                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                {% endif %}
+            </nav>
+
         </div>
     </header>
+
+
 
     <!-- Contenu principal -->
     <section class="hero-full">
@@ -25,17 +96,178 @@
             <div class="container hero-content" style="text-align: center; color: white;">
                 <h1>Bienvenue dans notre salle connectée</h1>
                 <p style="margin-bottom: 20px;">Explore toutes les fonctionnalités et équipements de notre salle !</p>
-                <a href="#" class="btn light">Commencer la visite</a>
+                <a href="#objets" class="btn light">
+                    Commencer la visite <span class="arrow">→</span>
+                </a>
             </div>
         </div>
     </section>
+    <section class="objet-simple" id="objets">
+        {% for obj in objets %}
+        <div class="objet-block {% if forloop.counter|divisibleby:2 %}reverse{% endif %}">
+            <div class="objet-text">
+                <h3>{{ obj.nom }}</h3>
 
-    <!-- Footer rapide -->
-    <footer class="footer-section" style="margin-top: 100px;">
-        <div class="footer-bottom" style="background-color: #c6daf0; text-align: center; padding: 10px 0;">
+                {% if obj.type %}
+                <p><strong>Type :</strong> {{ obj.type }}</p>
+                {% endif %}
+
+                {% if obj.etat %}
+                <p><strong>État :</strong> {{ obj.etat }}</p>
+                {% endif %}
+
+                {% if obj.zone %}
+                <p><strong>Zone :</strong> {{ obj.zone }}</p>
+                {% endif %}
+
+                {% if obj.vitesse_max %}
+                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }}</p>
+                {% endif %}
+
+                {% if obj.inclinaison_max %}
+                <p><strong>Inclinaison max :</strong> {{ obj.inclinaison_max }}</p>
+                {% endif %}
+
+                {% if obj.capacite_max %}
+                <p><strong>Capacité max :</strong> {{ obj.capacite_max }}</p>
+                {% endif %}
+
+                {% if obj.precision %}
+                <p><strong>Précision :</strong> {{ obj.precision }}</p>
+                {% endif %}
+
+                {% if obj.intensite %}
+                <p><strong>Intensité :</strong> {{ obj.intensite }}</p>
+                {% endif %}
+
+                {% if obj.couleur %}
+                <p><strong>Couleur :</strong> {{ obj.couleur }}</p>
+                {% endif %}
+
+                {% if obj.volume_max %}
+                <p><strong>Volume max :</strong> {{ obj.volume_max }}</p>
+                {% endif %}
+
+                {% if obj.commande_vocale %}
+                <p><strong>Commande vocale :</strong> Oui</p>
+                {% endif %}
+
+                {% if obj.connectivite %}
+                <p><strong>Connectivité :</strong> {{ obj.connectivite }}</p>
+                {% endif %}
+
+                {% if obj.statut %}
+                <p><strong>Statut :</strong> {{ obj.statut }}</p>
+                {% endif %}
+
+                {% if obj.derniere_maintenance %}
+                <p><strong>Dernière maintenance :</strong> {{ obj.derniere_maintenance }}</p>
+                {% endif %}
+            </div>
+
+
+            <div class="objet-image">
+                {% if obj.image %}
+                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
+                {% else %}
+                <img src="{% static 'images/balance.jpg' %}" alt="Image non disponible">
+                {% endif %}
+
+
+            </div>
+        </div>
+        {% endfor %}
+    </section>
+    <script>
+        function toggleCard(id) {
+            const card = document.getElementById(id);
+            card.style.display = card.style.display === "none" ? "block" : "none";
+        }
+    </script>
+
+
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Service & Info</h4>
+                <ul>
+                    <li><a href="#">Service client</a></li>
+                    <li><a href="#">Règlement</a></li>
+                    <li><a href="#">Horaires</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Promotions</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                    <li><a href="#">Objectifs</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Nos clubs</h4>
+                <ul>
+                    <li><a href="#">Paris</a></li>
+                    <li><a href="#">Cergy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>© 2025 ConnectedGym. Tous droits réservés.</p>
         </div>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 🍔 Menu Burger
+            const burger = document.getElementById("hamburgerBtn");
+            const menu = document.getElementById("mobileMenu");
+            const close = document.getElementById("closeMenu");
+            const overlay = document.getElementById("menuOverlay");
+
+            function closeMenu() {
+                menu.classList.remove("active");
+            }
+
+            burger?.addEventListener("click", () => {
+                menu.classList.add("active");
+            });
+
+            close?.addEventListener("click", closeMenu);
+            overlay?.addEventListener("click", closeMenu);
+
+            // ✅ Menu déroulant mobile (Nos services)
+            const trigger = document.getElementById("servicesToggle");
+            const dropdown = document.getElementById("dropdownServices");
+
+            trigger?.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (dropdown.style.display === "flex") {
+                    dropdown.style.display = "none";
+                } else {
+                    dropdown.style.display = "flex";
+                }
+            });
+
+            // Fermer si on clique ailleurs
+            document.addEventListener("click", function (e) {
+                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+        });
+    </script>
 </body>
+{% endblock %}
 
 </html>

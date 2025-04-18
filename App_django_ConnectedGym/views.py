@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
 from .models import ProfilUtilisateur, ObjetConnecte
+from django.db.models import Q
 
 def inscription(request):
     if request.method == 'POST':
@@ -50,6 +51,30 @@ def equipe(request):
 
 def visite(request):
     objets = ObjetConnecte.objects.all()
+    # Si utilisateur connecté : recherche par mot-clé
+    if request.user.is_authenticated:
+        query = request.GET.get('q')
+        if query:
+            filtres = Q(nom__icontains=query) | Q(type__icontains=query) | Q(etat__icontains=query) | Q(zone__icontains=query) | \
+                      Q(connectivite__icontains=query) | Q(marque__icontains=query) | Q(statut__icontains=query) | \
+                      Q(couleur__icontains=query) | Q(attribut__icontains=query)
+
+            try:
+                # si la recherche est un nombre (int ou float), on l'inclut aussi dans les champs numériques
+                num = float(query)
+                filtres |= Q(capacite_max=num) | Q(precision=num) | Q(volume_max=num) | Q(intensite=num)
+            except ValueError:
+                pass
+
+            objets = objets.filter(filtres)
+    else:
+        # Utilisateur non connecté : filtres doubles
+        
+        filtre_zone = request.GET.get("filtre1")  # ex: ambiance
+        filtre_statut = request.GET.get("filtre2")  # ex: actif
+
+        if filtre_zone and filtre_statut:
+            objets = objets.filter(zone__iexact=filtre_zone, statut__iexact=filtre_statut)
     return render(request, 'visite.html', {'objets': objets})
 
 

@@ -163,6 +163,11 @@
     background: transparent;
 }
 
+.btn.light:hover {
+    background: #fff;
+    color: #000;
+}
+
 .btn.small {
     background-color: #c6daf0;
     color: black;
@@ -713,4 +718,110 @@ body {
 
 html {
     scroll-behavior: smooth;
+}
+
+.search-input {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 300px;
+    margin-right: 10px;
+}
+
+.search-filter-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-recherche,
+.form-filtrage {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.champ {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    min-width: 220px;
+}
+
+.label-filtre {
+    margin-right: 5px;
+    font-weight: bold;
+    color: white;
+}
+
+.filter-zone {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.form-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-group label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.form-group select {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    min-width: 180px;
+    font-size: 14px;
+}
+
+
+.form-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-filter,
+.btn-clear {
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: none;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-filter:hover {
+    background-color: #ddd;
+}
+
+.btn-clear {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+}
+
+.btn-clear:hover {
+    background-color: #fff;
+    color: #333;
 }

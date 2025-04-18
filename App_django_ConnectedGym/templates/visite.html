@@ -99,6 +99,49 @@
                 <a href="#objets" class="btn light">
                     Commencer la visite <span class="arrow">→</span>
                 </a>
+                <div class="search-filter-wrapper">
+                    {% if user.is_authenticated %}
+                    <form method="get" action="{% url 'visite' %}" class="form-recherche">
+                        <input type="text" name="q" placeholder="Rechercher un objet ou une caractéristique..."
+                            class="champ">
+                        <button type="submit" class="btn light">Rechercher</button>
+                        <a href="{% url 'visite' %}" class="btn light">Tout afficher</a>
+                    </form>
+                    {% else %}
+                    <form method="get" action="{% url 'visite' %}" class="filter-zone">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="filtre1">Zone</label>
+                                <select name="filtre1" id="filtre1">
+                                    <option value="">-- Choisir une zone --</option>
+                                    <option value="ambiance">Ambiance</option>
+                                    <option value="détente">Détente</option>
+                                    <option value="cardio">Cardio</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="filtre2">Statut</label>
+                                <select name="filtre2" id="filtre2">
+                                    <option value="">-- Choisir un statut --</option>
+                                    <option value="actif">Actif</option>
+                                    <option value="inactif">Inactif</option>
+                                    <option value="en maintenance">En maintenance</option>
+                                </select>
+                            </div>
+
+                            <div class="form-buttons">
+                                <button type="submit" class="btn-filter">Filtrer</button>
+                                <a href="{% url 'visite' %}" class="btn-clear">Tout afficher</a>
+                            </div>
+                        </div>
+                    </form>
+
+                    {% endif %}
+                </div>
+
+
+
             </div>
         </div>
     </section>
@@ -118,6 +161,10 @@
 
                 {% if obj.zone %}
                 <p><strong>Zone :</strong> {{ obj.zone }}</p>
+                {% endif %}
+
+                {% if obj.marque %}
+                <p><strong>Marque :</strong> {{ obj.marque }}</p>
                 {% endif %}
 
                 {% if obj.vitesse_max %}
@@ -265,9 +312,19 @@
                     dropdown.style.display = "none";
                 }
             });
+            // Si un paramètre de recherche est présent dans l’URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                // Scroller vers la section avec id="objets"
+                const objetsSection = document.getElementById("objets");
+                if (objetsSection) {
+                    objetsSection.scrollIntoView({ behavior: "smooth" });
+                }
+            }
         });
     </script>
 </body>
 {% endblock %}
+
 
 </html>

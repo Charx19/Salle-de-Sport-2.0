@@ -232,12 +232,14 @@
 </section>
 
 <!-- CTA -->
+{% if not user.is_authenticated %}
 <section class="cta-section">
     <div class="container">
         <h2>Rejoignez notre salle connectée</h2>
         <p>Créez votre compte pour accéder à des fonctionnalités exclusives et optimiser votre entraînement.</p>
     </div>
 </section>
+{% endif %}
 
 <!-- Footer -->
 <footer class="footer-section">

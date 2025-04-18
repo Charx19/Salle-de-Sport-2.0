@@ -48,6 +48,8 @@ def deconnexion(request):
 def equipe(request):
     return render(request, 'equipe.html')
 
+def objectif(request):
+    return render(request, 'objectif.html')
 
 def visite(request):
     objets = ObjetConnecte.objects.all()

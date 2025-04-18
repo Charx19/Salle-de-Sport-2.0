@@ -19,6 +19,7 @@ urlpatterns = [
     path('objets-connectes/', views.objets_connectes, name='objets_connectes'),
     path('performances/', views.performances, name='performances'),
     path('personnalisation/', views.personnalisation, name='personnalisation'),
+    path('objectif/', views.objectif, name='objectif'),
 ]
 
 if settings.DEBUG:

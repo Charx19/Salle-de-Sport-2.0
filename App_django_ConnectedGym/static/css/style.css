@@ -825,3 +825,38 @@ html {
     background-color: #fff;
     color: #333;
 }
+
+.a-propos {
+    max-width: 900px;
+    margin: 100px auto;
+    padding: 0 20px;
+    font-size: 1.1em;
+    line-height: 1.7;
+    color: #333;
+}
+
+.a-propos h2 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.a-propos h3 {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-size: 1.4em;
+    color: #222;
+}
+
+.a-propos ul {
+    padding-left: 20px;
+}
+
+.a-propos li {
+    margin-bottom: 10px;
+}
+
+.highlight {
+    color: #007bff;
+    font-weight: bold;
+}

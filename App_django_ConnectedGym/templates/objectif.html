@@ -3,10 +3,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
+<meta charset="UTF-8">
+
 
 <head>
     <meta charset="UTF-8">
-    <title>Visite de la salle</title>
+    <title>Objectif</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
@@ -91,146 +93,41 @@
 
 
     <!-- Contenu principal -->
-    <section class="hero-full">
-        <div class="overlay" style="background: rgba(0,0,0,0.5); padding: 50px;">
-            <div class="container hero-content" style="text-align: center; color: white;">
-                <h1>Bienvenue dans notre salle connectée</h1>
-                <p style="margin-bottom: 20px;">Explore toutes les fonctionnalités et équipements de notre salle !</p>
-                <a href="#objets" class="btn light">
-                    Commencer la visite <span class="arrow">→</span>
-                </a>
-                <div class="search-filter-wrapper">
-                    {% if user.is_authenticated %}
-                    <form method="get" action="{% url 'visite' %}" class="form-recherche">
-                        <input type="text" name="q" placeholder="Rechercher un objet ou une caractéristique..."
-                            class="champ">
-                        <button type="submit" class="btn light">Rechercher</button>
-                        <a href="{% url 'visite' %}" class="btn light">Tout afficher</a>
-                    </form>
-                    {% else %}
-                    <form method="get" action="{% url 'visite' %}" class="filter-zone">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="filtre1">Zone</label>
-                                <select name="filtre1" id="filtre1">
-                                    <option value="">-- Choisir une zone --</option>
-                                    <option value="ambiance">Ambiance</option>
-                                    <option value="détente">Détente</option>
-                                    <option value="cardio">Cardio</option>
-                                </select>
-                            </div>
+    <section class="a-propos">
+        <div class="container">
+            <h2 class="title">A propos de ConnectedGym</h2>
+            <p>
+                <strong>ConnectedGym</strong> est bien plus qu'une simple salle de sport. C'est une
+                <strong>expérience connecté</strong> et immersive connue pour offrir à chacun une
+                pratique sportive personnalisée, intelligente et agréable.
+            </p>
 
-                            <div class="form-group">
-                                <label for="filtre2">Statut</label>
-                                <select name="filtre2" id="filtre2">
-                                    <option value="">-- Choisir un statut --</option>
-                                    <option value="actif">Actif</option>
-                                    <option value="inactif">Inactif</option>
-                                    <option value="en maintenance">En maintenance</option>
-                                </select>
-                            </div>
+            <h3 class="subtitle"> Nos objectifs</h3>
+            <ul>
+                <li><strong>Innover l'expérience sportive :</strong> grâce à nos objets
+                    connectés (lumière, son, climatisation, tapis, balance...), chaque séance s'adapte
+                    à vos préférences.</li>
+                <li><strong> Suivre les performances :</strong> les utilisateurs peuvent consulter leurs
+                    données personnelles et suivre leurs progrès.</li>
+                <li><strong> Favoriser un mode de vie sain :</strong> nous encourageons une pratique
+                    sportive régulière et accessible à tous.</li>
+                <li><strong> Créer une communauté active :</strong> ConnectedGym est aussi un lieu
+                    de partage et de bien-être.</li>
+            </ul>
 
-                            <div class="form-buttons">
-                                <button type="submit" class="btn-filter">Filtrer</button>
-                                <a href="{% url 'visite' %}" class="btn-clear">Tout afficher</a>
-                            </div>
-                        </div>
-                    </form>
-
-                    {% endif %}
-                </div>
-
-
-
-            </div>
+            <h3 class="subtitle">Une technologie au service du bien-être</h3>
+            <p>
+                Chaque zone (cardio, détente, musculation...) est équipée de capteurs intelligents
+                permettant :
+            </p>
+            <ul>
+                <li>la <strong>gestion automatique de l'ambiance</strong> (lumière, son, température),</li>
+                <li>la <strong>détection d'utilisation des machines</strong>,</li>
+                <li>des <strong>recommandations personnalisées</strong> selon vos habitudes.</li>
+            </ul>
         </div>
     </section>
-    <section class="objet-simple" id="objets">
-        {% for obj in objets %}
-        <div class="objet-block {% if forloop.counter|divisibleby:2 %}reverse{% endif %}">
-            <div class="objet-text">
-                <h3>{{ obj.nom }}</h3>
 
-                {% if obj.type %}
-                <p><strong>Type :</strong> {{ obj.type }}</p>
-                {% endif %}
-
-                {% if obj.etat %}
-                <p><strong>État :</strong> {{ obj.etat }}</p>
-                {% endif %}
-
-                {% if obj.zone %}
-                <p><strong>Zone :</strong> {{ obj.zone }}</p>
-                {% endif %}
-
-                {% if obj.marque %}
-                <p><strong>Marque :</strong> {{ obj.marque }}</p>
-                {% endif %}
-
-                {% if obj.vitesse_max %}
-                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }}</p>
-                {% endif %}
-
-                {% if obj.inclinaison_max %}
-                <p><strong>Inclinaison max :</strong> {{ obj.inclinaison_max }}</p>
-                {% endif %}
-
-                {% if obj.capacite_max %}
-                <p><strong>Capacité max :</strong> {{ obj.capacite_max }}</p>
-                {% endif %}
-
-                {% if obj.precision %}
-                <p><strong>Précision :</strong> {{ obj.precision }}</p>
-                {% endif %}
-
-                {% if obj.intensite %}
-                <p><strong>Intensité :</strong> {{ obj.intensite }}</p>
-                {% endif %}
-
-                {% if obj.couleur %}
-                <p><strong>Couleur :</strong> {{ obj.couleur }}</p>
-                {% endif %}
-
-                {% if obj.volume_max %}
-                <p><strong>Volume max :</strong> {{ obj.volume_max }}</p>
-                {% endif %}
-
-                {% if obj.commande_vocale %}
-                <p><strong>Commande vocale :</strong> Oui</p>
-                {% endif %}
-
-                {% if obj.connectivite %}
-                <p><strong>Connectivité :</strong> {{ obj.connectivite }}</p>
-                {% endif %}
-
-                {% if obj.statut %}
-                <p><strong>Statut :</strong> {{ obj.statut }}</p>
-                {% endif %}
-
-                {% if obj.derniere_maintenance %}
-                <p><strong>Dernière maintenance :</strong> {{ obj.derniere_maintenance }}</p>
-                {% endif %}
-            </div>
-
-
-            <div class="objet-image">
-                {% if obj.image %}
-                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
-                {% else %}
-                <img src="{% static 'images/balance.jpg' %}" alt="Image non disponible">
-                {% endif %}
-
-
-            </div>
-        </div>
-        {% endfor %}
-    </section>
-    <script>
-        function toggleCard(id) {
-            const card = document.getElementById(id);
-            card.style.display = card.style.display === "none" ? "block" : "none";
-        }
-    </script>
 
 
 
@@ -312,15 +209,7 @@
                     dropdown.style.display = "none";
                 }
             });
-            // Si un paramètre de recherche est présent dans l’URL
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
-                // Scroller vers la section avec id="objets"
-                const objetsSection = document.getElementById("objets");
-                if (objetsSection) {
-                    objetsSection.scrollIntoView({ behavior: "smooth" });
-                }
-            }
+
         });
     </script>
 </body>

@@ -8,6 +8,164 @@
     <meta charset="UTF-8">
     <title>Visite de la salle</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .objet-simple {
+            padding: 60px 20px;
+            background-color: #f9f9f9;
+        }
+
+        .objet-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1000px;
+            margin: 40px auto;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .objet-block.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .objet-text {
+            flex: 1;
+        }
+
+        .objet-text h2 {
+            font-size: 1.8rem;
+            color: #3a00c2;
+            margin-bottom: 10px;
+        }
+
+        .objet-text p {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 6px 0;
+        }
+
+        .objet-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .objet-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .search-input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 300px;
+            margin-right: 10px;
+        }
+
+        .search-filter-wrapper {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form-recherche,
+        .form-filtrage {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .champ {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            min-width: 220px;
+        }
+
+        .label-filtre {
+            margin-right: 5px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .filter-zone {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-group select {
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            min-width: 180px;
+            font-size: 14px;
+        }
+
+
+        .form-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-filter,
+        .btn-clear {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-filter:hover {
+            background-color: #ddd;
+        }
+
+        .btn-clear {
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+        }
+
+        .btn-clear:hover {
+            background-color: #fff;
+            color: #333;
+        }
+    </style>
 </head>
 
 <body>

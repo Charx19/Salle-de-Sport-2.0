@@ -81,14 +81,13 @@ WSGI_APPLICATION = 'Projet_Django.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',  # Nom de la base de données
-        'USER': 'postgres',  # Nom d'utilisateur (généralement "postgres")
-        'PASSWORD': '623755247Mus',  # Mot de passe
-        'HOST': 'db.ddqbthhirudcpswidgho.supabase.co',  # Hôte de Supabase
-        'PORT': '5432',  # Port PostgreSQL
+        'NAME': 'postgres',  # or the actual DB name from dashboard
+        'USER': 'postgres',
+        'PASSWORD': '623755247Mus',  # or the real one from dashboard
+        'HOST': 'db.ddqbthhirudcpswidgho.supabase.co',
+        'PORT': '5432',
     }
 }
-
 
 
 # Password validation

@@ -143,3 +143,12 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/connexion/'
 
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'moussareotra2@gmail.com'  # ➡️ remplace par ton Gmail
+EMAIL_HOST_PASSWORD = 'edni fcpl rzxr wnbh'  # ➡️ voir explication ci-dessous
+DEFAULT_FROM_EMAIL = 'ConnectedGym <moussareotra2@gmail.com>'

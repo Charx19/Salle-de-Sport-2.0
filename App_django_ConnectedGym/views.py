@@ -1,3 +1,9 @@
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.contrib.sites.shortcuts import get_current_site
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.contrib.auth.tokens import default_token_generator
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -5,21 +11,61 @@ from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
 from .models import ProfilUtilisateur, ObjetConnecte
 from django.db.models import Q
+from django.contrib.auth import get_user_model
+from django.core.mail import EmailMultiAlternatives
+from django.urls import reverse
+
+User = get_user_model()
+
+# ============ VUES PRINCIPALES =============
 
 def inscription(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, f"Bienvenue {user.first_name} ! Vous êtes maintenant inscrit et connecté.")
-            return redirect('acceuil')
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+
+            current_site = get_current_site(request)
+            subject = 'Activation de votre compte ConnectedGym'
+            text_content = f"Bonjour {user.first_name}, veuillez cliquer sur le lien pour activer votre compte : http://{current_site.domain}{reverse('activation_compte', kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)), 'token': default_token_generator.make_token(user)})}"
+            
+            html_content = render_to_string('activation_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': default_token_generator.make_token(user),
+            })
+            
+            email = EmailMultiAlternatives(subject, text_content, 'ConnectedGym <noreply@connectedgym.com>', [user.email])
+            email.attach_alternative(html_content, "text/html")
+            email.send()
+
+            messages.success(request, "Inscription réussie ! Un email de confirmation vous a été envoyé.")
+            return redirect('connexion')
         else:
             messages.error(request, "Une erreur s'est produite. Veuillez vérifier le formulaire.")
     else:
         form = CustomUserCreationForm()
     return render(request, 'inscription.html', {'form': form})
 
+
+def activation_compte(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Votre compte a été activé avec succès. Vous pouvez maintenant vous connecter.')
+        return redirect('connexion')
+    else:
+        messages.error(request, "Le lien d'activation est invalide ou a expiré.")
+        return redirect('connexion')
 
 def connexion(request):
     if request.method == 'POST':

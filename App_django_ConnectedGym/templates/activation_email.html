@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Activation de votre compte ConnectedGym</title>
+  <style>
+    body {
+      background-color: #f5f5f5;
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 0;
+    }
+    .email-container {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 500px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .logo {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      color: #1e293b;
+    }
+    p {
+      font-size: 16px;
+      color: #475569;
+      margin-bottom: 25px;
+    }
+    .btn {
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <img src="https://ton-domaine-ou-ton-hosting.com/static/images/altere.png" alt="ConnectedGym Logo" class="logo">
+    <h1>Veuillez vérifier votre adresse e-mail 😁</h1>
+    <p>Pour utiliser ConnectedGym, cliquez sur le bouton ci-dessous afin de vérifier votre compte.<br>Cela nous aide à sécuriser votre profil.</p>
+
+    <a href="http://{{ domain }}{% url 'activation_compte' uidb64=uid token=token %}" class="btn">Activer mon compte</a>
+
+    <p>Vous recevez cet e-mail car vous vous êtes inscrit sur ConnectedGym. Si vous n'êtes pas à l'origine de cette inscription, veuillez ignorer cet e-mail.</p>
+
+    <div class="footer">
+      © 2025 ConnectedGym. Tous droits réservés.
+    </div>
+  </div>
+</body>
+</html>

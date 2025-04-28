@@ -1,82 +1,42 @@
 {% load static %}
 {% block content %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
-    <title>Objets connectés</title>
+    <title>Règlement</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        .header-objets {
-            text-align: center;
-            margin-top: 80px;
-        }
-
-        .header-objets h1 {
-            font-size: 2.5em;
-            color: #4a00e0;
-            margin-bottom: 15px;
-        }
-
-        .header-objets p {
-            font-size: 1.2em;
-            color: #555;
-        }
-
-        .objets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
+        .reglement-container {
             max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .objet-item {
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .objet-item img {
-            width: 100%;
-            height: auto;
+            margin: 100px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .objet-item:hover {
-            transform: scale(1.05);
-        }
-
-        .objet-item h3 {
-            margin-top: 10px;
-            font-size: 1.1em;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
             color: #333;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
+        .reglement-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a00e0;
+            padding: 12px 15px;
         }
 
-        .btn-ajouter {
-            display: inline-block;
-            margin-bottom: 30px;
-            padding: 10px 20px;
-            background-color: #4a00e0;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background-color 0.3s;
+        .reglement-container h3 {
+            margin-top: 30px;
+            color: #4a00e0;
         }
 
-        .btn-ajouter:hover {
-            background-color: #4a00e0;
+        .reglement-container ul {
+            padding-left: 20px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -156,35 +116,40 @@
 
         </div>
     </header>
+    <section class="reglement-container">
+        <h2>Règlement Intérieur</h2>
 
-    <!-- Contenu principal-->
-    <div class="header-objets">
-        <h1>Gérer les objets connectés</h1>
-        <p>Sélectionnez un objet pour consulter, modifier ses informations ou gérer ses paramètres.</p>
-    </div>
+        <h3>Accès et Comportement</h3>
+        <ul>
+            <li>Le respect des autres adhérents et du personnel est obligatoire.</li>
+            <li>Le port de tenues de sport propres et adaptées est requis.</li>
+            <li>Les chaussures utilisées doivent être exclusivement réservées à l'intérieur.</li>
+        </ul>
 
-    <section class="objets-grid">
-        {% for obj in objets %}
-        <div class="objet-item">
-            <a href="{% url 'detail_objet' obj.id %}">
-                {% if obj.image %}
-                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
-                {% else %}
-                <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
-                {% endif %}
-                <h3>{{ obj.nom }}</h3>
-            </a>
-        </div>
-        {% empty %}
-        <p>Aucun objet connecté trouvé.</p>
-        {% endfor %}
+        <h3>Utilisation des Équipements Connectés</h3>
+        <ul>
+            <li>Chaque utilisateur est responsable du matériel utilisé pendant sa séance.</li>
+            <li>Un nettoyage rapide des machines après utilisation est demandé.</li>
+            <li>Il est interdit de modifier les réglages système des appareils connectés sans autorisation.</li>
+        </ul>
+
+        <h3>Hygiène et Sécurité</h3>
+        <ul>
+            <li>Un essuie-tout personnel est obligatoire sur les machines et bancs.</li>
+            <li>Les bouteilles d’eau doivent être fermées hermétiquement.</li>
+            <li>Merci de signaler immédiatement tout incident ou dysfonctionnement.</li>
+        </ul>
+
+        <h3>Gestion des données personnelles</h3>
+        <ul>
+            <li>Les données collectées par les équipements sont utilisées uniquement pour le suivi sportif personnalisé.
+            </li>
+            <li>Conformément à la loi, chaque utilisateur peut demander l'accès ou la suppression de ses données.</li>
+        </ul>
+
+        <p style="margin-top: 30px;">Merci de respecter ce règlement pour garantir un environnement agréable, connecté
+            et sécurisé pour tous !</p>
     </section>
-
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
-    </div>
-
-
 
 
     <!-- Footer -->
@@ -276,6 +241,5 @@
     </script>
 </body>
 {% endblock %}
-
 
 </html>

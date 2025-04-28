@@ -334,17 +334,17 @@
             </div>
             <div class="member">
                 <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
-                <h3>qlqn</h3>
+                <h3>Moussa Traore</h3>
                 <p>qlqc</p>
             </div>
             <div class="member">
                 <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
-                <h3>qlqn</h3>
+                <h3>Charles Delpech</h3>
                 <p>qlqc</p>
             </div>
             <div class="member">
                 <img src="{% static 'images/profil2.png' %}" alt="Membre 2">
-                <h3>qlqn</h3>
+                <h3>Ahmed Belhadj</h3>
                 <p>qlqc</p>
             </div>
         </div>
@@ -390,10 +390,8 @@
             <h4>Service & Info</h4>
             <ul>
                 <li><a href="#">Service client</a></li>
-                <li><a href="#">Règlement</a></li>
-                <li><a href="#">Horaires</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Promotions</a></li>
+                <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                <li><a href="{% url 'horaires' %}">Horaires</a></li>
             </ul>
         </div>
         <div class="footer-col">

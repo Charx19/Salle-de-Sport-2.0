@@ -166,6 +166,8 @@
             color: #333;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -309,10 +311,6 @@
             <div class="objet-text">
                 <h3>{{ obj.nom }}</h3>
 
-                {% if obj.type %}
-                <p><strong>Type :</strong> {{ obj.type }}</p>
-                {% endif %}
-
                 {% if obj.attribut %}
                 <p><strong>Attributs :</strong> {{ obj.attribut }}</p>
                 {% endif %}
@@ -330,7 +328,7 @@
                 {% endif %}
 
                 {% if obj.vitesse_max %}
-                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }}</p>
+                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }} km/h</p>
                 {% endif %}
 
                 {% if obj.inclinaison_max %}
@@ -352,14 +350,15 @@
                 {% if obj.statut %}
                 <p><strong>Statut :</strong> {{ obj.statut }}</p>
                 {% endif %}
+                {% if obj.duree_max_jour %}
+                <p><strong>Durée maximale par jour :</strong> {{ obj.duree_max_jour }} minutes</p>
+                {% endif %}
 
                 {% if obj.derniere_maintenance %}
                 <p><strong>Dernière maintenance :</strong> {{ obj.derniere_maintenance }}</p>
                 {% endif %}
 
-                {% if obj.duree_max_jour %}
-                <p><strong>Durée maximale par jour :</strong> {{ obj.duree_max_jour }} minutes</p>
-                {% endif %}
+
 
 
             </div>
@@ -393,10 +392,8 @@
                 <h4>Service & Info</h4>
                 <ul>
                     <li><a href="#">Service client</a></li>
-                    <li><a href="#">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">

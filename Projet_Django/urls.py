@@ -14,6 +14,12 @@ urlpatterns = [
     path('visite/', views.visite, name='visite'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('profil/', views.profil, name='profil'),
+    path('reglement/', views.reglement, name='reglement'),
+    path('horaires/', views.horaires, name='horaires'),
+    path('objet/<int:objet_id>/', views.detail_objet, name='detail_objet'),
+    path('ajouter-objet/', views.ajouter_objet, name='ajouter_objet'),
+    path('objets/', views.objets_connectes, name='objets_connectes'),
+
     path('activation/<uidb64>/<token>/', views.activation_compte, name='activation_compte'),
 
     # ✅ Ajout des vues pour le système de points

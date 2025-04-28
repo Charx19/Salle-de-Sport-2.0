@@ -6,75 +6,54 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Objets connectés</title>
+    <title>Ajouter un objet</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        .header-objets {
-            text-align: center;
-            margin-top: 80px;
-        }
-
-        .header-objets h1 {
-            font-size: 2.5em;
-            color: #4a00e0;
-            margin-bottom: 15px;
-        }
-
-        .header-objets p {
-            font-size: 1.2em;
-            color: #555;
-        }
-
-        .objets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .objet-item {
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .objet-item img {
-            width: 100%;
-            height: auto;
+        .form-ajouter-objet {
+            max-width: 700px;
+            margin: 80px auto;
+            padding: 40px;
+            background: #fff;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .objet-item:hover {
-            transform: scale(1.05);
+        .form-ajouter-objet h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #3a00c2;
         }
 
-        .objet-item h3 {
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #333;
+        .form-ajouter-objet form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .btn-ajouter {
-            display: inline-block;
-            margin-bottom: 30px;
-            padding: 10px 20px;
-            background-color: #4a00e0;
-            color: white;
-            text-decoration: none;
+        .form-ajouter-objet label {
             font-weight: bold;
-            border-radius: 8px;
-            transition: background-color 0.3s;
         }
 
-        .btn-ajouter:hover {
-            background-color: #4a00e0;
+        .form-ajouter-objet input,
+        .form-ajouter-objet select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        .form-ajouter-objet button {
+            background-color: #3a00c2;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-ajouter-objet button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -157,33 +136,68 @@
         </div>
     </header>
 
-    <!-- Contenu principal-->
-    <div class="header-objets">
-        <h1>Gérer les objets connectés</h1>
-        <p>Sélectionnez un objet pour consulter, modifier ses informations ou gérer ses paramètres.</p>
-    </div>
 
-    <section class="objets-grid">
-        {% for obj in objets %}
-        <div class="objet-item">
-            <a href="{% url 'detail_objet' obj.id %}">
-                {% if obj.image %}
-                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
-                {% else %}
-                <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
-                {% endif %}
-                <h3>{{ obj.nom }}</h3>
-            </a>
-        </div>
-        {% empty %}
-        <p>Aucun objet connecté trouvé.</p>
-        {% endfor %}
+    <!-- Contenu principal -->
+    <section class="form-ajouter-objet">
+        <h2>Ajouter un nouvel objet connecté</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" id="nom" required>
+
+            <label for"type">Type :</label>
+            <input type="text" name="type" id="type" required>
+
+            <label for="attribut">Attribut :</label>
+            <input type="text" name="attribut" id="attribut" required>
+
+            <label for="zone">Zone :</label>
+            <select name="zone" id="zone" required>
+                <option value="">-- Choisir une zone --</option>
+                <option value="cardio">Cardio</option>
+                <option value="ambiance">Ambiance</option>
+                <option value="détente">Détente</option>
+            </select>
+
+            <label for="etat">État :</label>
+            <select name="etat" id="etat" required>
+                <option value="">-- Choisir l'état --</option>
+                <option value="neuf">Neuf</option>
+                <option value="tres_bon">Très bon état</option>
+                <option value="bon">Bon état</option>
+                <option value="moyen">État moyen</option>
+                <option value="mauvais">Mauvais état</option>
+            </select>
+
+            <label for="statut">Statut :</label>
+            <select name="statut" id="statut" required>
+                <option value="actif">Actif</option>
+                <option value="inactif">Inactif</option>
+                <option value="maintenance">En maintenance</option>
+            </select>
+
+            <label for="connectivite">Connectivité :</label>
+            <select name="connectivite" id="connectivite" required>
+                <option value="">-- Choisir la connectivité --</option>
+                <option value="Wi-Fi">Wi-Fi</option>
+                <option value="Bluetooth">Bluetooth</option>
+                <option value="Zigbee">Zigbee</option>
+                <option value="Autre">Autre</option>
+            </select>
+
+            <label for="marque">Marque :</label>
+            <input type="text" name="marque" id="marque" required>
+
+            <label for="couleur">Couleur :</label>
+            <input type="text" name="couleur" id="couleur" required>
+
+            <label for="annee_fin">Année de fin :</label>
+            <input type="number" name="annee_fin" id="annee_fin" min="2024" max="2100" required>
+
+            <button type="submit">Ajouter l'objet</button>
+        </form>
     </section>
-
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
-    </div>
-
 
 
 
@@ -195,7 +209,9 @@
                 <ul>
                     <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                    <li><a href="#">Horaires</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Promotions</a></li>
                 </ul>
             </div>
             <div class="footer-col">

@@ -42,10 +42,12 @@
         }
 
         .highlight {
-            color: #007bff;
+            color: #3a00c2;
             font-weight: bold;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 </head>
 
 <body>
@@ -129,40 +131,43 @@
 
 
     <!-- Contenu principal -->
-    <section class="a-propos">
-        <div class="container">
-            <h2 class="title">A propos de ConnectedGym</h2>
+    <section class="a-propos" style="background: linear-gradient(to right, #dfe9f3, #ffffff); padding: 60px 20px;">
+        <div class="container"
+            style="background-color: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <h2 class="title">À propos de ConnectedGym</h2>
             <p>
-                <strong>ConnectedGym</strong> est bien plus qu'une simple salle de sport. C'est une
-                <strong>expérience connecté</strong> et immersive connue pour offrir à chacun une
-                pratique sportive personnalisée, intelligente et agréable.
+                <strong>ConnectedGym</strong> révolutionne l'entraînement sportif en alliant machines intelligentes et
+                suivi personnalisé.
+                Notre salle connectée est conçue pour offrir à chacun une expérience d'entraînement moderne, fluide et
+                motivante.
             </p>
 
-            <h3 class="subtitle"> Nos objectifs</h3>
+            <h3 class="subtitle">Nos objectifs</h3>
             <ul>
-                <li><strong>Innover l'expérience sportive :</strong> grâce à nos objets
-                    connectés (lumière, son, climatisation, tapis, balance...), chaque séance s'adapte
-                    à vos préférences.</li>
-                <li><strong> Suivre les performances :</strong> les utilisateurs peuvent consulter leurs
-                    données personnelles et suivre leurs progrès.</li>
-                <li><strong> Favoriser un mode de vie sain :</strong> nous encourageons une pratique
-                    sportive régulière et accessible à tous.</li>
-                <li><strong> Créer une communauté active :</strong> ConnectedGym est aussi un lieu
-                    de partage et de bien-être.</li>
+                <li><strong>Proposer un équipement connecté de haute qualité :</strong> tapis de course, vélos, rameurs,
+                    steppers et elliptiques intelligents pour un suivi précis de vos performances.</li>
+                <li><strong>Suivre vos efforts en temps réel :</strong> calories brûlées, rythme cardiaque, distance
+                    parcourue... tout est enregistré pour vous aider à progresser.</li>
+                <li><strong>Offrir une expérience personnalisée :</strong> chaque machine adapte ses paramètres
+                    (intensité, programme) selon vos objectifs.</li>
+                <li><strong>Créer une communauté dynamique :</strong> ConnectedGym est un lieu de dépassement de soi, de
+                    motivation et de bien-être partagé.</li>
             </ul>
 
-            <h3 class="subtitle">Une technologie au service du bien-être</h3>
+            <h3 class="subtitle">Une technologie au service de votre performance</h3>
             <p>
-                Chaque zone (cardio, détente, musculation...) est équipée de capteurs intelligents
-                permettant :
+                Nos équipements connectés permettent :
             </p>
             <ul>
-                <li>la <strong>gestion automatique de l'ambiance</strong> (lumière, son, température),</li>
-                <li>la <strong>détection d'utilisation des machines</strong>,</li>
-                <li>des <strong>recommandations personnalisées</strong> selon vos habitudes.</li>
+                <li>Un <strong>suivi précis</strong> de chaque séance (temps, intensité, rythme cardiaque, calories).
+                </li>
+                <li>Des <strong>programmes personnalisés</strong> adaptés à votre niveau et vos objectifs.</li>
+                <li>Un <strong>historique complet</strong> de vos performances pour visualiser vos progrès.</li>
             </ul>
         </div>
     </section>
+
+
 
 
 
@@ -174,10 +179,8 @@
                 <h4>Service & Info</h4>
                 <ul>
                     <li><a href="#">Service client</a></li>
-                    <li><a href="#">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">

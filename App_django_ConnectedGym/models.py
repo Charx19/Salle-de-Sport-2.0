@@ -42,17 +42,16 @@ ETAT_CHOICES = [
 
 class ObjetConnecte(models.Model):
     nom = models.CharField(max_length=100)
+    attribut = models.TextField(blank=True, null=True)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES)
     etat = models.CharField(max_length=50, choices=ETAT_CHOICES)
     zone = models.CharField(max_length=50, choices=ZONE_CHOICES)
     annee_achat = models.IntegerField(null=True, blank=True)
     annee_fin = models.IntegerField(null=True, blank=True)
-    attribut = models.TextField(blank=True, null=True)
+    duree_max_jour = models.IntegerField(null=True, blank=True)
     connectivite = models.CharField(max_length=100)
     couleur = models.CharField(max_length=50, null=True, blank=True)
     derniere_maintenance = models.DateField(null=True, blank=True)
-    duree_max_jour = models.IntegerField(null=True, blank=True)
-    est_disponible = models.BooleanField(default=True)
     image = models.URLField(max_length=300, null=True, blank=True)
     inclinaison_max = models.CharField(max_length=50, null=True, blank=True)
     marque = models.CharField(max_length=100)
@@ -60,6 +59,8 @@ class ObjetConnecte(models.Model):
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES)
     vitesse_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     intensite = models.CharField(max_length=50, null=True, blank=True)
+    heure_debut_utilisation = models.TimeField(null=True, blank=True)
+    heure_fin_utilisation = models.TimeField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom} ({self.get_type_display()})"

@@ -6,74 +6,55 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Objets connectés</title>
+    <title>Visite de la salle</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        .header-objets {
-            text-align: center;
-            margin-top: 80px;
-        }
-
-        .header-objets h1 {
-            font-size: 2.5em;
-            color: #4a00e0;
-            margin-bottom: 15px;
-        }
-
-        .header-objets p {
-            font-size: 1.2em;
-            color: #555;
-        }
-
-        .objets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
-        .objet-item {
-            text-align: center;
-            transition: transform 0.3s;
-        }
-
-        .objet-item img {
-            width: 100%;
-            height: auto;
+        .form-objet {
+            max-width: 700px;
+            margin: 100px auto;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
-        .objet-item:hover {
-            transform: scale(1.05);
+        .form-objet h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a00e0;
         }
 
-        .objet-item h3 {
-            margin-top: 10px;
-            font-size: 1.1em;
-            color: #333;
+        .form-objet form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        a {
-            text-decoration: none;
-            color: inherit;
+        .form-objet label {
+            font-weight: bold;
         }
 
-        .btn-ajouter {
-            display: inline-block;
-            margin-bottom: 30px;
-            padding: 10px 20px;
+        .form-objet input,
+        .form-objet select,
+        .form-objet textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+        }
+
+        .form-objet button {
             background-color: #4a00e0;
             color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background-color 0.3s;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
-        .btn-ajouter:hover {
+        .form-objet button:hover {
+            font-weight: bold;
             background-color: #4a00e0;
         }
     </style>
@@ -158,32 +139,52 @@
     </header>
 
     <!-- Contenu principal-->
-    <div class="header-objets">
-        <h1>Gérer les objets connectés</h1>
-        <p>Sélectionnez un objet pour consulter, modifier ses informations ou gérer ses paramètres.</p>
-    </div>
+    <section class="form-objet">
+        <h2>Modifier l'objet : {{ objet.nom }}</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" id="nom" value="{{ objet.nom }}">
 
-    <section class="objets-grid">
-        {% for obj in objets %}
-        <div class="objet-item">
-            <a href="{% url 'detail_objet' obj.id %}">
-                {% if obj.image %}
-                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
+            <label for="etat">État :</label>
+            <input type="text" name="etat" id="etat" value="{{ objet.etat }}">
+
+            <label for="zone">Zone :</label>
+            <input type="text" name="zone" id="zone" value="{{ objet.zone }}">
+
+            <select name="statut" id="statut">
+                {% if objet.statut == 'actif' %}
+                <option value="actif" selected>Actif</option>
                 {% else %}
-                <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
+                <option value="actif">Actif</option>
                 {% endif %}
-                <h3>{{ obj.nom }}</h3>
-            </a>
-        </div>
-        {% empty %}
-        <p>Aucun objet connecté trouvé.</p>
-        {% endfor %}
+
+                {% if objet.statut == 'inactif' %}
+                <option value="inactif" selected>Inactif</option>
+                {% else %}
+                <option value="inactif">Inactif</option>
+                {% endif %}
+
+                {% if objet.statut == 'maintenance' %}
+                <option value="maintenance" selected>En maintenance</option>
+                {% else %}
+                <option value="maintenance">En maintenance</option>
+                {% endif %}
+            </select>
+
+            <label for="heure_debut_utilisation">Heure de début :</label>
+            <input type="time" name="heure_debut_utilisation" id="heure_debut_utilisation"
+                value="{{ objet.heure_debut_utilisation|default_if_none:'' }}">
+
+            <label for="heure_fin_utilisation">Heure de fin :</label>
+            <input type="time" name="heure_fin_utilisation" id="heure_fin_utilisation"
+                value="{{ objet.heure_fin_utilisation|default_if_none:'' }}">
+
+
+
+            <button type="submit">Enregistrer les modifications</button>
+        </form>
     </section>
-
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
-    </div>
-
 
 
 

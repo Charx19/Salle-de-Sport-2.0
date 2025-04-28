@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.contrib.auth.tokens import default_token_generator
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -14,6 +14,7 @@ from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
+from datetime import datetime
 
 User = get_user_model()
 
@@ -96,6 +97,64 @@ def equipe(request):
 
 def objectif(request):
     return render(request, 'objectif.html')
+
+def reglement(request):
+    return render(request, 'reglement.html')
+
+def horaires(request):
+    return render(request, 'horaires.html')
+
+def detail_objet(request, objet_id):
+    objet = get_object_or_404(ObjetConnecte, pk=objet_id)
+
+    if request.method == 'POST':
+        objet.nom = request.POST.get('nom')
+        objet.etat = request.POST.get('etat')
+        objet.zone = request.POST.get('zone')
+        objet.statut = request.POST.get('statut')
+        objet.heure_debut_utilisation = request.POST.get('heure_debut_utilisation')
+        objet.heure_fin_utilisation = request.POST.get('heure_fin_utilisation')
+
+        objet.save()
+        return redirect('objets_connectes')  # Après modification, retour vers la liste des objets
+
+    return render(request, 'detail_objet.html', {'objet': objet})
+
+def ajouter_objet(request):
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        attribut = request.POST.get('attribut')
+        zone = request.POST.get('zone')
+        etat = request.POST.get('etat')
+        statut = request.POST.get('statut')
+        connectivite = request.POST.get('connectivite')
+        marque = request.POST.get('marque')
+        couleur = request.POST.get('couleur')
+        annee_fin = request.POST.get('annee_fin')
+        image = request.POST.get('image')
+
+        # Définir l'année d'achat automatiquement
+        annee_achat = datetime.now().year
+
+        nouvel_objet = ObjetConnecte(
+            nom=nom,
+            attribut=attribut,
+            zone=zone,
+            etat=etat,
+            statut=statut,
+            connectivite=connectivite,
+            marque=marque,
+            couleur=couleur,
+            annee_achat=annee_achat,
+            annee_fin=annee_fin,
+            image=image
+        )
+        nouvel_objet.save()
+        messages.success(request, "Objet ajouté avec succès !")
+        return redirect('objets_connectes')
+
+    return render(request, 'ajouter_objet.html')
+
 
 def visite(request):
     objets = ObjetConnecte.objects.all()
@@ -184,7 +243,8 @@ def verifier_niveau(profil):
 @login_required
 def objets_connectes(request):
     ajouter_points(request, 2, 'visited_objets')
-    return render(request, 'objets_connectes.html')
+    objets = ObjetConnecte.objects.all()
+    return render(request, 'objets_connectes.html', {'objets': objets})
 
 @login_required
 def performances(request):

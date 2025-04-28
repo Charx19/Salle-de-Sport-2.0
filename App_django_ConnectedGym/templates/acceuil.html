@@ -150,7 +150,7 @@
     </div>
 </section>
 
-
+{% if not user.is_authenticated %}
 <section class="profile-section">
     <h2 class="section-title">Nos profils</h2>
     <div class="profile-cards">
@@ -162,7 +162,7 @@
                 <li>Présentation de la salle</li>
                 <li>Sans inscription requise</li>
             </ul>
-            <button class="profile-btn">Explorer</button>
+            <a href="{% url 'inscription' %}" class="profile-btn">Explorer</a>
         </div>
 
         <div class="profile-card">
@@ -173,20 +173,20 @@
                 <li>Consulter les objets connectés</li>
                 <li>Explorer les outils et services disponibles</li>
             </ul>
-            <button class="profile-btn">Commencer</button>
+            <a href="{% url 'inscription' %}" class="profile-btn">Commencer</a>
         </div>
 
         <div class="profile-card featured">
             <span class="badge">Recommandé</span>
             <h3>Intermédiaire</h3>
-            <p class="profile-access">Passez à un usage plus technique</p>
+            <p class="profile-access">Passez à un usage plus technique</a>
             <ul>
                 <li>Gérer les objets connectés</li>
                 <li>Configurer les équipements</li>
                 <li>Surveiller les performances</li>
                 <li>Accéder a vos statistiques</li>
             </ul>
-            <button class="profile-btn">Choisir</button>
+            <a href="{% url 'inscription' %}" class="profile-btn">Choisir</a>
         </div>
 
         <div class="profile-card">
@@ -198,10 +198,11 @@
                 <li>Personnaliser la plateforme</li>
                 <li>Générer des rapports avancés</li>
             </ul>
-            <button class="profile-btn">S’entraîner</button>
+            <a href="{% url 'inscription' %}" class="profile-btn">S’entraîner</a>
         </div>
     </div>
 </section>
+{% endif %}
 
 <section class="faq-section">
     <h2 class="section-title">FAQ</h2>
@@ -248,10 +249,8 @@
             <h4>Service & Info</h4>
             <ul>
                 <li><a href="#">Service client</a></li>
-                <li><a href="#">Règlement</a></li>
-                <li><a href="#">Horaires</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Promotions</a></li>
+                <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                <li><a href="{% url 'horaires' %}">Horaires</a></li>
             </ul>
         </div>
         <div class="footer-col">

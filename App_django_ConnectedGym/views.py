@@ -103,14 +103,15 @@ def visite(request):
     if request.user.is_authenticated:
         query = request.GET.get('q')
         if query:
-            filtres = Q(nom__icontains=query) | Q(type__icontains=query) | Q(etat__icontains=query) | Q(zone__icontains=query) | \
-                      Q(connectivite__icontains=query) | Q(marque__icontains=query) | Q(statut__icontains=query) | \
-                      Q(couleur__icontains=query) | Q(attribut__icontains=query)
+            filtres = Q(nom__icontains=query) | Q(type__icontains=query) | Q(etat__icontains=query) | \
+                      Q(zone__icontains=query) | Q(connectivite__icontains=query) | Q(marque__icontains=query) | \
+                      Q(statut__icontains=query) | Q(couleur__icontains=query) | Q(attribut__icontains=query) | \
+                      Q(intensite__icontains=query)
 
             try:
                 # si la recherche est un nombre (int ou float), on l'inclut aussi dans les champs numériques
                 num = float(query)
-                filtres |= Q(capacite_max=num) | Q(precision=num) | Q(volume_max=num) | Q(intensite=num)
+                filtres |= Q(vitesse_max=num) | Q(duree_max_jour=num)
             except ValueError:
                 pass
 

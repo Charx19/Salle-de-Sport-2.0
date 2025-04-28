@@ -313,6 +313,10 @@
                 <p><strong>Type :</strong> {{ obj.type }}</p>
                 {% endif %}
 
+                {% if obj.attribut %}
+                <p><strong>Attributs :</strong> {{ obj.attribut }}</p>
+                {% endif %}
+
                 {% if obj.etat %}
                 <p><strong>État :</strong> {{ obj.etat }}</p>
                 {% endif %}
@@ -333,28 +337,12 @@
                 <p><strong>Inclinaison max :</strong> {{ obj.inclinaison_max }}</p>
                 {% endif %}
 
-                {% if obj.capacite_max %}
-                <p><strong>Capacité max :</strong> {{ obj.capacite_max }}</p>
-                {% endif %}
-
-                {% if obj.precision %}
-                <p><strong>Précision :</strong> {{ obj.precision }}</p>
-                {% endif %}
-
                 {% if obj.intensite %}
                 <p><strong>Intensité :</strong> {{ obj.intensite }}</p>
                 {% endif %}
 
                 {% if obj.couleur %}
                 <p><strong>Couleur :</strong> {{ obj.couleur }}</p>
-                {% endif %}
-
-                {% if obj.volume_max %}
-                <p><strong>Volume max :</strong> {{ obj.volume_max }}</p>
-                {% endif %}
-
-                {% if obj.commande_vocale %}
-                <p><strong>Commande vocale :</strong> Oui</p>
                 {% endif %}
 
                 {% if obj.connectivite %}
@@ -368,6 +356,12 @@
                 {% if obj.derniere_maintenance %}
                 <p><strong>Dernière maintenance :</strong> {{ obj.derniere_maintenance }}</p>
                 {% endif %}
+
+                {% if obj.duree_max_jour %}
+                <p><strong>Durée maximale par jour :</strong> {{ obj.duree_max_jour }} minutes</p>
+                {% endif %}
+
+
             </div>
 
 

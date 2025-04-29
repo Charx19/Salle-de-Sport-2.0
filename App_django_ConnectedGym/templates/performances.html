@@ -1,12 +1,58 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Suivi des Performances{% endblock %}
+{% block title %}Suivi des Performances - ConnectedGym{% endblock %}
 
 {% block content %}
-<div class="container" style="padding: 4rem 1rem; text-align: center;">
-    <h2>Suivi des performances</h2>
-    <p>Consultez ici vos statistiques et progrès physiques en temps réel.</p>
-    <img src="{% static 'images/performance.jpg' %}" alt="Performances" style="width: 300px; margin-top: 20px;">
+
+<!-- Barre de retour à l'accueil -->
+<div class="back-bar">
+    <div class="logo" style="display: flex; align-items: center; padding: 1rem 0;">
+        <a href="{% url 'acceuil' %}">
+           <img src="http://127.0.0.1:8000/static/images/altere.png" alt="Retour a l'acceuil" style="height: 50px; margin-left: 10px;">
+        </a>
+    </div>
 </div>
+
+<!-- Hero avec image -->
+<section class="hero-full" style="background-image: url('{% static 'images/performance.jpg' %}'); background-size: cover;">
+    <div class="overlay">
+        <div class="container hero-content">
+            <h1>Suivez vos performances en temps réel</h1>
+            <p>Visualisez vos progrès grâce à nos équipements connectés et vos données personnalisées.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Statistiques ou graphiques (exemple à personnaliser) -->
+<section class="features-section">
+    <h2 class="section-title">Vos données sportives</h2>
+    <div class="features-container">
+        <div class="freq">
+            <h3>Fréquence cardiaque</h3>
+            <p>Surveillez votre rythme cardiaque lors de vos séances.</p>
+        </div>
+
+        <div class="feature-card">
+            <img src="{% static 'images/stats2.png' %}" alt="Calories brûlées" class="feature-img">
+            <h3>Calories brûlées</h3>
+            <p>Suivez vos dépenses énergétiques au quotidien.</p>
+        </div>
+
+        <div class="feature-card">
+            <img src="{% static 'images/stats3.png' %}" alt="Evolution performance" class="feature-img">
+            <h3>Progression</h3>
+            <p>Consultez votre évolution physique sur la durée.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- Appel à l’action -->
+<section class="cta-section" style="padding-top: 30px; padding-bottom: 60px;">
+    <div class="container">
+        <h2>Accédez à des statistiques personnalisées</h2>
+        <a href="{% url 'profil' %}" class="btn dark" style="margin-bottom: 10px;">Voir mes statistiques</a>
+    </div>
+</section>
 {% endblock %}

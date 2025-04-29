@@ -78,7 +78,7 @@
         }
 
         .footer-col ul li a:hover {
-            color: #3a00c2;
+            color: #6a00ff;
             text-decoration: underline;
         }
 
@@ -163,7 +163,7 @@
         }
 
         .menu-body a:hover {
-            color: #3a00c2;
+            color: #6a00ff;
         }
 
         .dropdown-content-mobile {
@@ -215,7 +215,7 @@
         }
 
         .btn {
-            background-color: #3a00c2;
+            background-color: #6a00ff;
             color: white;
             padding: 10px 20px;
             text-decoration: none;
@@ -294,7 +294,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background-color: #3a00c2;
+            background-color: #6a00ff;
             color: white;
             font-weight: bold;
             font-size: 18px;
@@ -305,7 +305,7 @@
             {{ profil.points }} pts
         </div>
         <div>
-            <h3 style="margin: 0; color: #3a00c2;">Mon solde de points</h3>
+            <h3 style="margin: 0; color: #6a00ff;">Mon solde de points</h3>
             <p style="margin: 0; color: #555;">Suivez votre progression</p>
         </div>
     </div>
@@ -352,39 +352,43 @@
         <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
         <p><strong>Email :</strong> {{ user.email }}</p>
     </div>
-    <div style="margin-top: 30px; background-color: #eef2ff; padding: 1rem; border-radius: 10px;">
-        <p><strong>Type de profil :</strong> <span style="color: #3a00c2;">{{ profil.niveau_experience|capfirst }}</span></p>
+    <div style="margin-top: 15px; background-color: #eef2ff; padding: 0.3rem; border-radius: 7px;">
+        <p><strong>Type de profil :</strong> <span style="color: #6a00ff;">{{ profil.niveau_experience|capfirst }}</span></p>
     </div>
 </div>
 
 <!-- Section : Liste des utilisateurs -->
 <div id="section-utilisateurs" style="display: none;">
-    <h3>Utilisateurs inscrits</h3>
-    <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-            <tr style="background-color: #f0f0f0;">
-                <th style="border: 1px solid #ccc; padding: 8px;">Nom</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">Prénom</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">Email</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">Niveau</th>
-                <th style="border: 1px solid #ccc; padding: 8px;">Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in utilisateurs %}
-            <tr>
-                <td style="border: 1px solid #ccc; padding: 8px;">{{ u.user.last_name }}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">{{ u.user.first_name }}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">{{ u.user.email }}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">{{ u.niveau_experience }}</td>
-                <td style="border: 1px solid #ccc; padding: 8px;">{{ u.points }}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="5">Aucun utilisateur trouvé.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <h3 style="margin-bottom: 20px;">Utilisateurs inscrits</h3>
+
+    <div style="max-height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Poppins', sans-serif;">
+            <thead style="position: sticky; top: 0; background-color: #6a00ff; color: white;">
+                <tr>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd;">Nom</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd;">Prénom</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd;">Email</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd;">Niveau</th>
+                    <th style="padding: 12px; border-bottom: 2px solid #ddd;">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in utilisateurs %}
+                <tr style="transition: background-color 0.2s ease;">
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ u.user.last_name }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ u.user.first_name }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ u.user.email }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ u.niveau_experience|capfirst }}</td>
+                    <td style="padding: 10px; border-bottom: 1px solid #eee;">{{ u.points }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="padding: 15px; text-align:center;">Aucun utilisateur inscrit.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
+
 
 <!-- Section : Modifier profil -->
 <div id="section-modifier" style="display: none;">
@@ -400,14 +404,14 @@
             <input type="date" name="date_naissance" value="{{ form.date_naissance.value|default_if_none:'' }}" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 300px;">
 
             <p><strong>Photo de profil :</strong></p>
-            <label for="id_photo_profil" style="display: inline-block; background-color: #3a00c2; color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
+            <label for="id_photo_profil" style="display: inline-block; background-color: #6a00ff; color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
                 Choisir une image
             </label>
             <span id="photoFileName" style="margin-left: 10px; color: #555;">Aucun fichier sélectionné</span>
             <input type="file" id="id_photo_profil" name="photo_profil" style="display: none;" onchange="updatePhotoFileName(this)">
         </div>
 
-        <a href="javascript:void(0)" id="togglePasswordFields" style="color: #3a00c2; text-decoration: underline;">Modifier le mot de passe</a>
+        <a href="javascript:void(0)" id="togglePasswordFields" style="color: #6a00ff; text-decoration: underline;">Modifier le mot de passe</a>
         <div id="passwordFields" style="display: none; margin-top: 15px;">
             <input type="password" name="new_password1" placeholder="Nouveau mot de passe" style="margin-bottom: 10px; width: 300px;">
             <br>

@@ -18,6 +18,8 @@ urlpatterns = [
     path('horaires/', views.horaires, name='horaires'),
     path('objet/<int:objet_id>/', views.detail_objet, name='detail_objet'),
     path('ajouter-objet/', views.ajouter_objet, name='ajouter_objet'),
+    path('rapport-utilisation/', views.rapport_utilisation, name='rapport_utilisation'),
+    path('historique-objet/<int:objet_id>/', views.historique_objet, name='historique_objet'),
     path('objets/', views.objets_connectes, name='objets_connectes'),
 
     path('activation/<uidb64>/<token>/', views.activation_compte, name='activation_compte'),

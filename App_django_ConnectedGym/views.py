@@ -9,12 +9,12 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
-from .models import ProfilUtilisateur, ObjetConnecte
+from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
-from datetime import datetime
+from datetime import datetime, time
 
 User = get_user_model()
 
@@ -112,9 +112,20 @@ def detail_objet(request, objet_id):
         objet.etat = request.POST.get('etat')
         objet.zone = request.POST.get('zone')
         objet.statut = request.POST.get('statut')
-        objet.heure_debut_utilisation = request.POST.get('heure_debut_utilisation')
-        objet.heure_fin_utilisation = request.POST.get('heure_fin_utilisation')
+        heure_debut = request.POST.get('heure_debut_utilisation')
+        heure_fin = request.POST.get('heure_fin_utilisation')
 
+        if heure_debut:
+            h, m = map(int, heure_debut.split(":"))
+            objet.heure_debut_utilisation = time(h, m)
+        else:
+            objet.heure_debut_utilisation = None
+
+        if heure_fin:
+            h, m = map(int, heure_fin.split(":"))
+            objet.heure_fin_utilisation = time(h, m)
+        else:
+            objet.heure_fin_utilisation = None
         objet.save()
         return redirect('objets_connectes')  # Après modification, retour vers la liste des objets
 
@@ -184,6 +195,14 @@ def visite(request):
         if filtre_zone and filtre_statut:
             objets = objets.filter(zone__iexact=filtre_zone, statut__iexact=filtre_statut)
     return render(request, 'visite.html', {'objets': objets})
+
+def rapport_utilisation(request):
+    historique = HistoriqueUtilisation.objects.all().order_by('-date')
+    return render(request, 'rapport_utilisation.html', {'historique': historique})
+
+def historique_objet(request, objet_id):
+    historique = HistoriqueUtilisation.objects.filter(objet_id=objet_id).order_by('-date')
+    return render(request, 'historique_objet.html', {'historique': historique})
 
 
 @login_required

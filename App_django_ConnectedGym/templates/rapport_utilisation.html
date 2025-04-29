@@ -6,81 +6,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Detail objet</title>
+    <title>Visite de la salle</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        body {
-            padding-top: 80px;
-            /* Ajuste selon la hauteur réelle de ta navbar */
-        }
 
-        section {
-            margin-top: 100px;
-        }
-
-        .btn-ajouter {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .btn-ajouter:hover {
-            background-color: #0056b3;
-        }
-
-        .form-objet {
-            max-width: 700px;
-            margin: 100px auto;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-objet h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #4a00e0;
-        }
-
-        .form-objet form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-objet label {
-            font-weight: bold;
-        }
-
-        .form-objet input,
-        .form-objet select,
-        .form-objet textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            width: 100%;
-        }
-
-        .form-objet button {
-            background-color: #4a00e0;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .form-objet button:hover {
-            font-weight: bold;
-            background-color: #4a00e0;
-        }
     </style>
 </head>
 
@@ -162,66 +91,43 @@
         </div>
     </header>
 
-    <!-- Contenu principal-->
-    <section class="form-objet">
-        <h2>Modifier l'objet : {{ objet.nom }}</h2>
-        <form method="post">
-            {% csrf_token %}
-            <label for="nom">Nom :</label>
-            <input type="text" name="nom" id="nom" value="{{ objet.nom }}">
 
-            <label for="etat">État :</label>
-            <input type="text" name="etat" id="etat" value="{{ objet.etat }}">
+    <h2 style="text-align:center;">Rapport global d'utilisation</h2>
 
-            <label for="zone">Zone :</label>
-            <input type="text" name="zone" id="zone" value="{{ objet.zone }}">
-
-            <select name="statut" id="statut">
-                {% if objet.statut == 'actif' %}
-                <option value="actif" selected>Actif</option>
-                {% else %}
-                <option value="actif">Actif</option>
-                {% endif %}
-
-                {% if objet.statut == 'inactif' %}
-                <option value="inactif" selected>Inactif</option>
-                {% else %}
-                <option value="inactif">Inactif</option>
-                {% endif %}
-
-                {% if objet.statut == 'maintenance' %}
-                <option value="maintenance" selected>En maintenance</option>
-                {% else %}
-                <option value="maintenance">En maintenance</option>
-                {% endif %}
-            </select>
-
-            <label for="heure_debut_utilisation">Heure de début :</label>
-            <input type="time" name="heure_debut_utilisation" id="heure_debut_utilisation"
-                value="{{ objet.heure_debut_utilisation|default_if_none:'' }}">
-
-            <label for="heure_fin_utilisation">Heure de fin :</label>
-            <input type="time" name="heure_fin_utilisation" id="heure_fin_utilisation"
-                value="{{ objet.heure_fin_utilisation|default_if_none:'' }}">
-
-            <label>Calories brûlées :</label>
-            <input type="number" step="0.01" name="calories_brulees">
-
-            <label>Durée d'utilisation (min) :</label>
-            <input type="number" name="duree_utilisation">
-
-            <label>Vitesse moyenne (km/h) :</label>
-            <input type="number" step="0.01" name="vitesse_moyenne">
-
-
-            <button type="submit">Enregistrer les modifications</button>
-        </form>
-    </section>
-
-    <div style="text-align:center; margin-top:30px;">
-        <a href="{% url 'historique_objet' objet.id %}" class="btn-ajouter">Voir l'historique de cet objet</a>
-    </div>
-
+    <table style="width:80%; margin: 20px auto; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th>Utilisateur</th>
+                <th>Objet</th>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Calories</th>
+                <th>Durée (min)</th>
+                <th>Vitesse (km/h)</th>
+                <th>Distance (km)</th>
+                <th>Intensité</th>
+                <th>Puissance (W)</th>
+                <th>Inclinaison</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in historique %}
+            <tr>
+                <td>{{ entry.utilisateur.username }}</td>
+                <td>{{ entry.objet.nom }}</td>
+                <td>{{ entry.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ entry.action }}</td>
+                <td>{{ entry.calories_brulees|default:"-" }}</td>
+                <td>{{ entry.duree_utilisation|default:"-" }}</td>
+                <td>{{ entry.vitesse_moyenne|default:"-" }}</td>
+                <td>{{ entry.distance_parcourue|default:"-" }}</td>
+                <td>{{ entry.intensite_moyenne|default:"-" }}</td>
+                <td>{{ entry.puissance_moyenne|default:"-" }}</td>
+                <td>{{ entry.inclinaison_moyenne|default:"-" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 
     <!-- Footer -->
@@ -232,7 +138,9 @@
                 <ul>
                     <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                    <li><a href="#">Horaires</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Promotions</a></li>
                 </ul>
             </div>
             <div class="footer-col">

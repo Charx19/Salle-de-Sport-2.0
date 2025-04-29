@@ -67,9 +67,18 @@ class ObjetConnecte(models.Model):
 
 class HistoriqueUtilisation(models.Model):
     utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
-    objet = models.ForeignKey(ObjetConnecte, on_delete=models.CASCADE)
+    objet = models.ForeignKey('ObjetConnecte', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=100)
+
+    calories_brulees = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    duree_utilisation = models.IntegerField(null=True, blank=True)
+    vitesse_moyenne = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    distance_parcourue = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    intensite_moyenne = models.CharField(max_length=100, null=True, blank=True)
+    puissance_moyenne = models.IntegerField(null=True, blank=True)
+    inclinaison_moyenne = models.CharField(max_length=100, null=True, blank=True)
+
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.objet.nom} - {self.action}"

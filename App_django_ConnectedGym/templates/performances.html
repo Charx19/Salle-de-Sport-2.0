@@ -1,12 +1,154 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Suivi des Performances{% endblock %}
+{% block title %}Personnalisation - ConnectedGym{% endblock %}
 
 {% block content %}
-<div class="container" style="padding: 4rem 1rem; text-align: center;">
-    <h2>Suivi des performances</h2>
-    <p>Consultez ici vos statistiques et progrès physiques en temps réel.</p>
-    <img src="{% static 'images/performance.jpg' %}" alt="Performances" style="width: 300px; margin-top: 20px;">
+<div class="back-bar">
+    <div class="logo" style="display: flex; align-items: center; padding: 1rem 0;">
+        <a href="{% url 'acceuil' %}">
+           <img src="{% static 'images/altere.png' %}" alt="Retour à l'accueil" style="height: 50px; margin-left: 10px;">
+        </a>
+    </div>
 </div>
+
+<section class="hero-full" style="background-image: url('{% static 'images/page.jpg' %}'); background-size: cover;">
+    <div class="overlay">
+        <div class="container hero-content">
+            <h1>Personnalisez votre expérience</h1>
+            <p>Choisissez votre salle et vos équipements connectés préférés.</p>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <div class="header-objets">
+        <h1>Choisir les objets connectés pour votre séance</h1>
+        <p>Sélectionnez un objet!</p>
+    </div>
+
+    <div class="objets-grid">
+        {% for obj in objets %}
+        <div class="objet-card">
+            <div class="objet-image">
+                {% if obj.image %}
+                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
+                {% else %}
+                <img src="{% static 'images/default_objet.png' %}" alt="Image par défaut">
+                {% endif %}
+            </div>
+
+            <div class="objet-content">
+                <h3>{{ obj.nom }}</h3>
+
+                <div class="objet-buttons">
+                    <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
+
+                    <a href="{% url 'detail_objet' obj.id %}" class="btn-action">Modifier</a>
+
+                    <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
+    </div>
+
+
+        <button type="submit" class="btn dark" style="margin-top: 20px;">Valider ma configuration</button>
+    </form>
+</section>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Service & Info</h4>
+                <ul>
+                    <li><a href="#">Service client</a></li>
+                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                    <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Nos clubs</h4>
+                <ul>
+                    <li><a href="#">Paris</a></li>
+                    <li><a href="#">Cergy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 🍔 Menu Burger
+            const burger = document.getElementById("hamburgerBtn");
+            const menu = document.getElementById("mobileMenu");
+            const close = document.getElementById("closeMenu");
+            const overlay = document.getElementById("menuOverlay");
+
+            function closeMenu() {
+                menu.classList.remove("active");
+            }
+
+            burger?.addEventListener("click", () => {
+                menu.classList.add("active");
+            });
+
+            close?.addEventListener("click", closeMenu);
+            overlay?.addEventListener("click", closeMenu);
+
+            // ✅ Menu déroulant mobile (Nos services)
+            const trigger = document.getElementById("servicesToggle");
+            const dropdown = document.getElementById("dropdownServices");
+
+            trigger?.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (dropdown.style.display === "flex") {
+                    dropdown.style.display = "none";
+                } else {
+                    dropdown.style.display = "flex";
+                }
+            });
+
+            // Fermer si on clique ailleurs
+            document.addEventListener("click", function (e) {
+                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+            // Si un paramètre de recherche est présent dans l’URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                // Scroller vers la section avec id="objets"
+                const objetsSection = document.getElementById("objets");
+                if (objetsSection) {
+                    objetsSection.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+        });
+    </script>
+</body>
+
 {% endblock %}

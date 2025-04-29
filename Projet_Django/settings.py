@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'App_django_ConnectedGym',
-    'rest_framework',
+    #'rest_framework',
     
 ]
 

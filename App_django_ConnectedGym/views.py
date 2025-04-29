@@ -15,6 +15,8 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from datetime import datetime, time
+from django.contrib.auth import update_session_auth_hash
+
 
 User = get_user_model()
 
@@ -213,11 +215,24 @@ def info_objet(request, objet_id):
 def profil(request):
     profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
     edit_mode = request.GET.get('edit') == '1'
+    utilisateurs = ProfilUtilisateur.objects.select_related('user').all()
+
 
     if request.method == 'POST':
         form = ProfilUtilisateurForm(request.POST, request.FILES, instance=profil, user=request.user)
         if form.is_valid():
             form.save()
+
+            # ✅ Gestion du changement de mot de passe
+            new_password1 = request.POST.get('new_password1')
+            new_password2 = request.POST.get('new_password2')
+
+            if new_password1 and new_password1 == new_password2:
+                request.user.set_password(new_password1)
+                request.user.save()
+                update_session_auth_hash(request, request.user)  # Important pour ne pas déconnecter l'utilisateur
+                messages.success(request, "Mot de passe mis à jour avec succès.")
+
             messages.success(request, "Profil mis à jour avec succès.")
             return redirect('profil')
     else:
@@ -227,6 +242,7 @@ def profil(request):
         'form': form,
         'profil': profil,
         'edit': edit_mode,
+        'utilisateurs': utilisateurs, 
     })
 
 
@@ -240,26 +256,28 @@ def dashboard(request):
 def ajouter_points(request, points, cle_session):
     if request.user.is_authenticated:
         profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
-        if not request.session.get(cle_session):  # Empêche d’ajouter deux fois les mêmes points
+        if not request.session.get(cle_session):  # Évite d'ajouter les mêmes points plusieurs fois
             profil.points += points
             profil.save()
             request.session[cle_session] = True
             verifier_niveau(profil)
 
 def verifier_niveau(profil):
-    """ Met automatiquement à jour le niveau selon les points """
+    """ Met automatiquement à jour le niveau selon les nouveaux points """
     p = profil.points
     if p >= 7 and profil.niveau_experience != 'expert':
         profil.niveau_experience = 'expert'
-        profil.user.is_staff = True  # ✅ devient admin Django
+        profil.user.is_staff = True  # ✅ Devient admin Django
+        profil.user.save()
     elif p >= 5 and profil.niveau_experience != 'avancé':
         profil.niveau_experience = 'avancé'
     elif p >= 3 and profil.niveau_experience != 'intermédiaire':
         profil.niveau_experience = 'intermédiaire'
-    elif p < 3:
+    else:
         profil.niveau_experience = 'débutant'
     
     profil.save()
+
 
 # ===================== FONCTIONNALITÉS ====================
 

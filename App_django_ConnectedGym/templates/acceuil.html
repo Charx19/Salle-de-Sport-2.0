@@ -129,18 +129,21 @@
     <h2 class="section-title">Nos services</h2>
     <div class="features-container">
 
-        <a href="{% url 'performances' %}" class="feature-card" style="text-decoration: none;">
-            <img src="{% static 'images/performance.jpg' %}" alt="Suivi des performances" class="feature-img">
-            <h3>Suivi des performances</h3>
-            <p>Visualisez vos progrès grâce à des graphiques interactifs.</p>
-        </a>
-
+        <!-- 1. Objets connectés -->
         <a href="{% url 'objets_connectes' %}" class="feature-card" style="text-decoration: none;">
             <img src="{% static 'images/objets.jpg' %}" alt="Objets connectés" class="feature-img">
             <h3>Objets connectés</h3>
             <p>Contrôlez lumière, son, climatisation et équipements depuis l'interface.</p>
         </a>
 
+        <!-- 2. Suivi des performances -->
+        <a href="{% url 'performances' %}" class="feature-card" style="text-decoration: none;">
+            <img src="{% static 'images/performance.jpg' %}" alt="Suivi des performances" class="feature-img">
+            <h3>Suivi des performances</h3>
+            <p>Visualisez vos progrès grâce à des graphiques interactifs.</p>
+        </a>
+
+        <!-- 3. Personnalisation -->
         <a href="{% url 'personnalisation' %}" class="feature-card" style="text-decoration: none;">
             <img src="{% static 'images/page.jpg' %}" alt="Personnalisation" class="feature-img">
             <h3>Personnalisation</h3>
@@ -149,6 +152,7 @@
 
     </div>
 </section>
+
 
 {% if not user.is_authenticated %}
 <section class="profile-section">

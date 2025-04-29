@@ -204,6 +204,10 @@ def historique_objet(request, objet_id):
     historique = HistoriqueUtilisation.objects.filter(objet_id=objet_id).order_by('-date')
     return render(request, 'historique_objet.html', {'historique': historique})
 
+def info_objet(request, objet_id):
+    objet = get_object_or_404(ObjetConnecte, id=objet_id)
+    return render(request, 'info_objet.html', {'objet': objet})
+
 
 @login_required
 def profil(request):

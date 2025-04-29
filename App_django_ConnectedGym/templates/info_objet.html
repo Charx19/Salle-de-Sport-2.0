@@ -6,22 +6,47 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Historique</title>
+    <title>Visite de la salle</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        header {
-            position: fixed;
-            top: 0;
-            height: 70px;
-            background: white;
-            width: 100%;
-            z-index: 999;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        .objet-details-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 40px;
+            gap: 40px;
         }
 
-        body {
-            padding-top: 90px;
-            /* décale tout le contenu sous la navbar */
+        .objet-image-container img {
+            width: 350px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .objet-info-container {
+            max-width: 500px;
+        }
+
+        .objet-info-container h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #6a00ff;
+        }
+
+        .objet-info-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .objet-info-container li {
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .objet-details-container {
+            margin-top: 100px;
+            /* ou 120px si ta barre est plus haute */
         }
 
         .btn-ajouter {
@@ -116,48 +141,37 @@
         </div>
     </header>
 
+
     <!-- Contenu principal -->
-    <h2 style="text-align:center;">Historique détaillé de l'objet</h2>
+    <div class="objet-details-container">
+        <div class="objet-image-container">
+            {% if objet.image %}
+            <img src="{{ objet.image }}" alt="{{ objet.nom }}">
+            {% else %}
+            <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
+            {% endif %}
+        </div>
 
-    <table style="width:80%; margin: 20px auto; border-collapse: collapse;">
-        <thead>
-            <tr style="background-color:#007bff; color:white;">
-                <th>Utilisateur</th>
-                <th>Date</th>
-                <th>Action</th>
-                <th>Calories</th>
-                <th>Durée (min)</th>
-                <th>Vitesse (km/h)</th>
-                <th>Distance (km)</th>
-                <th>Intensité</th>
-                <th>Puissance (W)</th>
-                <th>Inclinaison</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for entry in historique %}
-            <tr style="border-bottom: 1px solid #ccc;">
-                <td>{{ entry.utilisateur.username }}</td>
-                <td>{{ entry.date|date:"d/m/Y H:i" }}</td>
-                <td>{{ entry.action }}</td>
-                <td>{{ entry.calories_brulees|default:"-" }}</td>
-                <td>{{ entry.duree_utilisation|default:"-" }}</td>
-                <td>{{ entry.vitesse_moyenne|default:"-" }}</td>
-                <td>{{ entry.distance_parcourue|default:"-" }}</td>
-                <td>{{ entry.intensite_moyenne|default:"-" }}</td>
-                <td>{{ entry.puissance_moyenne|default:"-" }}</td>
-                <td>{{ entry.inclinaison_moyenne|default:"-" }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="10" style="text-align:center;">Aucune donnée enregistrée pour cet objet.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
+        <div class="objet-info-container">
+            <h2>{{ objet.nom }}</h2>
+            <ul>
+                <li><strong>Type :</strong> {{ objet.type }}</li>
+                <li><strong>Zone :</strong> {{ objet.zone }}</li>
+                <li><strong>État :</strong> {{ objet.etat }}</li>
+                <li><strong>Statut :</strong> {{ objet.statut }}</li>
+                <li><strong>Marque :</strong> {{ objet.marque }}</li>
+                <li><strong>Vitesse max :</strong> {{ objet.vitesse_max }}</li>
+                <li><strong>Intensité :</strong> {{ objet.intensite }}</li>
+                <li><strong>Puissance :</strong> {{ objet.puissance }}</li>
+                <li><strong>Inclinaison max :</strong> {{ objet.inclinaison_max }}</li>
+                <li><strong>Connectivité :</strong> {{ objet.connectivite }}</li>
+                <li><strong>Année d'achat :</strong> {{ objet.annee_achat }}</li>
+                <li><strong>Année de fin :</strong> {{ objet.annee_fin }}</li>
+            </ul>
+        </div>
+    </div>
     <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> Voir tous les objets connectés</a>
+        <a href="{% url 'detail_objet' objet.id %}" class="btn-ajouter"> Modifier l'objet </a>
     </div>
 
 

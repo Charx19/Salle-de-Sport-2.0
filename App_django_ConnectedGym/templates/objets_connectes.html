@@ -25,15 +25,6 @@
             color: #555;
         }
 
-        .objets-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
-        }
-
         .objet-item {
             text-align: center;
             transition: transform 0.3s;
@@ -75,6 +66,62 @@
 
         .btn-ajouter:hover {
             background-color: #4a00e0;
+        }
+
+        .objets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 20px;
+            justify-items: center;
+        }
+
+        .objet-card {
+            background: white;
+            width: 250px;
+            height: 380px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .objet-image img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .objet-content h3 {
+            margin: 15px 0 10px;
+            font-size: 1.3em;
+            color: #333;
+        }
+
+        .objet-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .btn-action {
+            background-color: #6a00ff;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .btn-action:hover {
+            background-color: #4a00cc;
         }
     </style>
 </head>
@@ -163,22 +210,31 @@
         <p>Sélectionnez un objet pour consulter, modifier ses informations ou gérer ses paramètres.</p>
     </div>
 
-    <section class="objets-grid">
+    <div class="objets-grid">
         {% for obj in objets %}
-        <div class="objet-item">
-            <a href="{% url 'detail_objet' obj.id %}">
+        <div class="objet-card">
+            <div class="objet-image">
                 {% if obj.image %}
                 <img src="{{ obj.image }}" alt="{{ obj.nom }}">
                 {% else %}
-                <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
+                <img src="{% static 'images/default_objet.png' %}" alt="Image par défaut">
                 {% endif %}
+            </div>
+
+            <div class="objet-content">
                 <h3>{{ obj.nom }}</h3>
-            </a>
+
+                <div class="objet-buttons">
+                    <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
+
+                    <a href="{% url 'detail_objet' obj.id %}" class="btn-action">Modifier</a>
+
+                    <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
+                </div>
+            </div>
         </div>
-        {% empty %}
-        <p>Aucun objet connecté trouvé.</p>
         {% endfor %}
-    </section>
+    </div>
 
     <div style="text-align: center; margin-top: 40px;">
         <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>

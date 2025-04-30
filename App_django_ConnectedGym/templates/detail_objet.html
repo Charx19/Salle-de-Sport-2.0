@@ -20,8 +20,9 @@
 
         .btn-ajouter {
             display: inline-block;
+            margin-bottom: 30px;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #4a00e0;
             color: white;
             text-decoration: none;
             font-weight: bold;
@@ -220,6 +221,10 @@
 
     <div style="text-align:center; margin-top:30px;">
         <a href="{% url 'historique_objet' objet.id %}" class="btn-ajouter">Voir l'historique de cet objet</a>
+    </div>
+
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> Voir tous les objets connectés</a>
     </div>
 
 

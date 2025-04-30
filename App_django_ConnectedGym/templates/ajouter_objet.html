@@ -55,6 +55,18 @@
         .form-ajouter-objet button:hover {
             background-color: #0056b3;
         }
+
+        .btn-ajouter {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background-color: #4a00e0;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
     </style>
 </head>
 
@@ -140,7 +152,8 @@
     <!-- Contenu principal -->
     <section class="form-ajouter-objet">
         <h2>Ajouter un nouvel objet connecté</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
+
             {% csrf_token %}
 
             <label for="nom">Nom :</label>
@@ -198,7 +211,9 @@
             <button type="submit">Ajouter l'objet</button>
         </form>
     </section>
-
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> Voir tous les objets connectés</a>
+    </div>
 
 
     <!-- Footer -->

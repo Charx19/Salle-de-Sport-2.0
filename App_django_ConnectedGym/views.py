@@ -144,7 +144,8 @@ def ajouter_objet(request):
         marque = request.POST.get('marque')
         couleur = request.POST.get('couleur')
         annee_fin = request.POST.get('annee_fin')
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
+
 
         # Définir l'année d'achat automatiquement
         annee_achat = datetime.now().year

@@ -166,8 +166,6 @@
             color: #333;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 
 <body>
@@ -311,8 +309,8 @@
             <div class="objet-text">
                 <h3>{{ obj.nom }}</h3>
 
-                {% if obj.attribut %}
-                <p><strong>Attributs :</strong> {{ obj.attribut }}</p>
+                {% if obj.type %}
+                <p><strong>Type :</strong> {{ obj.type }}</p>
                 {% endif %}
 
                 {% if obj.etat %}
@@ -328,11 +326,19 @@
                 {% endif %}
 
                 {% if obj.vitesse_max %}
-                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }} km/h</p>
+                <p><strong>Vitesse max :</strong> {{ obj.vitesse_max }}</p>
                 {% endif %}
 
                 {% if obj.inclinaison_max %}
                 <p><strong>Inclinaison max :</strong> {{ obj.inclinaison_max }}</p>
+                {% endif %}
+
+                {% if obj.capacite_max %}
+                <p><strong>Capacité max :</strong> {{ obj.capacite_max }}</p>
+                {% endif %}
+
+                {% if obj.precision %}
+                <p><strong>Précision :</strong> {{ obj.precision }}</p>
                 {% endif %}
 
                 {% if obj.intensite %}
@@ -343,6 +349,14 @@
                 <p><strong>Couleur :</strong> {{ obj.couleur }}</p>
                 {% endif %}
 
+                {% if obj.volume_max %}
+                <p><strong>Volume max :</strong> {{ obj.volume_max }}</p>
+                {% endif %}
+
+                {% if obj.commande_vocale %}
+                <p><strong>Commande vocale :</strong> Oui</p>
+                {% endif %}
+
                 {% if obj.connectivite %}
                 <p><strong>Connectivité :</strong> {{ obj.connectivite }}</p>
                 {% endif %}
@@ -350,17 +364,10 @@
                 {% if obj.statut %}
                 <p><strong>Statut :</strong> {{ obj.statut }}</p>
                 {% endif %}
-                {% if obj.duree_max_jour %}
-                <p><strong>Durée maximale par jour :</strong> {{ obj.duree_max_jour }} minutes</p>
-                {% endif %}
 
                 {% if obj.derniere_maintenance %}
                 <p><strong>Dernière maintenance :</strong> {{ obj.derniere_maintenance }}</p>
                 {% endif %}
-
-
-
-
             </div>
 
 
@@ -392,8 +399,10 @@
                 <h4>Service & Info</h4>
                 <ul>
                     <li><a href="#">Service client</a></li>
-                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                    <li><a href="#">Règlement</a></li>
+                    <li><a href="#">Horaires</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Promotions</a></li>
                 </ul>
             </div>
             <div class="footer-col">

@@ -159,8 +159,14 @@
             <label for="nom">Nom :</label>
             <input type="text" name="nom" id="nom" required>
 
-            <label for"type">Type :</label>
-            <input type="text" name="type" id="type" required>
+            <label for="type">Type :</label>
+            <select name="type" id="type" required>
+                <option value="">-- Choisir un type --</option>
+                {% for t in types_autorises %}
+                <option value="{{ t }}">{{ t }}</option>
+                {% endfor %}
+            </select>
+
 
             <label for="attribut">Attribut :</label>
             <input type="text" name="attribut" id="attribut" required>
@@ -212,7 +218,7 @@
         </form>
     </section>
     <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> Voir tous les objets connectés</a>
+        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> ↩ Retour aux objets</a>
     </div>
 
 

@@ -8,6 +8,8 @@
     <meta charset="UTF-8">
     <title>Objets connectés</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     <style>
         .header-objets {
             text-align: center;
@@ -222,12 +224,39 @@
             </div>
 
             <div class="objet-content">
-                <h3>{{ obj.nom }}</h3>
+                <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    {{ obj.nom }}
+
+                </h3>
+                {% if "actif" in obj.statut %}
+                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                    <span style="color: limegreen;"> Actif</span>
+                </p>
+                {% elif "maintenance" in obj.statut %}
+                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                    <span style="color: orange;"> Maintenance</span>
+                </p>
+                {% elif "inactif" in obj.statut %}
+                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                    <span style="color: crimson;"> Inactif</span>
+                </p>
+                {% else %}
+                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                    <span style="color: gray;"> Inconnu</span>
+                </p>
+                {% endif %}
+
+
+
+
+
+
+
 
                 <div class="objet-buttons">
                     <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
 
-                    <a href="{% url 'detail_objet' obj.id %}" class="btn-action">Modifier</a>
+                    <a href="{% url 'modif_objet' obj.id %}" class="btn-action">Modifier</a>
 
                     <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
                 </div>

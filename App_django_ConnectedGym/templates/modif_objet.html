@@ -1,0 +1,653 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier objet</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            padding-top: 100px;
+            background-color: #f9f9f9;
+        }
+
+        .form-objet {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-objet h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4a00e0;
+            font-size: 24px;
+        }
+
+        .form-objet form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-objet label {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .form-objet input,
+        .form-objet select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            width: 100%;
+            background: white;
+        }
+
+        .form-objet button {
+            background-color: #4a00e0;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-objet button:hover {
+            background-color: #0056b3;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .actions a,
+        .actions form button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .actions a.btn-ajouter {
+            background-color: #4a00e0;
+            color: white;
+        }
+
+        .actions a.btn-ajouter:hover {
+            background-color: #0056b3;
+        }
+
+        .actions form button.btn-supprimer {
+            background-color: crimson;
+            color: white;
+            border: none;
+        }
+
+        .actions form button.btn-supprimer:hover {
+            background-color: darkred;
+        }
+
+        .note {
+            display: block;
+            margin-top: 2px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #555;
+            font-style: italic;
+        }
+
+        .form-objet input,
+        .form-objet select,
+        .form-objet textarea {
+            margin-bottom: 25px;
+
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #4a00e0;
+            cursor: pointer;
+            margin-top: 30px;
+        }
+
+        .checkbox-container label {
+            font-size: 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Barre du haut -->
+    <header class="main-nav">
+        <div class="container nav-container">
+            <div class="logo">ConnectedGym</div>
+
+            <!-- Bouton burger -->
+            <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+
+            </button>
+
+            <!-- Overlay + Menu mobile -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="menu-overlay" id="menuOverlay"></div>
+                <div class="menu-panel">
+                    <div class="menu-header">
+                        <span class="logo">ConnectedGym</span>
+                        <button class="close-menu" id="closeMenu">✕</button>
+                    </div>
+
+                    <nav class="menu-body">
+                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                        <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                        <div class="dropdown-mobile">
+                            <a href="#" id="servicesToggle">Nos services</a>
+                            <div class="dropdown-content-mobile" id="dropdownServices">
+                                <a href="#">Nos équipements</a>
+                                <a href="#">Suivi des performances</a>
+                                <a href="#">Personnalisation</a>
+                            </div>
+                        </div>
+
+
+                        <a href="#">Contact</a>
+
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'profil' %}">Mon espace</a>
+                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                        {% else %}
+                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                        {% endif %}
+                    </nav>
+
+
+                </div>
+            </div>
+            <!-- Menu desktop -->
+            <nav class="nav-links desktop-only">
+                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                <div class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                    <div class="dropdown-content" id="dropdown-services">
+                        <a href="#">Nos équipements</a>
+                        <a href="#">Suivi des performances</a>
+                        <a href="#">Personnalisation</a>
+                    </div>
+                </div>
+
+
+                <a href="#">Contact</a>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'profil' %}">Mon espace</a>
+                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- Contenu principal-->
+    <section class="form-objet">
+        <h2>Modifier l’objet connecté</h2>
+
+        <form method="post" action="{% url 'modif_objet' objet.id %}">
+            {% csrf_token %}
+
+            <!-- INFOS DE BASE -->
+            <h3>Informations générales</h3>
+            <label for="nom">Nom :</label>
+            <input type="text" name="nom" id="nom" value="{{ objet.nom }}">
+
+            <label for="type">Type :</label>
+            <input type="text" id="type" value="{{ objet.get_type_display }}" disabled>
+            <input type="hidden" name="type" value="{{ objet.type }}">
+
+
+            <label for="zone">Zone :</label>
+            {% with z=objet.zone|default:"" %}
+            <select name="zone" id="zone" required>
+                <option value="cardio" {% if "cardio" in z %} selected{% endif %}>Cardio</option>
+                <option value="ambiance" {% if "ambiance" in z %} selected{% endif %}>Ambiance</option>
+                <option value="détente" {% if "détente" in z %} selected{% endif %}>Détente</option>
+            </select>
+            {% endwith %}
+
+
+
+            <label for="etat">État :</label>
+            {% with s=objet.etat|default:"" %}
+            <select name="etat" id="etat">
+                <option value="neuf" {% if "neuf" in s %} selected{% endif %}>Neuf</option>
+                <option value="tres_bon" {% if "tres_bon" in s %} selected{% endif %}>Très bon état</option>
+                <option value="bon" {% if "bon" in s %} selected{% endif %}>Bon état</option>
+                <option value="moyen" {% if "moyen" in s %} selected{% endif %}>État moyen</option>
+                <option value="mauvais" {% if "mauvais" in s %} selected{% endif %}>Mauvais état</option>
+            </select>
+            {% endwith %}
+
+
+
+            <label for="marque">Marque :</label>
+            <input type="text" name="marque" id="marque" value="{{ objet.marque }}">
+
+            <label>Année d’achat :</label>
+            <input type="text" value="{{ objet.annee_achat }}" disabled>
+
+            <label for="annee_fin">Année de fin :</label>
+            <input type="number" name="annee_fin" id="annee_fin" value="{{ objet.annee_fin }}" min="2024" max="2100"
+                step="1">
+
+            <label for="derniere_maintenance">Dernière maintenance :</label>
+            <input type="text" id="derniere_maintenance" value="{{ objet.derniere_maintenance }}" disabled>
+
+
+
+            <!-- STATUT -->
+            <h3>Statut de fonctionnement</h3>
+            <label for="statut">Statut :</label>
+            <select name="statut" id="statut">
+                {% with s=objet.statut|default:"" %}
+                <option value="actif" {% if "actif" in s %} selected{% endif %}>Actif</option>
+                <option value="inactif" {% if "inactif" in s %} selected{% endif %}>Inactif</option>
+                <option value="maintenance" {% if "maintenance" in s %} selected{% endif %}>Maintenance</option>
+                {% endwith %}
+            </select>
+
+            <!-- CHAMPS SPÉCIFIQUES AU TYPE -->
+            <h3>Spécifications</h3>
+            <div id="champs-specifiques">
+
+                <!-- Pour Vélo -->
+                <div class="type-velo champs-type" style="display: none;">
+                    <label for="puissance_v">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 250W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="puissance" id="puissance_v" value="{{ objet.puissance}}">
+
+                    <label for="vitesse_max_v">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 45 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="vitesse_max" id="vitesse_max_v"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_v">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique.
+                    </small>
+
+                    <input type="number" name="intensite" id="intensite_v" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="type_transmission">Type de transmission :</label>
+                    <small class="note"> Chaîne (classique), Courroie (silencieuse), Magnétique (haut de
+                        gamme)</small>
+                    {% with s=objet.type_transmission|default:"" %}
+                    <select name="type_transmission" id="type_transmission">
+                        <option value="Chaîne" {% if "Chaîne" in s %} selected{% endif %}>Chaîne</option>
+                        <option value="Courroie" {% if "Courroie" in s %} selected{% endif %}>Courroie</option>
+                        <option value="Magnétique" {% if "Magnétique" in s %} selected{% endif %}>Magnétique</option>
+                    </select>
+                    {% endwith %}
+
+
+                    <label for="type_resistance">Type de résistance :</label>
+                    <small class="note"> Mécanique (molette), Magnétique (fluide), Électromagnétique (précis)</small>
+                    {% with s=objet.type_resistance|default:"" %}
+                    <select name="type_resistance" id="type_resistance">
+                        <option value="Mécanique" {% if "Mécanique" in s %} selected{% endif %}>Mécanique</option>
+                        <option value="Magnétique" {% if "Magnétique" in s %} selected{% endif %}>Magnétique</option>
+                        <option value="Électromagnétique" {% if "Électromagnétique" in s %} selected{% endif %}>
+                            Électromagnétique</option>
+                    </select>
+                    {% endwith %}
+
+                </div>
+                <!-- Pour Tapis de course -->
+                <div class="type-tapis champs-type" style="display: none;">
+                    <label for="inclinaison_max_t">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 40% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="inclinaison_max" id="inclinaison_max_t"
+                        value="{{ objet.inclinaison_max }}">
+
+                    <label for="vitesse_max_t">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 20 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="vitesse_max" id="vitesse_max_t"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_t">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" name="intensite" id="intensite_t" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="amorti">Amorti :</label>
+                    <small class="note"> Basique (usage occasionnel), Renforcé (confort articulations), Professionnel
+                        (absorption maximale)</small>
+                    {% with a=objet.amorti|default:"" %}
+                    <select name="amorti" id="amorti">
+                        <option value="basique" {% if "basique" in a %}selected{% endif %}>Basique</option>
+                        <option value="renforcé" {% if "renforcé" in a %}selected{% endif %}>Renforcé</option>
+                        <option value="professionnel" {% if "professionnel" in a %}selected{% endif %}>Professionnel
+                        </option>
+                    </select>
+                    {% endwith %}
+
+                    <div class="checkbox-container">
+
+                        <label for="vf">Activer la ventilation intégrée</label>
+                        <input type="checkbox" name="vf" id="vf" {% if objet.ventilation_frontale %}checked{% endif %}>
+                    </div>
+                    <small class="note"> Active un flux d’air frontal pendant l’utilisation.</small>
+
+
+                </div>
+
+                <!-- Pour Stepper -->
+                <div class="type-stepper champs-type" style="display: none;">
+                    <label for="inclinaison_max_s">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 15% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="inclinaison_max" id="inclinaison_max_s"
+                        value="{{ objet.inclinaison_max }}">
+
+                    <label for="puissance_s">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 200W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="puissance" id="puissance_s" value="{{ objet.puissance }}">
+                    <label for="intensite_s">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" name="intensite" id="intensite_s" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="hauteur_marche">Hauteur des marches (cm):</label>
+                    <small class="note"> Recommandé : 15 cm pour usage sportif classique. (min 10 / max 25)
+                    </small>
+
+                    <input type="number" name="hauteur_marche" id="hauteur_marche" value="{{ objet.hauteur_marche }}"
+                        min="10" max="25" required>
+
+                    <div class="checkbox-container">
+
+                        <label for="vf_">Activer la ventilation intégrée</label>
+                        <input type="checkbox" name="vf" id="vf_" {% if objet.ventilation_frontale %}checked{% endif%}>
+                    </div>
+                    <small class="note"> Active un flux d’air frontal pendant l’utilisation.</small>
+
+
+                </div>
+
+                <!--Pour rameur-->
+                <div class="type-rameur champs-type" style="display: none;">
+                    <label for="puissance_r">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 3000W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="puissance" id="puissance_r" value="{{ objet.puissance }}">
+
+                    <label for="intensite_r">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique.
+                    </small>
+
+                    <input type="number" name="intensite" id="intensite_r" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="type_resistance">Type de résistance :</label>
+                    <small class="note"> Air (dynamique), Eau (réaliste), Magnétique (silencieux), Hybride
+                        (combiné)</small>
+                    {% with s=objet.type_resistance|default:"" %}
+                    <select name="type_resistance_r" id="type_resistance_r">
+                        <option value="air" {% if "air" in r %}selected{% endif %}>Air</option>
+                        <option value="eau" {% if "eau" in r %}selected{% endif %}>Eau</option>
+                        <option value="magnétique" {% if "magnétique" in r %}selected{% endif %}>Magnétique</option>
+                        <option value="hybride" {% if "hybride" in r %}selected{% endif %}>Hybride</option>
+                    </select>
+                    {% endwith %}
+
+                    <label for="longueur_rail">Longueur des rails (cm) :</label>
+                    <small class="note"> Recommandé : 110 cm. (Min : 100 / Max : 160)</small>
+                    <input type="number" name="longueur_rail" id="longueur_rail" value="{{ objet.longueur_rail }}"
+                        min="100" max="160" step="1">
+
+
+                </div>
+
+                <!-- Pour Elliptique -->
+                <div class="type-elliptique champs-type" style="display: none;">
+                    <label for="puissance_e">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 3000W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="puissance" id="puissance_e" value="{{ objet.puissance }}">
+
+                    <label for="inclinaison_max_e">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 40% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="inclinaison_max" id="inclinaison_max_e"
+                        value="{{objet.inclinaison_max }}">
+
+                    <label for="vitesse_max_e">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 20 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" name="vitesse_max" id="vitesse_max_e"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_e">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" name="intensite" id="intensite_e" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+                    <label for="longueur_pas">Longueur des pas (cm) :</label>
+                    <small class="note"> Recommandé : 50 cm pour usage confortable. (min 30 / max 70)</small>
+                    <input type="number" name="longueur_pas" id="longueur_pas" value="{{ objet.longueur_pas }}" min="30"
+                        max="70" step="1">
+
+                    <label for="type_mouvement">Type de mouvement :</label>
+                    <small class="note"> Linéaire (mouvement droit), Elliptique (plus naturel), Rotatif (style
+                        stepper)</small>
+                    {% with m=objet.type_mouvement|default:"" %}
+                    <select name="type_mouvement" id="type_mouvement">
+                        <option value="linéaire" {% if "linéaire" in m %}selected{% endif %}>Linéaire</option>
+                        <option value="elliptique" {% if "elliptique" in m %}selected{% endif %}>Elliptique</option>
+                        <option value="rotatif" {% if "rotatif" in m %}selected{% endif %}>Rotatif</option>
+                    </select>
+                    {% endwith %}
+
+
+                </div>
+
+
+
+            </div>
+
+            <button type="submit"> Enregistrer les modifications</button>
+        </form>
+
+
+
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <a href="{% url 'historique_objet' objet.id %}" class="btn-ajouter"> Voir l’historique</a>
+
+            <form method="post" action="{% url 'demander_suppression' objet.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-supprimer"> Demander la suppression</button>
+            </form>
+
+            <a href="{% url 'objets_connectes' %}" class="btn-ajouter">↩ Retour aux objets</a>
+        </div>
+
+    </section>
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Service & Info</h4>
+                <ul>
+                    <li><a href="#">Service client</a></li>
+                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                    <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Nos clubs</h4>
+                <ul>
+                    <li><a href="#">Paris</a></li>
+                    <li><a href="#">Cergy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 🍔 Menu Burger
+            const burger = document.getElementById("hamburgerBtn");
+            const menu = document.getElementById("mobileMenu");
+            const close = document.getElementById("closeMenu");
+            const overlay = document.getElementById("menuOverlay");
+
+            function closeMenu() {
+                menu.classList.remove("active");
+            }
+
+            burger?.addEventListener("click", () => {
+                menu.classList.add("active");
+            });
+
+            close?.addEventListener("click", closeMenu);
+            overlay?.addEventListener("click", closeMenu);
+
+            // ✅ Menu déroulant mobile (Nos services)
+            const trigger = document.getElementById("servicesToggle");
+            const dropdown = document.getElementById("dropdownServices");
+
+            trigger?.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (dropdown.style.display === "flex") {
+                    dropdown.style.display = "none";
+                } else {
+                    dropdown.style.display = "flex";
+                }
+            });
+
+            // Fermer si on clique ailleurs
+            document.addEventListener("click", function (e) {
+                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+            // Si un paramètre de recherche est présent dans l’URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                // Scroller vers la section avec id="objets"
+                const objetsSection = document.getElementById("objets");
+                if (objetsSection) {
+                    objetsSection.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+
+            // pour les dropdowns des choix
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("zone").value = "{{ objet.zone }}";
+                document.getElementById("etat").value = "{{ objet.etat }}";
+                document.getElementById("statut").value = "{{ objet.statut }}";
+            });
+            const type = "{{ objet.type }}";  // Pas besoin de |lower
+
+            const allChamps = document.querySelectorAll(".champs-type");
+            allChamps.forEach(div => div.style.display = "none");
+
+            if (type === "Velo") {
+                document.querySelector(".type-velo").style.display = "block";
+            } else if (type === "Tapis") {
+                document.querySelector(".type-tapis").style.display = "block";
+            } else if (type === "Stepper") {
+                document.querySelector(".type-stepper").style.display = "block";
+            } else if (type === "Rameur") {
+                document.querySelector(".type-rameur").style.display = "block";
+            } else if (type === "Elliptique") {
+                document.querySelector(".type-elliptique").style.display = "block";
+            }
+        });
+    </script>
+</body>
+{% endblock %}
+
+
+</html>

@@ -10,12 +10,14 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
 from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation
+from .models import ZONE_CHOICES, ETAT_CHOICES, STATUT_CHOICES
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from datetime import datetime, time
 from django.contrib.auth import update_session_auth_hash
+from django.http import HttpResponseRedirect
 
 
 User = get_user_model()
@@ -106,35 +108,99 @@ def reglement(request):
 def horaires(request):
     return render(request, 'horaires.html')
 
-def detail_objet(request, objet_id):
+TYPES_CHOICE = ["Tapis de course", "Stepper", "Vélo", "Rameur", "Elliptique"]
+
+from datetime import datetime, time
+
+@login_required
+def modif_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, pk=objet_id)
 
     if request.method == 'POST':
-        objet.nom = request.POST.get('nom')
-        objet.etat = request.POST.get('etat')
-        objet.zone = request.POST.get('zone')
-        objet.statut = request.POST.get('statut')
-        heure_debut = request.POST.get('heure_debut_utilisation')
-        heure_fin = request.POST.get('heure_fin_utilisation')
+        print("Formulaire POST reçu")
+        print("Données reçues:", request.POST)  # Debug
+        
+        # Champs de base
+        objet.nom = request.POST.get('nom', objet.nom)
+        objet.etat = request.POST.get('etat', objet.etat)
+        objet.zone = request.POST.get('zone', objet.zone)
+        objet.marque = request.POST.get('marque', objet.marque)
+        objet.annee_fin = request.POST.get('annee_fin', objet.annee_fin)
+        
+        # Champs spécifiques
+        objet.type_transmission = request.POST.get("type_transmission", objet.type_transmission)
+        objet.type_resistance = request.POST.get("type_resistance") or \
+                  request.POST.get("type_resistance_r") or None
+        objet.intensite = request.POST.get("intensite") or \
+                  request.POST.get("intensite_v") or \
+                  request.POST.get("intensite_s") or \
+                  request.POST.get("intensite_r") or \
+                  request.POST.get("intensite_e") or None
+        objet.vitesse_max = request.POST.get("vitesse_max") or \
+                  request.POST.get("vitesse_max_v") or \
+                  request.POST.get("vitesse_max_s") or \
+                  request.POST.get("vitesse_max_r") or \
+                  request.POST.get("vitesse_max_e") or None
+        objet.puissance = request.POST.get("puissance") or \
+                  request.POST.get("puissance_v") or \
+                  request.POST.get("puissance_s") or \
+                  request.POST.get("puissance_r") or \
+                  request.POST.get("puissance_e") or None
 
-        if heure_debut:
-            h, m = map(int, heure_debut.split(":"))
-            objet.heure_debut_utilisation = time(h, m)
-        else:
-            objet.heure_debut_utilisation = None
+        objet.inclinaison_max = request.POST.get("inclinaison_max") or \
+                  request.POST.get("inclinaison_max_v") or \
+                  request.POST.get("inclinaison_max_s") or \
+                  request.POST.get("inclinaison_max_r") or \
+                  request.POST.get("inclinaison_max_e") or None
+        
+        objet.amorti = request.POST.get("amorti", objet.amorti)
+        objet.ventilation_frontale = any([
+            request.POST.get("vf") == "on",
+            request.POST.get("vf_") == "on"
+        ])
 
-        if heure_fin:
-            h, m = map(int, heure_fin.split(":"))
-            objet.heure_fin_utilisation = time(h, m)
-        else:
-            objet.heure_fin_utilisation = None
-        objet.save()
-        return redirect('objets_connectes')  # Après modification, retour vers la liste des objets
+        objet.hauteur_marche = request.POST.get("hauteur_marche", objet.hauteur_marche)
+        objet.longueur_pas = request.POST.get("longueur_pas", objet.longueur_pas)
+        objet.longueur_rail = request.POST.get("longueur_rail", objet.longueur_rail)
+        objet.type_mouvement = request.POST.get("type_mouvement", objet.type_mouvement)
 
-    return render(request, 'detail_objet.html', {'objet': objet})
+        # Gestion du statut
+        ancien_statut = objet.statut
+        nouvel_statut = request.POST.get('statut', objet.statut)
+        objet.statut = nouvel_statut
+
+        if ancien_statut != "maintenance" and nouvel_statut == "maintenance":
+            objet.derniere_maintenance = datetime.today().date()
+
+        try:
+            objet.save()
+            messages.success(request, "Modifications enregistrées avec succès")
+            return redirect('objets_connectes')
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la sauvegarde: {str(e)}")
+            return render(request, 'modif_objet.html', {
+                'objet': objet,
+                'zone_choices': ZONE_CHOICES,
+                'etat_choices': ETAT_CHOICES,
+                'statut_choices': STATUT_CHOICES,
+            })
+
+    return render(request, 'modif_objet.html', {
+        'objet': objet,
+        'zone_choices': ZONE_CHOICES,
+        'etat_choices': ETAT_CHOICES,
+        'statut_choices': STATUT_CHOICES,
+    })
+
+
 
 def ajouter_objet(request):
     if request.method == 'POST':
+        type_choisi = request.POST.get('type')
+        if type_choisi not in TYPES_CHOICE:  
+            messages.error(request, "Type non autorisé.")
+            return redirect('ajouter_objet')
+
         nom = request.POST.get('nom')
         attribut = request.POST.get('attribut')
         zone = request.POST.get('zone')
@@ -152,6 +218,7 @@ def ajouter_objet(request):
 
         nouvel_objet = ObjetConnecte(
             nom=nom,
+            type=type_choisi,
             attribut=attribut,
             zone=zone,
             etat=etat,
@@ -167,7 +234,8 @@ def ajouter_objet(request):
         messages.success(request, "Objet ajouté avec succès !")
         return redirect('objets_connectes')
 
-    return render(request, 'ajouter_objet.html')
+    return render(request, 'ajouter_objet.html', {'types_autorises': TYPES_CHOICE})
+
 
 
 def visite(request):
@@ -199,9 +267,7 @@ def visite(request):
             objets = objets.filter(zone__iexact=filtre_zone, statut__iexact=filtre_statut)
     return render(request, 'visite.html', {'objets': objets})
 
-def rapport_utilisation(request):
-    historique = HistoriqueUtilisation.objects.all().order_by('-date')
-    return render(request, 'rapport_utilisation.html', {'historique': historique})
+
 
 def historique_objet(request, objet_id):
     historique = HistoriqueUtilisation.objects.filter(objet_id=objet_id).order_by('-date')
@@ -251,7 +317,17 @@ def profil(request):
 def dashboard(request):
     return render(request, 'dashboard.html')
 
+@login_required
+def demander_suppression(request, objet_id):
+    objet = get_object_or_404(ObjetConnecte, pk=objet_id)
 
+    # Ici, on pourrait enregistrer la demande dans une table dédiée
+    # ou envoyer un mail à un admin. Pour l'instant, on marque l'objet comme "en attente de suppression"
+    objet.statut = "suppression_demande"
+    objet.save()
+
+    messages.success(request, f"La demande de suppression pour « {objet.nom} » a été enregistrée.")
+    return redirect('objets_connectes')
 # ============ SYSTEME DE POINTS AUTOMATIQUE =============
 
 def ajouter_points(request, points, cle_session):

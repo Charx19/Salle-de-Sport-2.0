@@ -117,7 +117,11 @@
     </header>
 
     <!-- Contenu principal -->
-    <h2 style="text-align:center;">Historique détaillé de l'objet</h2>
+    <h2 style="text-align:center; margin-bottom: 10px;">Historique de l’objet : {{ historique.0.objet.nom }}</h2>
+    <p style="text-align: center; color: #666; margin-bottom: 30px;">
+        Type : {{ historique.0.objet.type }} — Zone : {{ historique.0.objet.zone }}
+    </p>
+
 
     <table style="width:80%; margin: 20px auto; border-collapse: collapse;">
         <thead>
@@ -157,7 +161,7 @@
     </table>
 
     <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'objets_connectes' %}" class="btn-ajouter"> Voir tous les objets connectés</a>
+        <a href="{% url 'objets_connectes' %}" class="btn-ajouter">↩ Retour aux objets</a>
     </div>
 
 

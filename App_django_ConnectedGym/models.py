@@ -27,9 +27,9 @@ ZONE_CHOICES = [
 ]
 
 STATUT_CHOICES = [
-    ('actif', 'Actif'),
-    ('panne', 'Panne'),
-    ('maintenance', 'Maintenance'),
+    ("actif", "Actif"),
+    ("inactif", "Inactif"),
+    ("maintenance", "En maintenance"),
 ]
 
 ETAT_CHOICES = [
@@ -39,6 +39,8 @@ ETAT_CHOICES = [
     ('moyen', 'État moyen'),
     ('mauvais', 'Mauvais état'),
 ]
+
+
 
 class ObjetConnecte(models.Model):
     nom = models.CharField(max_length=100)
@@ -56,11 +58,22 @@ class ObjetConnecte(models.Model):
     inclinaison_max = models.CharField(max_length=50, null=True, blank=True)
     marque = models.CharField(max_length=100)
     puissance = models.CharField(max_length=50, null=True, blank=True)
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='actif')
     vitesse_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    intensite = models.CharField(max_length=50, null=True, blank=True)
+    intensite = models.IntegerField(null=True, blank=True)
     heure_debut_utilisation = models.TimeField(null=True, blank=True)
     heure_fin_utilisation = models.TimeField(null=True, blank=True)
+    puissance_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    vitesse_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    intensite_max = models.IntegerField(null=True, blank=True)
+    type_transmission = models.CharField(max_length=100, null=True, blank=True)
+    type_resistance = models.CharField(max_length=100, null=True, blank=True)
+    amorti = models.CharField(max_length=100, null=True, blank=True)
+    ventilation_frontale = models.BooleanField(null=True, blank=True)
+    hauteur_marche = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    longueur_rail = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    type_mouvement = models.CharField(max_length=100, null=True, blank=True)
+    longueur_pas = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return f"{self.nom} ({self.get_type_display()})"

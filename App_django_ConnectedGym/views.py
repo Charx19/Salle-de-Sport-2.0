@@ -19,10 +19,19 @@ from datetime import datetime, time
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 import io
 import base64
 from django.db import IntegrityError
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import HistoriqueUtilisation
+import json
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import HistoriqueUtilisation
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 
 User = get_user_model()
@@ -476,10 +485,92 @@ def objets_connectes(request):
     objets = ObjetConnecte.objects.all()
     return render(request, 'objets_connectes.html', {'objets': objets})
 
+import json
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from App_django_ConnectedGym.models import HistoriqueUtilisation
+
+
 @login_required
 def performances(request):
-    ajouter_points(request, 2, 'visited_performance')
-    return render(request, 'performances.html')
+    user = request.user
+
+    historiques = (
+        HistoriqueUtilisation.objects
+        .select_related('objet')
+        .filter(utilisateur=user)
+        .order_by('date')
+    )
+
+    labels = []
+    calories_data = []
+    labels_progression = []
+    data_progression = []
+    labels_frequence = []
+    data_frequence = []
+
+    for h in historiques:
+        if h.date:
+            label = h.date.strftime('%Y-%m-%d')
+        else:
+            label = f"#{h.id}"
+
+        # 🔥 Calories brûlées
+        calories = getattr(h.objet, 'calories_brulees', None)
+        if calories is not None:
+            labels.append(label)
+            calories_data.append(float(calories))
+
+        # 📈 Progression
+        duree = getattr(h.objet, 'duree_utilisation', None)
+        if duree is not None:
+            labels_progression.append(label)
+            data_progression.append(duree)
+
+        # ❤️ Fréquence cardiaque (intensité dans historique)
+        frequence = getattr(h, 'intensite', None)
+        if frequence is not None:
+            labels_frequence.append(label)
+            data_frequence.append(frequence)
+
+    # ✅ Statistiques globales
+    global_historiques = (
+        HistoriqueUtilisation.objects
+        .select_related('objet')
+        .all()
+        .order_by('date')
+    )
+
+    global_labels = []
+    global_calories = []
+    global_distances = []
+
+    for h in global_historiques:
+        if h.date:
+            label = h.date.strftime('%Y-%m-%d')
+            global_labels.append(label)
+
+            calories = getattr(h.objet, 'calories_brulees', 0)
+            distance = getattr(h.objet, 'distance_parcourue', 0)
+
+            global_calories.append(float(calories or 0))
+            global_distances.append(float(distance or 0))
+
+    context = {
+        'labels': json.dumps(labels),
+        'calories_data': json.dumps(calories_data),
+        'labels_progression': json.dumps(labels_progression),
+        'data_progression': json.dumps(data_progression),
+        'labels_frequence': json.dumps(labels_frequence),
+        'data_frequence': json.dumps(data_frequence),
+        'global_labels': json.dumps(global_labels),
+        'global_calories': json.dumps(global_calories),
+        'global_distances': json.dumps(global_distances),
+    }
+
+    return render(request, 'performances.html', context)
+
+
 
 @login_required
 def personnalisation(request):

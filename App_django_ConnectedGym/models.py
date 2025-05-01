@@ -74,8 +74,11 @@ class ObjetConnecte(models.Model):
     longueur_rail = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     type_mouvement = models.CharField(max_length=100, null=True, blank=True)
     est_disponible = models.BooleanField(default=True)
-
+    calories_brulees = models.DecimalField(max_digits=6, decimal_places=2, null=True, blank=True)
+    duree_utilisation = models.IntegerField(null=True, blank=True)
     longueur_pas = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    distance_parcourue = models.FloatField(null=True, blank=True, help_text="Distance parcourue pendant l'utilisation (en km)")
+
 
     def __str__(self):
         return f"{self.nom} ({self.get_type_display()})"
@@ -103,6 +106,8 @@ class HistoriqueUtilisation(models.Model):
     type_transmission = models.CharField(max_length=100, null=True, blank=True)
     type_resistance = models.CharField(max_length=100, null=True, blank=True)
     type_mouvement = models.CharField(max_length=100, null=True, blank=True)
+    distance_parcourue = models.FloatField(null=True, blank=True, help_text="Distance parcourue pendant l'utilisation (en km)")
+
 
 
     def __str__(self):

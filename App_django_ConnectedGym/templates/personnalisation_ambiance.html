@@ -9,151 +9,67 @@
     <title>Personnalisation</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
-        .layout-wrapper {
-            display: flex;
-            gap: 4rem;
-            justify-content: center;
-            padding: 2rem 6rem;
-            align-items: flex-start;
-            flex-wrap: wrap;
+        .ambiance-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
         }
 
-
-
-        .objets-cartes {
-            margin-left: 6rem;
-
-        }
-
-
-        .objet-card.horizontal {
+        .ambiance-container h2 {
+            margin-top: 1.5rem;
+            font-size: 1.3rem;
             display: flex;
             align-items: center;
-            justify-content: flex-start;
-            gap: 1.5rem;
-            width: 350px;
-            background-color: white;
-            padding: 1rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 1.5rem;
+            gap: 0.5rem;
         }
 
-        .objet-image img {
-            width: 120px;
-            height: auto;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-
-        .objet-info h3 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .objet-info form {
-            margin-top: 0.5rem;
-        }
-
-
-        .objet-card img {
+        .ambiance-container select,
+        .ambiance-container input[type="number"] {
             width: 100%;
-            max-height: 120px;
-            object-fit: contain;
+            padding: 10px;
+            margin-top: 0.5rem;
             border-radius: 8px;
-        }
-
-
-        .objets-list {
-            flex: 1;
-            min-width: 300px;
-
-        }
-
-        .resume-selection {
-            flex: 1;
-            min-width: 350px;
-            background: #f8f8f8;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-        }
-
-
-        .resume-card {
-            background: white;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-        }
-
-        .objets-list h2,
-        .resume-selection h2 {
+            border: 1px solid #ccc;
+            font-size: 1rem;
             margin-bottom: 1.5rem;
         }
 
-        .btn {
-            border: none;
-            padding: 8px 14px;
-            font-weight: bold;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s;
+        .radio-group {
+            margin-top: 0.8rem;
+            display: flex;
+            gap: 2rem;
+            align-items: center;
         }
 
-        .btn.success {
-            background-color: #3a00c2;
-            color: white;
-            border: 2px solid #3a00c2;
-        }
-
-        .btn.success:hover {
-            background-color: white;
-            color: #3a00c2;
-        }
-
-        .btn.danger {
-            background-color: #e53935;
-            color: white;
-            border: 2px solid #e53935;
-        }
-
-        .btn.danger:hover {
-            background-color: white;
-            color: #e53935;
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 500;
         }
 
         .btn.primary {
             background-color: #6a1b9a;
             color: white;
-            border: none;
-            padding: 10px 20px;
+            padding: 10px 22px;
             font-weight: bold;
+            border: none;
             border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
         }
 
         .btn.primary:hover {
             background-color: #4a148c;
         }
 
-        .ambiance-recap {
-            background: #fefefe;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-
-        .ambiance-recap h3 {
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .ambiance-recap p {
-            margin: 0.4rem 0;
+        .submit-wrapper {
+            text-align: center;
+            margin-top: 2rem;
         }
     </style>
 </head>
@@ -235,7 +151,6 @@
 
         </div>
     </header>
-
     <section class="hero-full" style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
         <div class="overlay">
             <div class="container hero-content">
@@ -244,82 +159,43 @@
             </div>
         </div>
     </section>
-
     <section class="features-section">
-        <div class="layout-wrapper">
-            <!-- Colonne gauche : liste des objets -->
-            <div class="objets-list">
-                <div class="objets-header">
-                    <h2>Objets disponibles</h2>
+        <div class="ambiance-container">
+            <form method="POST">
+                {% csrf_token %}
+
+                <h2>🎵 Musique</h2>
+                <select name="musique" required>
+                    <option value="">-- Choisir une ambiance --</option>
+                    <option value="aucune">Aucune</option>
+                    <option value="zen">Zen</option>
+                    <option value="cardio">Cardio</option>
+                    <option value="motivation">Motivation</option>
+                    <option value="muscu">Musculation</option>
+                </select>
+
+                <h2>💡 Lumière</h2>
+                <select name="lumiere" required>
+                    <option value="basse">Basse</option>
+                    <option value="moyenne">Moyenne</option>
+                    <option value="forte">Forte</option>
+                </select>
+
+                <h2>❄️ Climatisation</h2>
+                <div class="radio-group">
+                    <label><input type="radio" name="clim" value="on" checked> ON</label>
+                    <label><input type="radio" name="clim" value="off"> OFF</label>
                 </div>
 
-                <div id="objets" class="objets-cartes">
-                    {% for obj in objets %}
-                    <div class="objet-card horizontal">
-                        <div class="objet-image">
-                            <img src="{{ obj.image|default:'https://via.placeholder.com/120x90' }}" alt="{{ obj.nom }}">
-                        </div>
-                        <div class="objet-info">
-                            <h3>{{ obj.nom }}</h3>
-                            <form method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="objet_id" value="{{ obj.id }}">
-                                {% if obj.id in selectionnes_ids %}
-                                <input type="hidden" name="action" value="remove">
-                                <button class="btn danger">Retirer</button>
-                                {% else %}
-                                <input type="hidden" name="action" value="add">
-                                <button class="btn success">Ajouter</button>
-                                {% endif %}
-                            </form>
-                        </div>
-                    </div>
-                    {% endfor %}
+                <label for="temperature" style="display:block; margin-top: 1rem;">Température souhaitée (°C)</label>
+                <input type="number" name="temperature" id="temperature" min="16" max="30" value="21">
+
+                <div class="submit-wrapper">
+                    <button class="btn primary" type="submit">Valider l’ambiance</button>
                 </div>
-            </div>
-
-
-
-            <!-- Colonne droite : objets sélectionnés -->
-            <div class="resume-selection">
-                <h2> Objets sélectionnés</h2>
-                {% if selectionnes %}
-                {% for s in selectionnes %}
-                <div class="resume-card">
-                    <h4>{{ s.objet.nom }}</h4>
-
-                    <p><strong>Zone</strong> : {{ s.objet.zone }}</p>
-                    <p><strong>Type</strong> : {{ s.objet.get_type_display }}</p>
-                    <p><strong>Attribut</strong> : {{ s.objet.attribut }}</p>
-
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>Aucun objet sélectionné pour le moment.</p>
-                {% endif %}
-
-
-            </div>
-
-
-
-        </div>
-        {% if ambiance %}
-        <section class="ambiance-recap" style="max-width: 500px; margin: 2rem auto; text-align: center;">
-            <h3>🎧 Ambiance de votre séance</h3>
-            <p><strong>Musique</strong> : {{ ambiance.get_musique_display }}</p>
-            <p><strong>Lumière</strong> : {{ ambiance.get_lumiere_display }}</p>
-            <p><strong>Climatisation</strong> : {{ ambiance.get_climatisation_display }}</p>
-            {% if ambiance.climatisation == 'on' %}
-            <p><strong>Température</strong> : {{ ambiance.temperature }}°C</p>
-            {% endif %}
-        </section>
-        {% endif %}
-        <div style="text-align:center; margin-top: 20px;">
-            <a href="{% url 'personnalisation_ambiance' %}" class="btn primary">Étape suivante : Ambiance</a>
+            </form>
         </div>
     </section>
-
 
     <!-- Footer -->
     <footer class="footer-section">

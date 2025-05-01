@@ -112,3 +112,38 @@ class HistoriqueUtilisation(models.Model):
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.objet.nom} - {self.action}"
+
+
+
+class ObjetSelectionne(models.Model):
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
+    objet = models.ForeignKey(ObjetConnecte, on_delete=models.CASCADE)
+    MUSIQUE_CHOICES = [
+        ('aucune', 'Aucune'),
+        ('zen', 'Zen'),
+        ('cardio', 'Cardio'),
+        ('motivation', 'Motivation'),
+        ('muscu', 'Musculation'),
+    ]
+
+    LUMIERE_CHOICES = [
+        ('basse', 'Basse'),
+        ('moyenne', 'Moyenne'),
+        ('forte', 'Forte'),
+    ]
+
+    CLIM_CHOICES = [
+        ('on', 'ON'),
+        ('off', 'OFF'),
+    ]
+
+    musique = models.CharField(max_length=20, choices=MUSIQUE_CHOICES, blank=True, null=True)
+    lumiere = models.CharField(max_length=20, choices=LUMIERE_CHOICES, blank=True, null=True)
+    climatisation = models.CharField(max_length=5, choices=CLIM_CHOICES, blank=True, null=True)
+    temperature = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ('utilisateur', 'objet')
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.objet.nom}"

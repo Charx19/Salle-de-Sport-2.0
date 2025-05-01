@@ -29,6 +29,7 @@ urlpatterns = [
     path('objets-connectes/', views.objets_connectes, name='objets_connectes'),
     path('performances/', views.performances, name='performances'),
     path('personnalisation/', views.personnalisation, name='personnalisation'),
+    path('personnalisation/ambiance/', views.personnalisation_ambiance, name='personnalisation_ambiance'),
     path('objectif/', views.objectif, name='objectif'),
 
 ]

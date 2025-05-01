@@ -9,7 +9,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
-from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation
+from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation, ObjetSelectionne
 from .models import ZONE_CHOICES, ETAT_CHOICES, STATUT_CHOICES
 from django.db.models import Q
 from django.contrib.auth import get_user_model
@@ -18,7 +18,7 @@ from django.urls import reverse
 from datetime import datetime, time
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 import matplotlib.pyplot as plt
 import io
 import base64
@@ -484,4 +484,50 @@ def performances(request):
 @login_required
 def personnalisation(request):
     ajouter_points(request, 2, 'visited_perso')
-    return render(request, 'personnalisation.html')
+
+    objets = ObjetConnecte.objects.filter(est_disponible=True)
+    selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
+    ambiance = ObjetSelectionne.objects.filter(utilisateur=request.user).first()
+
+
+    if request.method == 'POST':
+        objet_id = request.POST.get('objet_id')
+        action = request.POST.get('action')
+        objet = get_object_or_404(ObjetConnecte, id=objet_id)
+
+        if action == 'add':
+            ObjetSelectionne.objects.get_or_create(utilisateur=request.user, objet=objet)
+        elif action == 'remove':
+            ObjetSelectionne.objects.filter(utilisateur=request.user, objet=objet).delete()
+
+        return redirect(reverse('personnalisation') + '#objets')
+
+    return render(request, 'personnalisation.html', {
+    'objets': objets,
+    'selectionnes': selectionnes,
+    'selectionnes_ids': [s.objet.id for s in selectionnes],
+    'ambiance': ambiance,
+})
+
+
+
+@login_required
+def personnalisation_ambiance(request):
+    if request.method == 'POST':
+        musique = request.POST.get('musique')
+        lumiere = request.POST.get('lumiere')
+        clim = request.POST.get('clim')
+        temp = request.POST.get('temperature')
+
+        objets_selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
+
+        for obj_sel in objets_selectionnes:
+            obj_sel.musique = musique
+            obj_sel.lumiere = lumiere
+            obj_sel.climatisation = clim
+            obj_sel.temperature = temp
+            obj_sel.save()
+
+        return redirect('accueil')  # ou une page de confirmation ?
+
+    return render(request, 'personnalisation_ambiance.html')

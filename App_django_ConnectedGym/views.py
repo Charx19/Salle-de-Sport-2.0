@@ -16,8 +16,13 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from datetime import datetime, time
+from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect
+import matplotlib.pyplot as plt
+import io
+import base64
+from django.db import IntegrityError
 
 
 User = get_user_model()
@@ -174,6 +179,30 @@ def modif_objet(request, objet_id):
 
         try:
             objet.save()
+            try:
+                HistoriqueUtilisation.objects.create(
+                    objet=objet,
+                    utilisateur=request.user,
+                    action="modifié",
+                    vitesse_max=objet.vitesse_max,
+                    puissance=objet.puissance,
+                    inclinaison_max=objet.inclinaison_max,
+                    intensite=objet.intensite,
+                    amorti=objet.amorti,
+                    ventilation_frontale=objet.ventilation_frontale,
+                    hauteur_marche=objet.hauteur_marche,
+                    longueur_rail=objet.longueur_rail,
+                    longueur_pas=objet.longueur_pas,
+                    type_transmission=objet.type_transmission,
+                    type_resistance=objet.type_resistance,
+                    type_mouvement=objet.type_mouvement
+                )
+                print("Historique enregistré avec succès")
+            except IntegrityError:
+                messages.error(request, "Erreur lors de l'enregistrement de l'historique. Vérifiez les données.")
+            except Exception as e:
+                print(f"Erreur lors de l'enregistrement de l'historique: {str(e)}")
+
             messages.success(request, "Modifications enregistrées avec succès")
             return redirect('objets_connectes')
         except Exception as e:
@@ -298,7 +327,63 @@ def visite(request):
 
 def historique_objet(request, objet_id):
     historique = HistoriqueUtilisation.objects.filter(objet_id=objet_id).order_by('-date')
-    return render(request, 'historique_objet.html', {'historique': historique})
+
+    def plot_to_base64(dates, valeurs, label, unit):
+        if len(dates) != len(valeurs):
+            return None
+        fig, ax = plt.subplots(figsize=(8, 4))  # Largeur et hauteur améliorées
+
+        ax.plot(dates, valeurs, marker='o', linestyle='-', color='tab:blue')
+        ax.set_title(f"Évolution de {label}", fontsize=14)
+        ax.set_xlabel("Date", fontsize=12)
+        ax.set_ylabel(f"{label} ({unit})", fontsize=12)
+        ax.tick_params(axis='x', rotation=45)
+        ax.tick_params(axis='both', labelsize=10)
+        ax.grid(True)
+        fig.tight_layout()  # Corrige les débordements
+
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", bbox_inches='tight')
+        encoded = base64.b64encode(buf.getvalue()).decode("utf-8")
+        plt.close(fig)
+        return f"data:image/png;base64,{encoded}"
+
+
+    # Données séparées
+    dates_v = []
+    valeurs_v = []
+    dates_p = []
+    valeurs_p = []
+    dates_i = []
+    valeurs_i = []
+
+    for h in historique:
+        if h.vitesse_max is not None:
+            dates_v.append(h.date)
+            valeurs_v.append(float(h.vitesse_max))
+        if h.puissance is not None:
+            dates_p.append(h.date)
+            valeurs_p.append(float(h.puissance))
+        if h.inclinaison_max is not None:
+            try:
+                valeurs_i.append(float(h.inclinaison_max))
+                dates_i.append(h.date)
+            except ValueError:
+                continue
+
+    graph_vitesse = plot_to_base64(dates_v, valeurs_v, "Vitesse", "km/h") if valeurs_v else None
+    graph_puissance = plot_to_base64(dates_p, valeurs_p, "Puissance", "W") if valeurs_p else None
+    graph_inclinaison = plot_to_base64(dates_i, valeurs_i, "Inclinaison", "%") if valeurs_i else None
+
+    return render(request, 'historique_objet.html', {
+        'historique': historique,
+        'graph_vitesse': graph_vitesse,
+        'graph_puissance': graph_puissance,
+        'graph_inclinaison': graph_inclinaison,
+    })
+
+
+
 
 def info_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, id=objet_id)

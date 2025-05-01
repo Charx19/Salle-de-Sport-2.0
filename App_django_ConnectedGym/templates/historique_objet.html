@@ -117,48 +117,185 @@
     </header>
 
     <!-- Contenu principal -->
-    <h2 style="text-align:center; margin-bottom: 10px;">Historique de l’objet : {{ historique.0.objet.nom }}</h2>
-    <p style="text-align: center; color: #666; margin-bottom: 30px;">
-        Type : {{ historique.0.objet.type }} — Zone : {{ historique.0.objet.zone }}
-    </p>
+    <section class="bloc-objet-technique" style="text-align:center; margin-bottom: 20px;">
+        <h2>Suivi technique de l’objet : {{ historique.0.objet.nom }}</h2>
+        <p>Type : {{ historique.0.objet.get_type_display }} — Zone : {{ historique.0.objet.zone }}
+            — État : {{historique.0.objet.etat }}</p>
+        {% if historique.0.objet.image %}
+        <img src="{{ historique.0.objet.image }}" alt="Image de l’objet"
+            style="max-height: 150px; border-radius: 12px;">
+        {% endif %}
+
+    </section>
 
 
-    <table style="width:80%; margin: 20px auto; border-collapse: collapse;">
+
+    {% if historique.0.objet.type == "Velo" %}
+    <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
         <thead>
             <tr style="background-color:#007bff; color:white;">
-                <th>Utilisateur</th>
                 <th>Date</th>
-                <th>Action</th>
-                <th>Calories</th>
-                <th>Durée (min)</th>
-                <th>Vitesse (km/h)</th>
-                <th>Distance (km)</th>
+                <th>Vitesse max (km/h)</th>
+                <th>Puissance max (W)</th>
                 <th>Intensité</th>
-                <th>Puissance (W)</th>
-                <th>Inclinaison</th>
+                <th>Type transmission</th>
+                <th>Type résistance</th>
             </tr>
         </thead>
         <tbody>
-            {% for entry in historique %}
-            <tr style="border-bottom: 1px solid #ccc;">
-                <td>{{ entry.utilisateur.username }}</td>
-                <td>{{ entry.date|date:"d/m/Y H:i" }}</td>
-                <td>{{ entry.action }}</td>
-                <td>{{ entry.calories_brulees|default:"-" }}</td>
-                <td>{{ entry.duree_utilisation|default:"-" }}</td>
-                <td>{{ entry.vitesse_moyenne|default:"-" }}</td>
-                <td>{{ entry.distance_parcourue|default:"-" }}</td>
-                <td>{{ entry.intensite_moyenne|default:"-" }}</td>
-                <td>{{ entry.puissance_moyenne|default:"-" }}</td>
-                <td>{{ entry.inclinaison_moyenne|default:"-" }}</td>
+            {% for h in historique %}
+            <tr>
+                <td>{{ h.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.vitesse_max|default:"-" }}</td>
+                <td>{{ h.puissance|default:"-" }}</td>
+                <td>{{ h.intensite|default:"-" }}</td>
+                <td>{{ h.type_transmission|default:"-" }}</td>
+                <td>{{ h.type_resistance|default:"-" }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="10" style="text-align:center;">Aucune donnée enregistrée pour cet objet.</td>
+                <td colspan="6" style="text-align:center;">Aucune donnée.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    {% elif historique.0.objet.type == "Elliptique" %}
+    <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Date</th>
+                <th>Vitesse max (km/h)</th>
+                <th>Puissance max (W)</th>
+                <th>Intensité</th>
+                <th>Type mouvement</th>
+                <th>Longueur des pas (cm)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in historique %}
+            <tr>
+                <td>{{ h.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.vitesse_max|default:"-" }}</td>
+                <td>{{ h.puissance|default:"-" }}</td>
+                <td>{{ h.intensite|default:"-" }}</td>
+                <td>{{ h.type_mouvement|default:"-" }}</td>
+                <td>{{ h.longueur_pas|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;">Aucune donnée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif historique.0.objet.type == "Tapis" %}
+    <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Date</th>
+                <th>Inclinaison max (%)</th>
+                <th>Vitesse max (km/h)</th>
+                <th>Intensité</th>
+                <th>Amorti</th>
+                <th>Ventilation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in historique %}
+            <tr>
+                <td>{{ h.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.inclinaison_max|default:"-" }}</td>
+                <td>{{ h.vitesse_max|default:"-" }}</td>
+                <td>{{ h.intensite|default:"-" }}</td>
+                <td>{{ h.amorti|default:"-" }}</td>
+                <td>{% if h.ventilation_frontale %}Oui{% else %}-{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;">Aucune donnée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif historique.0.objet.type == "Stepper" %}
+    <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Date</th>
+                <th>Inclinaison max (%)</th>
+                <th>Puissance max (W)</th>
+                <th>Intensité</th>
+                <th>Hauteur marche (cm)</th>
+                <th>Ventilation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in historique %}
+            <tr>
+                <td>{{ h.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.inclinaison_max|default:"-" }}</td>
+                <td>{{ h.puissance|default:"-" }}</td>
+                <td>{{ h.intensite|default:"-" }}</td>
+                <td>{{ h.hauteur_marche|default:"-" }}</td>
+                <td>{% if h.ventilation_frontale %}Oui{% else %}-{% endif %}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align:center;">Aucune donnée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% elif historique.0.objet.type == "Rameur" %}
+    <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color:#007bff; color:white;">
+                <th>Date</th>
+                <th>Puissance max (W)</th>
+                <th>Intensité</th>
+                <th>Type résistance</th>
+                <th>Longueur rail (cm)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in historique %}
+            <tr>
+                <td>{{ h.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.puissance|default:"-" }}</td>
+                <td>{{ h.intensite|default:"-" }}</td>
+                <td>{{ h.type_resistance|default:"-" }}</td>
+                <td>{{ h.longueur_rail|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align:center;">Aucune donnée.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+
+
+    <section style="margin: 40px auto; text-align: center;">
+        <h3>Analyse visuelle</h3>
+        <p>Évolution des performances de l’objet connecté</p>
+        <div style="display:flex; justify-content:center; flex-wrap: wrap; gap: 30px;">
+            {% if graph_vitesse %}<img src="{{ graph_vitesse }}" alt="Graphique Vitesse"
+                style="max-width: 400px;">{%endif%}
+            {% if graph_puissance %}<img src="{{ graph_puissance }}" alt="Graphique Puissance"
+                style="max-width: 400px;">{% endif %}
+            {% if graph_inclinaison %}<img src="{{ graph_inclinaison }}" alt="Graphique Inclinaison"
+                style="max-width: 400px;">{% endif %}
+        </div>
+    </section>
+
+
+
 
     <div style="text-align: center; margin-top: 40px;">
         <a href="{% url 'objets_connectes' %}" class="btn-ajouter">↩ Retour aux objets</a>

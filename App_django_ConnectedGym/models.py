@@ -85,14 +85,24 @@ class HistoriqueUtilisation(models.Model):
     objet = models.ForeignKey('ObjetConnecte', on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     action = models.CharField(max_length=100)
+    etat = models.CharField(max_length=50, choices=ETAT_CHOICES)
+    image = models.URLField(max_length=300, null=True, blank=True)
 
-    calories_brulees = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    duree_utilisation = models.IntegerField(null=True, blank=True)
-    vitesse_moyenne = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    distance_parcourue = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    intensite_moyenne = models.CharField(max_length=100, null=True, blank=True)
-    puissance_moyenne = models.IntegerField(null=True, blank=True)
-    inclinaison_moyenne = models.CharField(max_length=100, null=True, blank=True)
+
+
+    # Champs copiés depuis ObjetConnecte
+    vitesse_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    puissance = models.CharField(max_length=50, null=True, blank=True)
+    inclinaison_max = models.CharField(max_length=50, null=True, blank=True)
+    intensite = models.IntegerField(null=True, blank=True)
+    amorti = models.CharField(max_length=100, null=True, blank=True)
+    ventilation_frontale = models.BooleanField(null=True, blank=True)
+    hauteur_marche = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    longueur_rail = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    longueur_pas = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    type_transmission = models.CharField(max_length=100, null=True, blank=True)
+    type_resistance = models.CharField(max_length=100, null=True, blank=True)
+    type_mouvement = models.CharField(max_length=100, null=True, blank=True)
 
 
     def __str__(self):

@@ -194,13 +194,15 @@ def modif_objet(request, objet_id):
 
 
 
+@login_required
 def ajouter_objet(request):
     if request.method == 'POST':
         type_choisi = request.POST.get('type')
-        if type_choisi not in TYPES_CHOICE:  
+        if type_choisi not in TYPES_CHOICE:
             messages.error(request, "Type non autorisé.")
             return redirect('ajouter_objet')
 
+        # Champs généraux
         nom = request.POST.get('nom')
         attribut = request.POST.get('attribut')
         zone = request.POST.get('zone')
@@ -211,14 +213,25 @@ def ajouter_objet(request):
         couleur = request.POST.get('couleur')
         annee_fin = request.POST.get('annee_fin')
         image = request.FILES.get('image')
-
-
-        # Définir l'année d'achat automatiquement
         annee_achat = datetime.now().year
 
+        # Champs spécifiques selon les types
+        intensite = request.POST.get('intensite')
+        puissance = request.POST.get('puissance')
+        vitesse_max = request.POST.get('vitesse_max')
+        inclinaison_max = request.POST.get('inclinaison_max')
+        hauteur_marche = request.POST.get('hauteur_marche')
+        longueur_rail = request.POST.get('longueur_rail')
+        longueur_pas = request.POST.get('longueur_pas')
+        type_mouvement = request.POST.get('type_mouvement')
+        type_transmission = request.POST.get('type_transmission')
+        type_resistance = request.POST.get('type_resistance') or request.POST.get('type_resistance_r')
+        amorti = request.POST.get('amorti')
+        ventilation_frontale = request.POST.get('vf') == "on" or request.POST.get('vf_') == "on"
+        est_disponible = True
         nouvel_objet = ObjetConnecte(
             nom=nom,
-            type=type_choisi,
+            type=type_choisi.lower(),
             attribut=attribut,
             zone=zone,
             etat=etat,
@@ -228,8 +241,22 @@ def ajouter_objet(request):
             couleur=couleur,
             annee_achat=annee_achat,
             annee_fin=annee_fin,
-            image=image
+            image=image,
+            intensite=intensite,
+            puissance=puissance,
+            vitesse_max=vitesse_max,
+            inclinaison_max=inclinaison_max,
+            hauteur_marche=hauteur_marche,
+            longueur_rail=longueur_rail,
+            longueur_pas=longueur_pas,
+            type_mouvement=type_mouvement,
+            type_transmission=type_transmission,
+            type_resistance=type_resistance,
+            amorti=amorti,
+            ventilation_frontale=ventilation_frontale,
+            est_disponible=est_disponible,
         )
+
         nouvel_objet.save()
         messages.success(request, "Objet ajouté avec succès !")
         return redirect('objets_connectes')

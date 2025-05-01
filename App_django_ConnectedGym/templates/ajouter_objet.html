@@ -167,6 +167,9 @@
                 {% endfor %}
             </select>
 
+            <label for="image">Image de l’objet :</label>
+            <input type="file" name="image" id="image" accept="image/*">
+
 
             <label for="attribut">Attribut :</label>
             <input type="text" name="attribut" id="attribut" required>
@@ -213,7 +216,237 @@
 
             <label for="annee_fin">Année de fin :</label>
             <input type="number" name="annee_fin" id="annee_fin" min="2024" max="2100" required>
+            <!-- CHAMPS SPÉCIFIQUES AU TYPE -->
+            <h3>Spécifications</h3>
+            <div id="champs-specifiques">
 
+                <!-- Pour Vélo -->
+                <div class="type-velo champs-type" style="display: none;">
+                    <label for="puissance_v">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 250W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="puissance" id="puissance_v" value="{{ objet.puissance}}">
+
+                    <label for="vitesse_max_v">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 45 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="vitesse_max" id="vitesse_max_v"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_v">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique.
+                    </small>
+
+                    <input type="number" data-name="intensite" id="intensite_v" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="type_transmission">Type de transmission :</label>
+                    <small class="note"> Chaîne (classique), Courroie (silencieuse), Magnétique (haut degamme)</small>
+                    {% with s=objet.type_transmission|default:"" %}
+                    <select data-name="type_transmission" id="type_transmission">
+                        <option value="Chaîne" {% if "Chaîne" in s %} selected{% endif %}>Chaîne</option>
+                        <option value="Courroie" {% if "Courroie" in s %} selected{% endif %}>Courroie</option>
+                        <option value="Magnétique" {% if "Magnétique" in s %} selected{% endif %}>Magnétique</option>
+                    </select>
+                    {% endwith %}
+
+
+                    <label for="type_resistance">Type de résistance :</label>
+                    <small class="note"> Mécanique (molette), Magnétique (fluide), Électromagnétique (précis)</small>
+                    {% with s=objet.type_resistance|default:"" %}
+                    <select data-name="type_resistance" id="type_resistance">
+                        <option value="Mécanique" {% if "Mécanique" in s %} selected{% endif %}>Mécanique</option>
+                        <option value="Magnétique" {% if "Magnétique" in s %} selected{% endif %}>Magnétique</option>
+                        <option value="Électromagnétique" {% if "Électromagnétique" in s %} selected{% endif %}>
+                            Électromagnétique</option>
+                    </select>
+                    {% endwith %}
+
+                </div>
+                <!-- Pour Tapis de course -->
+                <div class="type-tapis champs-type" style="display: none;">
+                    <label for="inclinaison_max_t">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 40% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="inclinaison_max" id="inclinaison_max_t"
+                        value="{{ objet.inclinaison_max }}">
+
+                    <label for="vitesse_max_t">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 20 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="vitesse_max" id="vitesse_max_t"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_t">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" data-name="intensite" id="intensite_t" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="amorti">Amorti :</label>
+                    <small class="note"> Basique (usage occasionnel), Renforcé (confort articulations), Professionnel
+                        (absorption maximale)</small>
+                    {% with a=objet.amorti|default:"" %}
+                    <select data-name="amorti" id="amorti">
+                        <option value="basique" {% if "basique" in a %}selected{% endif %}>Basique</option>
+                        <option value="renforcé" {% if "renforcé" in a %}selected{% endif %}>Renforcé</option>
+                        <option value="professionnel" {% if "professionnel" in a %}selected{% endif %}>Professionnel
+                        </option>
+                    </select>
+                    {% endwith %}
+
+                    <div class="checkbox-container">
+
+                        <label for="vf">Activer la ventilation intégrée</label>
+                        <input type="checkbox" data-name="vf" id="vf" {%if objet.ventilation_frontale%}checked{%endif%}>
+                    </div>
+                    <small class="note"> Active un flux d’air frontal pendant l’utilisation.</small>
+
+
+                </div>
+
+                <!-- Pour Stepper -->
+                <div class="type-stepper champs-type" style="display: none;">
+                    <label for="inclinaison_max_s">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 15% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="inclinaison_max" id="inclinaison_max_s"
+                        value="{{ objet.inclinaison_max }}">
+
+                    <label for="puissance_s">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 200W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="puissance" id="puissance_s"
+                        value="{{ objet.puissance }}">
+                    <label for="intensite_s">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" data-name="intensite" id="intensite_s" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="hauteur_marche">Hauteur des marches (cm):</label>
+                    <small class="note"> Recommandé : 15 cm pour usage sportif classique. (min 10 / max 25)
+                    </small>
+
+                    <input type="number" data-name="hauteur_marche" id="hauteur_marche"
+                        value="{{ objet.hauteur_marche }}" min="10" max="25" required>
+
+                    <div class="checkbox-container">
+                        <label for="vf_">Activer la ventilation intégrée</label>
+                        <input type="checkbox" data-name="vf" id="vf_" {% if obj.ventilation_frontale%}checked{%endif%}>
+                    </div>
+                    <small class="note"> Active un flux d’air frontal pendant l’utilisation.</small>
+
+
+                </div>
+
+                <!--Pour rameur-->
+                <div class="type-rameur champs-type" style="display: none;">
+                    <label for="puissance_r">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 3000W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="puissance" id="puissance_r"
+                        value="{{ objet.puissance }}">
+
+                    <label for="intensite_r">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique.
+                    </small>
+
+                    <input type="number" data-name="intensite" id="intensite_r" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+
+                    <label for="type_resistance">Type de résistance :</label>
+                    <small class="note"> Air (dynamique), Eau (réaliste), Magnétique (silencieux), Hybride
+                        (combiné)</small>
+                    {% with s=objet.type_resistance|default:"" %}
+                    <select data-name="type_resistance_r" id="type_resistance_r">
+                        <option value="air" {% if "air" in r %}selected{% endif %}>Air</option>
+                        <option value="eau" {% if "eau" in r %}selected{% endif %}>Eau</option>
+                        <option value="magnétique" {% if "magnétique" in r %}selected{% endif %}>Magnétique</option>
+                        <option value="hybride" {% if "hybride" in r %}selected{% endif %}>Hybride</option>
+                    </select>
+                    {% endwith %}
+
+                    <label for="longueur_rail">Longueur des rails (cm) :</label>
+                    <small class="note"> Recommandé : 110 cm. (Min : 100 / Max : 160)</small>
+                    <input type="number" data-name="longueur_rail" id="longueur_rail" value="{{ objet.longueur_rail }}"
+                        min="100" max="160" step="1">
+
+
+                </div>
+
+                <!-- Pour Elliptique -->
+                <div class="type-elliptique champs-type" style="display: none;">
+                    <label for="puissance_e">Puissance max (W):</label>
+                    <small class="note">
+                        Recommandé : 3000W pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="puissance" id="puissance_e"
+                        value="{{ objet.puissance }}">
+
+                    <label for="inclinaison_max_e">Inclinaison max (%):</label>
+                    <small class="note">
+                        Recommandé : 40% pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="inclinaison_max" id="inclinaison_max_e"
+                        value="{{objet.inclinaison_max }}">
+
+                    <label for="vitesse_max_e">Vitesse max (km/h):</label>
+                    <small class="note"> Recommandé : 20 km/h pour usage sportif classique.
+                    </small>
+
+                    <input type="number" step="0.1" data-name="vitesse_max" id="vitesse_max_e"
+                        value="{{ objet.vitesse_max }}">
+
+                    <label for="intensite_e">Intensité:</label>
+                    <small class="note"> Recommandé : 10 niveaux pour usage sportif classique. (max 20)
+                    </small>
+
+                    <input type="number" data-name="intensite" id="intensite_e" value="{{ objet.intensite }}" min="1"
+                        max="20" required>
+
+                    <label for="longueur_pas">Longueur des pas (cm) :</label>
+                    <small class="note"> Recommandé : 50 cm pour usage confortable. (min 30 / max 70)</small>
+                    <input type="number" data-name="longueur_pas" id="longueur_pas" value="{{ objet.longueur_pas }}"
+                        min="30" max="70" step="1">
+
+                    <label for="type_mouvement">Type de mouvement :</label>
+                    <small class="note"> Linéaire (mouvement droit), Elliptique (plus naturel), Rotatif (style
+                        stepper)</small>
+                    {% with m=objet.type_mouvement|default:"" %}
+                    <select data-name="type_mouvement" id="type_mouvement">
+                        <option value="linéaire" {% if "linéaire" in m %}selected{% endif %}>Linéaire</option>
+                        <option value="elliptique" {% if "elliptique" in m %}selected{% endif %}>Elliptique</option>
+                        <option value="rotatif" {% if "rotatif" in m %}selected{% endif %}>Rotatif</option>
+                    </select>
+                    {% endwith %}
+
+
+                </div>
+
+
+
+            </div>
             <button type="submit">Ajouter l'objet</button>
         </form>
     </section>
@@ -309,6 +542,50 @@
                     objetsSection.scrollIntoView({ behavior: "smooth" });
                 }
             }
+            const typeSelect = document.getElementById("type");
+
+            const typeMapping = {
+                "vélo": ".type-velo",
+                "tapis de course": ".type-tapis",
+                "stepper": ".type-stepper",
+                "rameur": ".type-rameur",
+                "elliptique": ".type-elliptique"
+            };
+
+            function updateChampsSpecifiques() {
+                const selectedType = typeSelect.value.toLowerCase().trim();
+
+                // Masquer tous les blocs
+                document.querySelectorAll(".champs-type").forEach(div => {
+                    div.style.display = "none";
+                    div.querySelectorAll("[data-name]").forEach(input => {
+                        input.removeAttribute("name");
+                        input.removeAttribute("required");
+                    });
+                });
+
+                // Afficher le bon bloc
+                const bloc = typeMapping[selectedType];
+                if (bloc) {
+                    const el = document.querySelector(bloc);
+                    if (el) {
+                        el.style.display = "block";
+                        el.querySelectorAll("[data-name]").forEach(input => {
+                            const name = input.getAttribute("data-name");
+                            input.setAttribute("name", name);
+                            if (input.hasAttribute("data-required")) {
+                                input.setAttribute("required", "required");
+                            }
+                        });
+                    }
+                }
+            }
+
+            // Événement sur changement du type
+            typeSelect.addEventListener("change", updateChampsSpecifiques);
+
+            // Init si un type est prérempli (ex : en cas d’erreur retour POST)
+            updateChampsSpecifiques();
         });
     </script>
 </body>

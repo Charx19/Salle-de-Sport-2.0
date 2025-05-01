@@ -73,6 +73,8 @@ class ObjetConnecte(models.Model):
     hauteur_marche = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     longueur_rail = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     type_mouvement = models.CharField(max_length=100, null=True, blank=True)
+    est_disponible = models.BooleanField(default=True)
+
     longueur_pas = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
 
     def __str__(self):

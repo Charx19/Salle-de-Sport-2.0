@@ -18,7 +18,6 @@ from django.urls import reverse
 from datetime import datetime, time
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
-
 from django.http import HttpResponseRedirect, JsonResponse
 import matplotlib.pyplot as plt
 import io
@@ -28,11 +27,9 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from .models import HistoriqueUtilisation
 import json
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from .models import HistoriqueUtilisation
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from App_django_ConnectedGym.models import HistoriqueUtilisation
 
 
 User = get_user_model()
@@ -485,11 +482,6 @@ def objets_connectes(request):
     ajouter_points(request, 2, 'visited_objets')
     objets = ObjetConnecte.objects.all()
     return render(request, 'objets_connectes.html', {'objets': objets})
-
-import json
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from App_django_ConnectedGym.models import HistoriqueUtilisation
 
 
 @login_required

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 class ProfilUtilisateur(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -120,10 +122,18 @@ class ObjetSelectionne(models.Model):
     objet = models.ForeignKey(ObjetConnecte, on_delete=models.CASCADE)
     MUSIQUE_CHOICES = [
         ('aucune', 'Aucune'),
-        ('zen', 'Zen'),
-        ('cardio', 'Cardio'),
-        ('motivation', 'Motivation'),
-        ('muscu', 'Musculation'),
+        ('rap', 'Rap'),
+        ('classique', 'Classique'),
+        ('jazz', 'Jazz'),
+        ('pop', 'Pop'),
+        ('rock', 'Rock'),
+        ('electro', 'Electro'),
+        ('reggae', 'Reggae'),
+        ('country', 'Country'),
+        ('hiphop', 'Hip-hop'),
+        ('rnb', 'R&B'),
+        ('latino', 'Latino'),
+        ('kpop', 'K-Pop'),
     ]
 
     LUMIERE_CHOICES = [
@@ -136,14 +146,49 @@ class ObjetSelectionne(models.Model):
         ('on', 'ON'),
         ('off', 'OFF'),
     ]
+    
+    AMBIANCE_CHOICES = [
+        ('aucune', 'Aucune'),
+        ('zen', 'Zen'),
+        ('cardio', 'Cardio'),
+        ('motivation', 'Motivation'),
+        ('muscu', 'Musculation'),
+    ]
+        
 
+    ambiance = models.CharField(max_length=20, choices=AMBIANCE_CHOICES, blank=True, null=True)
     musique = models.CharField(max_length=20, choices=MUSIQUE_CHOICES, blank=True, null=True)
     lumiere = models.CharField(max_length=20, choices=LUMIERE_CHOICES, blank=True, null=True)
     climatisation = models.CharField(max_length=5, choices=CLIM_CHOICES, blank=True, null=True)
     temperature = models.IntegerField(blank=True, null=True)
+    date_debut = models.DateTimeField(auto_now_add=True)
+    duree_heures = models.PositiveIntegerField(default=1) 
+    def temps_restant(self):
+        fin = self.date_debut + timedelta(hours=self.duree_heures)
+        delta = fin - timezone.now()
+        if delta.total_seconds() < 0:
+            return timedelta(seconds=0)
+        return delta
+    @property
+    def est_encore_reserve(self):
+        fin = self.date_debut + timedelta(hours=self.duree_heures)
+        return timezone.now() < fin
 
     class Meta:
         unique_together = ('utilisateur', 'objet')
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.objet.nom}"
+
+
+class HistoriqueAmbiance(models.Model):
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    ambiance = models.CharField(max_length=20, choices=ObjetSelectionne.AMBIANCE_CHOICES)
+    musique = models.CharField(max_length=20, choices=ObjetSelectionne.MUSIQUE_CHOICES)
+    lumiere = models.CharField(max_length=20, choices=ObjetSelectionne.LUMIERE_CHOICES)
+    climatisation = models.CharField(max_length=5, choices=ObjetSelectionne.CLIM_CHOICES)
+    temperature = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.utilisateur.username} - {self.date.strftime('%d/%m/%Y %H:%M')}"

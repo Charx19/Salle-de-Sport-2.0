@@ -160,12 +160,15 @@
             <input type="text" name="nom" id="nom" required>
 
             <label for="type">Type :</label>
-            <select name="type" id="type" required>
+            <select name="type" id="type">
                 <option value="">-- Choisir un type --</option>
-                {% for t in types_autorises %}
-                <option value="{{ t }}">{{ t }}</option>
-                {% endfor %}
+                <option value="velo">Vélo</option>
+                <option value="tapis">Tapis de course</option>
+                <option value="stepper">Stepper</option>
+                <option value="rameur">Rameur</option>
+                <option value="elliptique">Elliptique</option>
             </select>
+
 
             <label for="image">Image de l’objet :</label>
             <input type="file" name="image" id="image" accept="image/*">

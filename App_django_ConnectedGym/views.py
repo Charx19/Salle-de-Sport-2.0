@@ -9,13 +9,13 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .form import CustomUserCreationForm, ProfilUtilisateurForm
-from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation, ObjetSelectionne
+from .models import ProfilUtilisateur, ObjetConnecte, HistoriqueUtilisation, ObjetSelectionne, HistoriqueAmbiance
 from .models import ZONE_CHOICES, ETAT_CHOICES, STATUT_CHOICES
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 from django.utils import timezone
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect, JsonResponse
@@ -30,6 +30,8 @@ import json
 from .models import HistoriqueUtilisation
 from django.contrib.auth.decorators import login_required
 from App_django_ConnectedGym.models import HistoriqueUtilisation
+from django.db.models import Count, Avg, F
+
 
 
 User = get_user_model()
@@ -184,6 +186,12 @@ def modif_objet(request, objet_id):
         if ancien_statut != "maintenance" and nouvel_statut == "maintenance":
             objet.derniere_maintenance = datetime.today().date()
 
+        image = request.POST.get("image", objet.image)
+        if image and not image.startswith("http") and not image.startswith("/"):
+            image = f"/static/images/{image}"
+        objet.image = image
+        
+        image_est_url = objet.image and (objet.image.startswith("http") or objet.image.startswith("/"))
         try:
             objet.save()
             try:
@@ -220,7 +228,8 @@ def modif_objet(request, objet_id):
                 'etat_choices': ETAT_CHOICES,
                 'statut_choices': STATUT_CHOICES,
             })
-
+    else:
+        image_est_url = objet.image and (objet.image.startswith("http") or objet.image.startswith("/"))
     return render(request, 'modif_objet.html', {
         'objet': objet,
         'zone_choices': ZONE_CHOICES,
@@ -568,10 +577,32 @@ def performances(request):
 @login_required
 def personnalisation(request):
     ajouter_points(request, 2, 'visited_perso')
+    zone_filtre = request.GET.get('filtre_zone')
+    type_filtre = request.GET.get('filtre_type')
 
-    objets = ObjetConnecte.objects.filter(est_disponible=True)
+    objets_query = ObjetConnecte.objects.filter(est_disponible=True)
+
+    if zone_filtre:
+        objets_query = objets_query.filter(zone__iexact=zone_filtre)
+
+    if type_filtre:
+        objets_query = objets_query.filter(type__iexact=type_filtre)
+    reservations = ObjetSelectionne.objects.exclude(utilisateur=request.user)
+    objets_reserves_ids = [
+        r.objet.id for r in reservations
+        if timezone.now() < r.date_debut + timedelta(hours=r.duree_heures)
+    ]
+
+    objets = objets_query.exclude(id__in=objets_reserves_ids)
+
     selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
-    ambiance = ObjetSelectionne.objects.filter(utilisateur=request.user).first()
+    now = timezone.now()
+    for s in selectionnes:
+        fin = s.date_debut + timedelta(hours=s.duree_heures)
+        s.expiration_datetime = fin
+
+    ambiance = ObjetSelectionne.objects.filter(utilisateur=request.user).order_by('-id').first()
+
 
 
     if request.method == 'POST':
@@ -580,17 +611,92 @@ def personnalisation(request):
         objet = get_object_or_404(ObjetConnecte, id=objet_id)
 
         if action == 'add':
-            ObjetSelectionne.objects.get_or_create(utilisateur=request.user, objet=objet)
+            duree = int(request.POST.get('duree_heures', 1))
+            if duree > 10:
+                duree = 10
+            ObjetSelectionne.objects.create(utilisateur=request.user, objet=objet, duree_heures=duree)
+            objet.est_disponible = False
+            objet.save()
+
+
         elif action == 'remove':
             ObjetSelectionne.objects.filter(utilisateur=request.user, objet=objet).delete()
-
+            objet.est_disponible = True
+            objet.save()
         return redirect(reverse('personnalisation') + '#objets')
+    # Calculer l’ambiance préférée
+    ambiance_preferee = (
+    HistoriqueAmbiance.objects
+    .filter(utilisateur=request.user)
+    .values('ambiance')
+    .annotate(total=Count('ambiance'))
+    .order_by('-total')
+    .first()
+    )
+    # Musique préférée
+    musique_preferee = (
+    HistoriqueAmbiance.objects
+    .filter(utilisateur=request.user)
+    .values('musique')
+    .annotate(total=Count('musique'))
+    .order_by('-total')
+    .first()
+    )
+
+    # Lumière préférée
+    lumiere_preferee = (
+    HistoriqueAmbiance.objects
+    .filter(utilisateur=request.user)
+    .values('lumiere')
+    .annotate(total=Count('lumiere'))
+    .order_by('-total')
+    .first()
+    )
+
+    # Climatisation la plus utilisée
+    clim_preferee = (
+    HistoriqueAmbiance.objects
+    .filter(utilisateur=request.user)
+    .values('climatisation')
+    .annotate(total=Count('climatisation'))
+    .order_by('-total')
+    .first()
+    )
+
+    # Température moyenne si clim = 'on'
+    temperature_moyenne = (
+    HistoriqueAmbiance.objects
+    .filter(utilisateur=request.user, climatisation='on', temperature__isnull=False)
+    .aggregate(moyenne=Avg('temperature'))['moyenne']
+    )
+    # Top 3 des objets les plus utilisés par l’utilisateur
+    top_objets = (
+    ObjetSelectionne.objects
+    .filter(utilisateur=request.user)
+    .values(
+        nom=F('objet__nom'),
+        image=F('objet__image')
+    )
+    .annotate(total=Count('objet'))
+    .order_by('-total')[:3]
+    )
+
+
+    
 
     return render(request, 'personnalisation.html', {
     'objets': objets,
     'selectionnes': selectionnes,
     'selectionnes_ids': [s.objet.id for s in selectionnes],
     'ambiance': ambiance,
+    'ambiance_preferee': ambiance_preferee,
+    'musique_preferee': musique_preferee,
+    'lumiere_preferee': lumiere_preferee,
+    'clim_preferee': clim_preferee,
+    'temperature_moyenne': temperature_moyenne,
+    'top_objets': top_objets,
+    'now': timezone.now(),
+
 })
 
 
@@ -598,20 +704,42 @@ def personnalisation(request):
 @login_required
 def personnalisation_ambiance(request):
     if request.method == 'POST':
+        ambiance = request.POST.get('ambiance')
         musique = request.POST.get('musique')
         lumiere = request.POST.get('lumiere')
         clim = request.POST.get('clim')
         temp = request.POST.get('temperature')
 
-        objets_selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
+        # Choix d’un objet disponible quelconque (à adapter si besoin)
+        objet = ObjetConnecte.objects.filter(est_disponible=True).exclude(
+            id__in=ObjetSelectionne.objects.filter(utilisateur=request.user).values_list('objet_id', flat=True)
+        ).first()
 
-        for obj_sel in objets_selectionnes:
-            obj_sel.musique = musique
-            obj_sel.lumiere = lumiere
-            obj_sel.climatisation = clim
-            obj_sel.temperature = temp
-            obj_sel.save()
+        if objet:
+            try:
+                ObjetSelectionne.objects.create(
+                    utilisateur=request.user,
+                    objet=objet,
+                    ambiance=ambiance,
+                    musique=musique,
+                    lumiere=lumiere,
+                    climatisation=clim,
+                    temperature=temp
+                )
+            except IntegrityError:
+                messages.error(request, "Cet objet a déjà été sélectionné.")
+        else:
+            messages.warning(request, "Aucun nouvel objet disponible pour être sélectionné.")
 
-        return redirect('accueil')  # ou une page de confirmation ?
+        HistoriqueAmbiance.objects.create(
+            utilisateur=request.user,
+            ambiance=ambiance,
+            musique=musique,
+            lumiere=lumiere,
+            climatisation=clim,
+            temperature=temp if clim == 'on' else None
+        )
+        return redirect('personnalisation')
+        
 
     return render(request, 'personnalisation_ambiance.html')

@@ -71,6 +71,17 @@
             text-align: center;
             margin-top: 2rem;
         }
+
+        .btn.success {
+            background-color: #3a00c2;
+            color: white;
+            border: 2px solid #3a00c2;
+        }
+
+        .btn.success:hover {
+            background-color: white;
+            color: #3a00c2;
+        }
     </style>
 </head>
 
@@ -155,17 +166,20 @@
         <div class="overlay">
             <div class="container hero-content">
                 <h1>Personnalisez votre expérience</h1>
-                <p>Choisissez votre salle et vos équipements connectés préférés.</p>
+                <p>Choisissez votre ambiance.</p>
+                <a href="#objets" class="btn light">
+                    Commencer la personnalisation de l'ambiance <span class="arrow">→</span>
+                </a>
             </div>
         </div>
     </section>
-    <section class="features-section">
+    <section class="features-section" id="objets">
         <div class="ambiance-container">
             <form method="POST">
                 {% csrf_token %}
 
-                <h2>🎵 Musique</h2>
-                <select name="musique" required>
+                <h2>Ambiance</h2>
+                <select name="ambiance" required>
                     <option value="">-- Choisir une ambiance --</option>
                     <option value="aucune">Aucune</option>
                     <option value="zen">Zen</option>
@@ -174,24 +188,45 @@
                     <option value="muscu">Musculation</option>
                 </select>
 
-                <h2>💡 Lumière</h2>
+                <h2>Musique</h2>
+                <select name="musique" required>
+                    <option value="">-- Choisir une musique --</option>
+                    <option value="aucune">Aucune</option>
+                    <option value="rap">Rap</option>
+                    <option value="pop">Pop</option>
+                    <option value="rock">Rock</option>
+                    <option value="classique">Classique</option>
+                    <option value="electro">Electro</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="reggae">Reggae</option>
+                    <option value="country">Country</option>
+                    <option value="hiphop">Hip-Hop</option>
+                    <option value="rnb">R&B</option>
+                    <option value="salsa">Salsa</option>
+                    <option value="kpop">K-Pop</option>
+                    <option value="latino">Latino</option>
+                </select>
+
+                <h2>Lumière</h2>
                 <select name="lumiere" required>
                     <option value="basse">Basse</option>
                     <option value="moyenne">Moyenne</option>
                     <option value="forte">Forte</option>
                 </select>
 
-                <h2>❄️ Climatisation</h2>
+                <h2>Climatisation</h2>
                 <div class="radio-group">
                     <label><input type="radio" name="clim" value="on" checked> ON</label>
                     <label><input type="radio" name="clim" value="off"> OFF</label>
                 </div>
 
-                <label for="temperature" style="display:block; margin-top: 1rem;">Température souhaitée (°C)</label>
-                <input type="number" name="temperature" id="temperature" min="16" max="30" value="21">
+                <div id="temperature-wrapper">
+                    <label for="temperature" style="display:block; margin-top: 1rem;">Température souhaitée (°C)</label>
+                    <input type="number" name="temperature" id="temperature" min="16" max="30" value="21">
+                </div>
 
                 <div class="submit-wrapper">
-                    <button class="btn primary" type="submit">Valider l’ambiance</button>
+                    <button class="btn success" type="submit">Valider l’ambiance</button>
                 </div>
             </form>
         </div>
@@ -284,7 +319,26 @@
                     objetsSection.scrollIntoView({ behavior: "smooth" });
                 }
             }
+            const climRadios = document.querySelectorAll('input[name="clim"]');
+            const temperatureWrapper = document.getElementById("temperature-wrapper");
+
+            function updateTemperatureVisibility() {
+                const selected = document.querySelector('input[name="clim"]:checked');
+                if (selected && selected.value === "on") {
+                    temperatureWrapper.style.display = "block";
+                } else {
+                    temperatureWrapper.style.display = "none";
+                }
+            }
+
+            climRadios.forEach(radio => {
+                radio.addEventListener("change", updateTemperatureVisibility);
+            });
+
+            // Initial call
+            updateTemperatureVisibility();
         });
+
     </script>
 </body>
 {% endblock %}

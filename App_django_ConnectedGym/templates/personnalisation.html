@@ -16,6 +16,7 @@
             padding: 2rem 6rem;
             align-items: flex-start;
             flex-wrap: wrap;
+            margin-top: 50px;
         }
 
 
@@ -25,6 +26,12 @@
 
         }
 
+        @media screen and (max-width: 768px) {
+            .objets-cartes {
+                margin-left: 0;
+                /* plus de décalage sur mobile */
+            }
+        }
 
         .objet-card.horizontal {
             display: flex;
@@ -126,7 +133,7 @@
         }
 
         .btn.primary {
-            background-color: #6a1b9a;
+            background-color: #746b8b;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -154,6 +161,48 @@
 
         .ambiance-recap p {
             margin: 0.4rem 0;
+        }
+
+        .input-duree {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background-color: #fdfdfd;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-duree:focus {
+            border-color: #3a00c2;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(58, 0, 194, 0.1);
+        }
+
+        form {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form select {
+            padding: 6px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -241,11 +290,52 @@
             <div class="container hero-content">
                 <h1>Personnalisez votre expérience</h1>
                 <p>Choisissez votre salle et vos équipements connectés préférés.</p>
+                <a href="#objets" class="btn light">
+                    Commencer la personnalisation <span class="arrow">→</span>
+                </a>
             </div>
+
         </div>
+
+        <form method="get" action="{% url 'personnalisation' %}"
+            style="margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+            <div>
+                <label for="filtre_zone">Zone :</label>
+                {% with z=request.GET.filtre_zone %}
+                <select name="filtre_zone" id="filtre_zone">
+                    <option value="">Toutes</option>
+                    <option value="ambiance" {% if "ambiance" in z%}selected{% endif %}>Ambiance</option>
+                    <option value="cardio" {% if "cardio" in z%}selected{% endif %}>Cardio</option>
+                    <option value="détente" {% if "détente" in z%}selected{% endif %}>Détente</option>
+                </select>
+                {% endwith %}
+
+            </div>
+
+            <div>
+                <label for="filtre_type">Type :</label>
+                {% with t=request.GET.filtre_type %}
+                <select name="filtre_type" id="filtre_type">
+                    <option value="">Tous</option>
+                    <option value="velo" {% if "velo" in t%}selected{% endif %}>Vélo</option>
+                    <option value="tapis" {% if "tapis" in t %}selected{% endif %}>Tapis</option>
+                    <option value="stepper" {% if "stepper" in t%}selected{% endif %}>Stepper</option>
+                    <option value="rameur" {% if "rameur" in t%}selected{% endif %}>Rameur</option>
+                    <option value="elliptique" {% if "elliptique" in t%}selected{% endif %}>Elliptique</option>
+                </select>
+                {% endwith %}
+
+            </div>
+
+            <div>
+                <button type="submit" class="btn success">Filtrer</button>
+                <a href="{% url 'personnalisation' %}" class="btn success" style="margin-left: 10px;">Réinitialiser</a>
+            </div>
+        </form>
+
     </section>
 
-    <section class="features-section">
+    <section class="features-section" id="objets">
         <div class="layout-wrapper">
             <!-- Colonne gauche : liste des objets -->
             <div class="objets-list">
@@ -255,18 +345,41 @@
 
                 <div id="objets" class="objets-cartes">
                     {% for obj in objets %}
-                    <div class="objet-card horizontal">
+                    <div class="objet-card horizontal"
+                        style="flex-direction: column; align-items: center; text-align: center;">
                         <div class="objet-image">
-                            <img src="{{ obj.image|default:'https://via.placeholder.com/120x90' }}" alt="{{ obj.nom }}">
+                            <img src="{{ obj.image|default:'/static/images/default_objet.png' }}" alt="{{ obj.nom }}"
+                                style="width: 140px; height: auto; object-fit: contain; border-radius: 8px;">
                         </div>
-                        <div class="objet-info">
-                            <h3>{{ obj.nom }}</h3>
+                        <div class="objet-info" style="margin-top: 0.5rem; width: 100%;">
+                            <h3 style="margin-bottom: 0.3rem;">{{ obj.nom }}</h3>
+                            <p style="font-size: 0.9rem; color: 
+                                {% if obj.statut == 'actif' %}green
+                                {% elif obj.statut == 'inactif' %}red
+                                {% else %}orange{% endif %};
+                                margin-bottom: 0.6rem;">
+                                {% if obj.statut == 'actif' %}Actif
+                                {% elif obj.statut == 'inactif' %}Inactif
+                                {% else %}En maintenance{% endif %}
+                            </p>
+
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="objet_id" value="{{ obj.id }}">
+
+                                {% if obj.id not in selectionnes_ids and obj.statut == 'actif' %}
+                                <label for="duree_heures_{{ obj.id }}"
+                                    style="font-size: 0.9rem; font-weight: 500;">Durée (en heures, max 10) :</label>
+                                <input type="number" name="duree_heures" id="duree_heures_{{ obj.id }}" value="1"
+                                    min="1" max="10"
+                                    style="width: 100%; padding: 6px; margin: 6px 0 10px 0; border: 1px solid #ccc; border-radius: 6px;">
+                                {% endif %}
+
                                 {% if obj.id in selectionnes_ids %}
                                 <input type="hidden" name="action" value="remove">
                                 <button class="btn danger">Retirer</button>
+                                {% elif obj.statut != 'actif' %}
+                                <button class="btn primary" disabled style="cursor: not-allowed;">Indisponible</button>
                                 {% else %}
                                 <input type="hidden" name="action" value="add">
                                 <button class="btn success">Ajouter</button>
@@ -274,6 +387,7 @@
                             </form>
                         </div>
                     </div>
+
                     {% endfor %}
                 </div>
             </div>
@@ -291,6 +405,19 @@
                     <p><strong>Zone</strong> : {{ s.objet.zone }}</p>
                     <p><strong>Type</strong> : {{ s.objet.get_type_display }}</p>
                     <p><strong>Attribut</strong> : {{ s.objet.attribut }}</p>
+                    <p><strong>Temps restant</strong> :
+                        {% if s.expiration_datetime > now %}
+                        {{ s.expiration_datetime|timeuntil }}
+                        {% else %}
+                        <span style="color:red;">Expiré</span>
+                        {% endif %}
+
+                    </p>
+
+
+                    <img src="{{ s.objet.image }}" alt="Image de {{ s.objet.nom }}"
+                        style="max-height: 80px; border-radius: 8px;">
+
 
                 </div>
                 {% endfor %}
@@ -299,24 +426,68 @@
                 {% endif %}
 
 
+
             </div>
 
 
 
+
         </div>
+        {% if ambiance_preferee %}
+        <div
+            style="background:#fff8dc; padding: 1rem; border-radius: 10px; margin: 2rem auto; max-width: 600px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+            <p style="margin:0; font-weight: bold; font-size: 1.1rem;">🏆 Ambiance préférée</p>
+            <p style="margin-top: 0.5rem;">
+                {{ ambiance_preferee.ambiance|capfirst }} ({{ ambiance_preferee.total }} fois enregistrée)
+            </p>
+        </div>
+        {% endif %}
+        {% if musique_preferee %}
+        <div
+            style="background:#f0f8ff; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <strong>Musique préférée</strong> : {{ musique_preferee.musique|capfirst }} ({{ musique_preferee.total }}
+            fois)
+        </div>
+        {% endif %}
+
+        {% if lumiere_preferee %}
+        <div
+            style="background:#f9fbe7; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <strong>Lumière préférée</strong> : {{ lumiere_preferee.lumiere|capfirst }} ({{ lumiere_preferee.total }}
+            fois)
+        </div>
+        {% endif %}
+
+        {% if clim_preferee %}
+        <div
+            style="background:#e1f5fe; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <strong>Climatisation préférée</strong> : {{ clim_preferee.climatisation|upper }}
+            ({{ clim_preferee.total}} fois)
+        </div>
+        {% endif %}
+
+        {% if temperature_moyenne %}
+        <div
+            style="background:#ffe0b2; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+            <strong>Température moyenne enregistrée</strong> : {{ temperature_moyenne|floatformat:1 }} °C
+        </div>
+        {% endif %}
+
         {% if ambiance %}
         <section class="ambiance-recap" style="max-width: 500px; margin: 2rem auto; text-align: center;">
-            <h3>🎧 Ambiance de votre séance</h3>
+            <h3>Ambiance de votre séance</h3>
+            <p><strong>Ambiance</strong> : {{ ambiance.get_ambiance_display }}</p>
             <p><strong>Musique</strong> : {{ ambiance.get_musique_display }}</p>
             <p><strong>Lumière</strong> : {{ ambiance.get_lumiere_display }}</p>
             <p><strong>Climatisation</strong> : {{ ambiance.get_climatisation_display }}</p>
-            {% if ambiance.climatisation == 'on' %}
-            <p><strong>Température</strong> : {{ ambiance.temperature }}°C</p>
+            {% if ambiance.climatisation == 'on' and ambiance.temperature %}
+            <p><strong>Température</strong> : {{ ambiance.temperature }} °C</p>
             {% endif %}
+
         </section>
         {% endif %}
         <div style="text-align:center; margin-top: 20px;">
-            <a href="{% url 'personnalisation_ambiance' %}" class="btn primary">Étape suivante : Ambiance</a>
+            <a href="{% url 'personnalisation_ambiance' %}" class="btn success">Étape suivante : Ambiance</a>
         </div>
     </section>
 

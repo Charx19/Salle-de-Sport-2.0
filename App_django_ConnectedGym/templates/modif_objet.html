@@ -218,6 +218,16 @@
     <!-- Contenu principal-->
     <section class="form-objet">
         <h2>Modifier l’objet connecté</h2>
+        <div style="text-align:center; margin-bottom: 1rem;">
+            {% if objet.image %}
+            <img src="{{ objet.image }}" alt="Image de l'objet" style="max-height: 150px;">
+            {% else %}
+            <img src="{% static 'images/default_objet.png' %}" alt="Image non disponible">
+            {% endif %}
+
+
+        </div>
+
 
         <form method="post" action="{% url 'modif_objet' objet.id %}">
             {% csrf_token %}
@@ -231,6 +241,8 @@
             <input type="text" id="type" value="{{ objet.get_type_display }}" disabled>
             <input type="hidden" name="type" value="{{ objet.type }}">
 
+            <label for="image">Image de l’objet :</label>
+            <input type="file" name="image" id="image" accept="image/*">
 
             <label for="zone">Zone :</label>
             {% with z=objet.zone|default:"" %}
@@ -624,11 +636,11 @@
             }
 
             // pour les dropdowns des choix
-            document.addEventListener("DOMContentLoaded", function () {
-                document.getElementById("zone").value = "{{ objet.zone }}";
-                document.getElementById("etat").value = "{{ objet.etat }}";
-                document.getElementById("statut").value = "{{ objet.statut }}";
-            });
+
+            document.getElementById("zone").value = "{{ objet.zone }}";
+            document.getElementById("etat").value = "{{ objet.etat }}";
+            document.getElementById("statut").value = "{{ objet.statut }}";
+
             // Gérer affichage des champs spécifiques selon le type
             const type = "{{ objet.type|lower }}".trim();
 

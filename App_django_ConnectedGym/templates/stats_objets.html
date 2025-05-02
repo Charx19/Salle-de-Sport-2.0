@@ -1,0 +1,424 @@
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Personnalisation</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .stats-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding: 40px 20px;
+        }
+
+        .stat-card {
+            flex: 1 1 300px;
+            max-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            align-items: center;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .stat-card canvas {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .bar-graph {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .btn.success {
+            background-color: #3a00c2;
+            color: white;
+            border: 2px solid #3a00c2;
+        }
+
+        .btn.success:hover {
+            background-color: white;
+            color: #3a00c2;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+    <!-- Barre du haut -->
+    <header class="main-nav">
+        <div class="container nav-container">
+            <div class="logo">ConnectedGym</div>
+
+            <!-- Bouton burger -->
+            <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+
+            </button>
+
+            <!-- Overlay + Menu mobile -->
+            <div class="mobile-menu" id="mobileMenu">
+                <div class="menu-overlay" id="menuOverlay"></div>
+                <div class="menu-panel">
+                    <div class="menu-header">
+                        <span class="logo">ConnectedGym</span>
+                        <button class="close-menu" id="closeMenu">✕</button>
+                    </div>
+
+                    <nav class="menu-body">
+                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                        <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                        <div class="dropdown-mobile">
+                            <a href="#" id="servicesToggle">Nos services</a>
+                            <div class="dropdown-content-mobile" id="dropdownServices">
+                                <a href="#">Nos équipements</a>
+                                <a href="#">Suivi des performances</a>
+                                <a href="#">Personnalisation</a>
+                            </div>
+                        </div>
+
+
+                        <a href="#">Contact</a>
+
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'profil' %}">Mon espace</a>
+                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                        {% else %}
+                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                        {% endif %}
+                    </nav>
+
+
+                </div>
+            </div>
+            <!-- Menu desktop -->
+            <nav class="nav-links desktop-only">
+                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                <div class="dropdown">
+                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                    <div class="dropdown-content" id="dropdown-services">
+                        <a href="#">Nos équipements</a>
+                        <a href="#">Suivi des performances</a>
+                        <a href="#">Personnalisation</a>
+                    </div>
+                </div>
+
+
+                <a href="#">Contact</a>
+
+                {% if user.is_authenticated %}
+                <a href="{% url 'profil' %}">Mon espace</a>
+                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                {% else %}
+                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+    <section class="hero-full" style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
+        <div class="overlay">
+            <div class="container hero-content">
+                <h1>Personnalisez votre expérience</h1>
+                <p>Choisissez votre ambiance.</p>
+                <a href="#objets" class="btn light">
+                    Commencer la personnalisation de l'ambiance <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!--Contenu de la page-->
+    <div class="stats-wrapper">
+        {% if par_type %}
+
+        <div class="stat-card">
+            <h3>Répartition des sélections par type</h3>
+            <canvas id="camembertType"></canvas>
+            <button onclick="exportCSV('type')" class="btn success">Exporter en CSV</button>
+
+        </div>
+
+        <script>
+            const dataTypes = JSON.parse('{{ par_type|escapejs }}');
+            console.log("par_type :", dataTypes);
+            const labelsTypes = dataTypes.map(item => item.objet__type);
+            const valuesTypes = dataTypes.map(item => item.nb);
+            console.log("par_type reçu :", dataTypes);
+
+            new Chart(document.getElementById("camembertType"), {
+                type: 'pie',
+                data: {
+                    labels: labelsTypes,
+                    datasets: [{
+                        data: valuesTypes,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Nombre de sélections par type d’objet'
+                        }
+                    }
+                }
+            });
+        </script>
+        {%endif%}
+        {% if par_zone %}
+        <div class="stat-card">
+            <h3>Répartition des sélections par zone</h3>
+            <canvas id="camembertZone"></canvas>
+            <button onclick="exportCSV('zone')" class="btn success">Exporter en CSV</button>
+
+        </div>
+
+        <script>
+            const dataZones = {{ par_zone| safe }};
+            const labelsZones = dataZones.map(item => item.objet__zone);
+            const valuesZones = dataZones.map(item => item.nb);
+
+            new Chart(document.getElementById("camembertZone"), {
+                type: 'pie',
+                data: {
+                    labels: labelsZones,
+                    datasets: [{
+                        data: valuesZones,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Répartition des sélections par zone'
+                        }
+                    }
+                }
+            });
+        </script>
+        {% endif %}
+
+        {% if duree_par_type %}
+        <div class="stat-card">
+            <h3>Durée d'utilisation</h3>
+            <canvas id="barDuree" class="bar-graph"></canvas>
+            <button onclick="exportCSV('duree')" class="btn success">Exporter en CSV</button>
+
+
+        </div>
+
+        <script>
+            const dureeData = {{ duree_par_type| safe }};
+            const barLabels = dureeData.map(item => item.objet__type);
+            const barValues = dureeData.map(item => item.total_duree);
+
+            new Chart(document.getElementById("barDuree"), {
+                type: 'bar',
+                data: {
+                    labels: barLabels,
+                    datasets: [{
+                        label: 'Durée totale (heures)',
+                        data: barValues,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Durée totale par type d’objet'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        },
+                        x: {
+                            ticks: {
+                                align: 'center'
+                            }
+                        }
+                    }
+
+                }
+            });
+        </script>
+        {%endif%}
+        {% if not par_type and not par_zone and not duree_par_type %}
+        <p style="text-align:center;">Aucune donnée pour l’instant. Essayez d’utiliser des objets connectés !</p>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-section">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>Service & Info</h4>
+                <ul>
+                    <li><a href="#">Service client</a></li>
+                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                    <li><a href="#">Horaires</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Promotions</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>À propos</h4>
+                <ul>
+                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                    <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Nos clubs</h4>
+                <ul>
+                    <li><a href="#">Paris</a></li>
+                    <li><a href="#">Cergy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Suivez-nous</h4>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // 🍔 Menu Burger
+            const burger = document.getElementById("hamburgerBtn");
+            const menu = document.getElementById("mobileMenu");
+            const close = document.getElementById("closeMenu");
+            const overlay = document.getElementById("menuOverlay");
+
+            function closeMenu() {
+                menu.classList.remove("active");
+            }
+
+            burger?.addEventListener("click", () => {
+                menu.classList.add("active");
+            });
+
+            close?.addEventListener("click", closeMenu);
+            overlay?.addEventListener("click", closeMenu);
+
+            // ✅ Menu déroulant mobile (Nos services)
+            const trigger = document.getElementById("servicesToggle");
+            const dropdown = document.getElementById("dropdownServices");
+
+            trigger?.addEventListener("click", function (e) {
+                e.preventDefault();
+                if (dropdown.style.display === "flex") {
+                    dropdown.style.display = "none";
+                } else {
+                    dropdown.style.display = "flex";
+                }
+            });
+
+            // Fermer si on clique ailleurs
+            document.addEventListener("click", function (e) {
+                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                    dropdown.style.display = "none";
+                }
+            });
+            // Si un paramètre de recherche est présent dans l’URL
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                // Scroller vers la section avec id="objets"
+                const objetsSection = document.getElementById("objets");
+                if (objetsSection) {
+                    objetsSection.scrollIntoView({ behavior: "smooth" });
+                }
+            }
+
+
+        });
+
+    </script>
+    <script>
+        let data = JSON.parse('{{ par_type|escapejs }}');
+
+
+        function exportCSV(source) {
+            let data = [];
+            let filename = 'export.csv';
+
+            if (source === 'type') {
+                data = JSON.parse('{{ par_type|escapejs }}');
+                filename = 'selections_par_type.csv';
+            }
+            else if (source === 'zone') {
+                data = JSON.parse('{{ par_zone|escapejs }}');
+                filename = 'selections_par_zone.csv';
+            } else if (source === 'duree') {
+                data = JSON.parse('{{ duree_par_type|escapejs }}');
+                filename = 'duree_par_type.csv';
+            }
+
+            if (!data.length) {
+                alert("Aucune donnée à exporter.");
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(";") + "\n";
+
+            data.forEach(row => {
+                const line = headers.map(h => row[h]).join(";");
+                csv += line + "\n";
+            });
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+
+
+</body>
+{% endblock %}
+
+
+</html>

@@ -30,7 +30,7 @@ import json
 from .models import HistoriqueUtilisation
 from django.contrib.auth.decorators import login_required
 from App_django_ConnectedGym.models import HistoriqueUtilisation
-from django.db.models import Count, Avg, F
+from django.db.models import Count, Avg, F, Sum
 
 
 
@@ -743,3 +743,32 @@ def personnalisation_ambiance(request):
         
 
     return render(request, 'personnalisation_ambiance.html')
+
+
+
+from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+
+@login_required
+def stats_objets(request):
+    selections = ObjetSelectionne.objects.filter(utilisateur=request.user)
+
+    # 1. Nombre de sélections par type d’objet
+    par_type = selections.values('objet__type').annotate(nb=Count('id'))
+
+    # 2. Répartition par zone
+    par_zone = selections.values('objet__zone').annotate(nb=Count('id'))
+
+    # 3. Durée totale d'utilisation par type
+    duree_par_type = (
+        selections
+        .values('objet__type')
+        .annotate(total_duree=Sum('duree_heures'))
+    )
+
+    return render(request, 'stats_objets.html', {
+        'par_type': json.dumps(list(par_type), cls=DjangoJSONEncoder),
+        'par_zone': json.dumps(list(par_zone), cls=DjangoJSONEncoder),
+        'duree_par_type': json.dumps(list(duree_par_type), cls=DjangoJSONEncoder),
+    })

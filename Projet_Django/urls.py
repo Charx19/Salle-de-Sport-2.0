@@ -32,6 +32,9 @@ urlpatterns = [
     path('personnalisation/ambiance/', views.personnalisation_ambiance, name='personnalisation_ambiance'),
     path('stats-objets/', views.stats_objets, name='stats_objets'),
     path('objectif/', views.objectif, name='objectif'),
+    path('objets-connectes/demande-suppression/<int:objet_id>/', views.demande_suppression_objet, name='demande_suppression_objet'),
+
+
 
 ]
 

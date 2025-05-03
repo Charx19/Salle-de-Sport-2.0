@@ -805,3 +805,25 @@ def stats_objets(request):
         'par_zone': json.dumps(list(par_zone), cls=DjangoJSONEncoder),
         'duree_par_type': json.dumps(list(duree_par_type), cls=DjangoJSONEncoder),
     })
+
+from django.contrib import messages
+from django.shortcuts import redirect, get_object_or_404
+from .models import ObjetConnecte, DemandeSuppressionObjet
+
+@login_required
+def demande_suppression_objet(request, objet_id):
+    if request.method == 'POST':
+        objet = get_object_or_404(ObjetConnecte, id=objet_id)
+        # Crée la demande seulement si elle n’existe pas déjà
+        demande, created = DemandeSuppressionObjet.objects.get_or_create(
+            utilisateur=request.user,
+            objet=objet
+        )
+        if created:
+            messages.success(
+                request,
+                f"Votre demande de suppression de l'objet « {objet.nom} » a été envoyée à l’administrateur."
+            )
+        else:
+            messages.info(request, "Vous avez déjà envoyé une demande pour cet objet.")
+    return redirect('objets_connectes')

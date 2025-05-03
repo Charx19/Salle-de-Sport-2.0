@@ -15,45 +15,45 @@
             text-align: center;
             margin-top: 80px;
         }
-
+    
         .header-objets h1 {
             font-size: 2.5em;
             color: #4a00e0;
             margin-bottom: 15px;
         }
-
+    
         .header-objets p {
             font-size: 1.2em;
             color: #555;
         }
-
+    
         .objet-item {
             text-align: center;
             transition: transform 0.3s;
         }
-
+    
         .objet-item img {
             width: 100%;
             height: auto;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-
+    
         .objet-item:hover {
             transform: scale(1.05);
         }
-
+    
         .objet-item h3 {
             margin-top: 10px;
             font-size: 1.1em;
             color: #333;
         }
-
+    
         a {
             text-decoration: none;
             color: inherit;
         }
-
+    
         .btn-ajouter {
             display: inline-block;
             margin-bottom: 30px;
@@ -65,11 +65,11 @@
             border-radius: 8px;
             transition: background-color 0.3s;
         }
-
+    
         .btn-ajouter:hover {
             background-color: #4a00e0;
         }
-
+    
         .objets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -77,11 +77,11 @@
             padding: 20px;
             justify-items: center;
         }
-
+    
         .objet-card {
             background: white;
             width: 250px;
-            height: 380px;
+            height: 420px; /* 🔼 hauteur augmentée pour le 4e bouton */
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
@@ -91,26 +91,26 @@
             justify-content: space-between;
             padding: 20px;
         }
-
+    
         .objet-image img {
             width: 100%;
             height: 150px;
             object-fit: contain;
             border-radius: 8px;
         }
-
+    
         .objet-content h3 {
             margin: 15px 0 10px;
             font-size: 1.3em;
             color: #333;
         }
-
+    
         .objet-buttons {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-
+    
         .btn-action {
             background-color: #6a00ff;
             color: white;
@@ -118,14 +118,35 @@
             border: none;
             border-radius: 8px;
             font-weight: bold;
-            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
             transition: background-color 0.3s;
         }
-
+    
         .btn-action:hover {
             background-color: #4a00cc;
         }
+    
+        .suppression-form {
+            margin: 0;
+        }
+    
+        .suppression-form button {
+            background-color: crimson;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+    
+        .suppression-form button:hover {
+            background-color: darkred;
+        }
     </style>
+    
 </head>
 
 <body>
@@ -236,8 +257,8 @@
             <div class="objet-content">
                 <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                     {{ obj.nom }}
-
                 </h3>
+    
                 {% if "actif" in obj.statut %}
                 <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
                     <span style="color: limegreen;"> Actif</span>
@@ -255,32 +276,28 @@
                     <span style="color: gray;"> Inconnu</span>
                 </p>
                 {% endif %}
-
-
-
-
-
-
-
-
+    
                 <div class="objet-buttons">
                     <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
-
                     <a href="{% url 'modif_objet' obj.id %}" class="btn-action">Modifier</a>
-
                     <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
+                    
+    
+                    <form method="post" action="{% url 'demande_suppression_objet' obj.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-action" style="background-color: crimson;">Demander suppression</button>
+                    </form>
+                    
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+    
 
     <div style="text-align: center; margin-top: 40px;">
         <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
     </div>
-
-
-
 
     <!-- Footer -->
     <footer class="footer-section">

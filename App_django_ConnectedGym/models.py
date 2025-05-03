@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 
+
 class ProfilUtilisateur(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     sexe = models.CharField(max_length=10, null=True, blank=True)
@@ -192,3 +193,22 @@ class HistoriqueAmbiance(models.Model):
 
     def __str__(self):
         return f"{self.utilisateur.username} - {self.date.strftime('%d/%m/%Y %H:%M')}"
+    
+
+class DemandeSuppressionObjet(models.Model):
+    utilisateur = models.ForeignKey(User, on_delete=models.CASCADE)
+    objet = models.ForeignKey('ObjetConnecte', on_delete=models.CASCADE)
+    date_demande = models.DateTimeField(auto_now_add=True)
+    traite = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Demande de {self.utilisateur.username} pour {self.objet.nom}"
+
+    def save(self, *args, **kwargs):
+        # Si instance existante, vérifier changement de 'traite'
+        if self.pk:
+            orig = DemandeSuppressionObjet.objects.get(pk=self.pk)
+            if not orig.traite and self.traite:
+                # supprime l’objet connecté
+                self.objet.delete()
+        super().save(*args, **kwargs)

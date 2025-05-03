@@ -323,29 +323,33 @@
         <h1>Bienvenue sur votre profil</h1>
 
         {% if messages %}
-        {% for message in messages %}
-        <p style="color: green;"><strong>{{ message }}</strong></p>
-        {% endfor %}
+            {% for message in messages %}
+                <p style="color: green;"><strong>{{ message }}</strong></p>
+            {% endfor %}
         {% endif %}
-
+        
         {% if edit %}
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="info">
-                <p><strong>Nom :</strong> {{ form.last_name }}</p>
-                <p><strong>Prénom :</strong> {{ form.first_name }}</p>
-                <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
-                <p><strong>Email :</strong> {{ form.email }}</p>
-                <p><strong>Sexe :</strong> {{ form.sexe }}</p>
-                <p><strong>Date de naissance :</strong> {{ form.date_naissance }}</p>
-                <p><strong>Photo de profil :</strong> {{ form.photo_profil }}</p>
-            </div>
-            <div class="actions">
-                <button type="submit" class="btn">Enregistrer les modifications</button>
-            </div>
-        </form>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="info">
+                    <p><strong>Nom :</strong> {{ form.last_name }}</p>
+                    <p><strong>Prénom :</strong> {{ form.first_name }}</p>
+                    <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
+                    <p><strong>Email :</strong> {{ form.email }}</p>
+                    <p><strong>Sexe :</strong> {{ form.sexe }}</p>
+                    <p><strong>Date de naissance :</strong> {{ form.date_naissance }}</p>
+                    <p><strong>Photo de profil :</strong> {{ form.photo_profil }}</p>
+                </div>
+        
+                <div class="actions" style="margin-top: 20px;">
+                    <button type="submit" class="btn">Enregistrer les modifications</button>
+                </div>
+            </form>
         {% else %}
-    <!-- Section : Mes infos -->
+            <!-- Partie non-modifiable affichée ici -->
+        {% endif %}
+        
+   <!-- Section : Mes infos -->
 <div id="section-infos">
     <div class="info">
         <p><strong>Nom :</strong> {{ user.last_name }}</p>
@@ -367,28 +371,21 @@
         </p>
     </div>
     {% endif %}
-</div>
-{% if profil.points >= 10 %}
-    <div style="margin-top: 20px; text-align: center;">
-        <a href="/admin/" class="btn success"
-           style="background-color: #4caf50; color: white; padding: 10px 18px; border-radius: 8px;
-                  font-weight: bold; text-decoration: none;">
-            Accéder à l’espace admin
-        </a>
-        <p style="margin-top: 5px; font-size: 0.9rem; color: #555;">Vous avez atteint le niveau expert ({{ profil.points }} points).</p>
-    </div>
-{% endif %}
 
-{% if profil.points >= 10 %}
+    {% if profil.points >= 10 %}
     <div style="margin-top: 20px; text-align: center;">
         <a href="/admin/" class="btn success"
            style="background-color: #4caf50; color: white; padding: 10px 18px; border-radius: 8px;
                   font-weight: bold; text-decoration: none;">
             Accéder à l’espace admin
         </a>
-        <p style="margin-top: 5px; font-size: 0.9rem; color: #555;">Vous avez atteint le niveau expert ({{ profil.points }} points).</p>
+        <p style="margin-top: 5px; font-size: 0.9rem; color: #555;">
+            Vous avez atteint le niveau expert ({{ profil.points }} points).
+        </p>
     </div>
-{% endif %}
+    {% endif %}
+</div>
+
 
 
 
@@ -429,59 +426,51 @@
         </div>
 
 
-        <!-- Section : Modifier profil -->
-        <div id="section-modifier" style="display: none;">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="info">
-                    <p><strong>Nom :</strong> {{ form.last_name }}</p>
-                    <p><strong>Prénom :</strong> {{ form.first_name }}</p>
-                    <p><strong>Email :</strong> {{ form.email }}</p>
-                    <p><strong>Sexe :</strong> {{ form.sexe }}</p>
+<!-- Section : Modifier profil -->
+<div id="section-modifier" style="display: none;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="info">
+            <p><strong>Nom :</strong> {{ form.last_name }}</p>
+            <p><strong>Prénom :</strong> {{ form.first_name }}</p>
+            <p><strong>Email :</strong> {{ form.email }}</p>
+            <p><strong>Sexe :</strong> {{ form.sexe }}</p>
 
-                    <p><strong>Date de naissance :</strong></p>
-                    <input type="date" name="date_naissance" value="{{ form.date_naissance.value|default_if_none:'' }}"
-                        style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 300px;">
+            <p><strong>Date de naissance :</strong></p>
+            <input type="date" name="date_naissance" value="{{ form.date_naissance.value|default_if_none:'' }}"
+                style="padding: 8px; border-radius: 6px; border: 1px solid #ccc; width: 300px;">
 
-                    <p><strong>Photo de profil :</strong></p>
-                    <label for="id_photo_profil"
-                        style="display: inline-block; background-color: #6a00ff; color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
-                        Choisir une image
-                    </label>
-                    <span id="photoFileName" style="margin-left: 10px; color: #555;">Aucun fichier sélectionné</span>
-                    <input type="file" id="id_photo_profil" name="photo_profil" style="display: none;"
-                        onchange="updatePhotoFileName(this)">
-                </div>
-
-                <a href="javascript:void(0)" id="togglePasswordFields"
-                    style="color: #6a00ff; text-decoration: underline;">Modifier le mot de passe</a>
-                <div id="passwordFields" style="display: none; margin-top: 15px;">
-                    <input type="password" name="new_password1" placeholder="Nouveau mot de passe"
-                        style="margin-bottom: 10px; width: 300px;">
-                    <br>
-                    <input type="password" name="new_password2" placeholder="Confirmer le mot de passe"
-                        style="width: 300px;">
-                </div>
-
-                <div class="actions" style="margin-top: 20px;">
-                    <button type="submit" class="btn">Enregistrer les modifications</button>
-                </div>
-            </form>
+            <p><strong>Photo de profil :</strong></p>
+            <label for="id_photo_profil"
+                style="display: inline-block; background-color: #6a00ff; color: white; padding: 8px 15px; border-radius: 6px; cursor: pointer;">
+                Choisir une image
+            </label>
+            <span id="photoFileName" style="margin-left: 10px; color: #555;">Aucun fichier sélectionné</span>
+            <input type="file" id="id_photo_profil" name="photo_profil" style="display: none;"
+                onchange="updatePhotoFileName(this)">
         </div>
 
+        <a href="javascript:void(0)" id="togglePasswordFields"
+            style="color: #6a00ff; text-decoration: underline;">Modifier le mot de passe</a>
+        <div id="passwordFields" style="display: none; margin-top: 15px;">
+            <input type="password" name="new_password1" placeholder="Nouveau mot de passe"
+                style="margin-bottom: 10px; width: 300px;">
+            <br>
+            <input type="password" name="new_password2" placeholder="Confirmer le mot de passe"
+                style="width: 300px;">
+        </div>
 
-        {% endif %}
-
-        {% if profil.niveau_experience == "expert" %}
         <div class="actions" style="margin-top: 20px;">
-            <a href="/admin/" class="btn" style="background-color: #333;">Accéder à l’administration</a>
+            <button type="submit" class="btn">Enregistrer les modifications</button>
         </div>
-        {% endif %}
+    </form>
+</div>
 
-        <div class="actions" style="margin-top: 30px;">
-            <a href="{% url 'deconnexion' %}" class="btn">Déconnexion</a>
-        </div>
-    </div>
+
+<div class="actions" style="margin-top: 30px;">
+    <a href="{% url 'deconnexion' %}" class="btn">Déconnexion</a>
+</div>
+
 
 
     <script>

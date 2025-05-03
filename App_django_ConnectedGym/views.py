@@ -495,17 +495,29 @@ def demander_suppression(request, objet_id):
     return redirect('objets_connectes')
 # ============ SYSTEME DE POINTS AUTOMATIQUE =============
 
+from.models import HistoriquePoints
 def ajouter_points(request, points, cle_session):
-    """ Ajoute des points une seule fois par session si non déjà attribués """
+    """Ajoute des points pour une action donnée une seule fois, sans dépasser 10 points"""
     if request.user.is_authenticated:
         profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
-        
-        # Ne pas ajouter les mêmes points plusieurs fois pour la même action
-        if not request.session.get(cle_session):
-            profil.points += points
-            request.session[cle_session] = True  # Marquer comme déjà comptabilisé
-            profil.save()  # Sauvegarder les nouveaux points
-            verifier_niveau(profil)  # Vérifier si niveau doit être mis à jour
+
+        # Vérifie si cette action a déjà été comptabilisée de manière persistante
+        if HistoriquePoints.objects.filter(user=request.user, code_action=cle_session).exists():
+            return  # Ne pas ajouter de points deux fois pour la même action
+
+        # Calcul du nombre de points restants jusqu'à 10
+        points_restants = max(0, 10 - profil.points)
+        points_a_ajouter = min(points, points_restants)
+
+        if points_a_ajouter > 0:
+            profil.points += points_a_ajouter
+            profil.save()
+            verifier_niveau(profil)
+            HistoriquePoints.objects.create(user=request.user, code_action=cle_session)
+
+        # Pour compatibilité avec les anciennes sessions
+        request.session[cle_session] = True
+
 
 
 def verifier_niveau(profil):

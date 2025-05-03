@@ -210,5 +210,14 @@ class DemandeSuppressionObjet(models.Model):
 
     def __str__(self):
         return f"Demande de {self.utilisateur.username} pour {self.objet.nom}"
+    
+class HistoriquePoints(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code_action = models.CharField(max_length=100)
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.code_action}"
+
 
 

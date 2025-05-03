@@ -35,7 +35,7 @@
                         </div>
                     </div>
 
-                    <a href="#">Contact</a>
+
 
                     {% if user.is_authenticated %}
                     <a href="{% url 'profil' %}">Mon espace</a>
@@ -62,7 +62,7 @@
                 </div>
             </div>
 
-            <a href="#">Contact</a>
+
 
             {% if user.is_authenticated %}
             <a href="{% url 'profil' %}">Mon espace</a>
@@ -94,35 +94,7 @@
     </div>
 </section>
 
-<!--Recherche-->
-<section class="smart-search">
-    <div class="smart-search-inner">
-        <h2 class="section-title">Trouvez l'expérience qui vous correspond</h2>
-        <form class="smart-search-form">
-            <input type="text" id="recherche" placeholder="Tapez un mot-clé (ex: balance, coaching...)"
-                class="search-full" />
-            <div class="form-row">
-                <select id="profil">
-                    <option value="">Choisissez un profil</option>
-                    <option value="visiteur">Visiteur</option>
-                    <option value="debutant">Débutant</option>
-                    <option value="intermediaire">Intermédiaire</option>
-                    <option value="avance">Avancé</option>
-                </select>
 
-                <select id="objectif">
-                    <option value="">Objectif principal</option>
-                    <option value="coaching">Coaching guidé</option>
-                    <option value="suivi">Suivi des performances</option>
-                    <option value="objets">Objets connectés</option>
-                    <option value="gestion">Gestion intelligente</option>
-                </select>
-
-                <button type="submit">Recherche</button>
-            </div>
-        </form>
-    </div>
-</section>
 
 <!-- Fonctionnalités -->
 <section class="features-section">

@@ -442,9 +442,12 @@ def info_objet(request, objet_id):
 @login_required
 def profil(request):
     profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
+
+    # ✅ Synchronise le niveau à chaque affichage du profil
+    verifier_niveau(profil)
+
     edit_mode = request.GET.get('edit') == '1'
     utilisateurs = ProfilUtilisateur.objects.select_related('user').all()
-
 
     if request.method == 'POST':
         form = ProfilUtilisateurForm(request.POST, request.FILES, instance=profil, user=request.user)
@@ -458,7 +461,7 @@ def profil(request):
             if new_password1 and new_password1 == new_password2:
                 request.user.set_password(new_password1)
                 request.user.save()
-                update_session_auth_hash(request, request.user)  # Important pour ne pas déconnecter l'utilisateur
+                update_session_auth_hash(request, request.user)
                 messages.success(request, "Mot de passe mis à jour avec succès.")
 
             messages.success(request, "Profil mis à jour avec succès.")
@@ -470,8 +473,9 @@ def profil(request):
         'form': form,
         'profil': profil,
         'edit': edit_mode,
-        'utilisateurs': utilisateurs, 
+        'utilisateurs': utilisateurs,
     })
+
 
 
 @login_required
@@ -492,29 +496,41 @@ def demander_suppression(request, objet_id):
 # ============ SYSTEME DE POINTS AUTOMATIQUE =============
 
 def ajouter_points(request, points, cle_session):
+    """ Ajoute des points une seule fois par session si non déjà attribués """
     if request.user.is_authenticated:
         profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
-        if not request.session.get(cle_session):  # Évite d'ajouter les mêmes points plusieurs fois
+        
+        # Ne pas ajouter les mêmes points plusieurs fois pour la même action
+        if not request.session.get(cle_session):
             profil.points += points
-            profil.save()
-            request.session[cle_session] = True
-            verifier_niveau(profil)
+            request.session[cle_session] = True  # Marquer comme déjà comptabilisé
+            profil.save()  # Sauvegarder les nouveaux points
+            verifier_niveau(profil)  # Vérifier si niveau doit être mis à jour
+
 
 def verifier_niveau(profil):
-    """ Met automatiquement à jour le niveau selon les nouveaux points """
-    p = profil.points
-    if p >= 7 and profil.niveau_experience != 'expert':
+    """ Met à jour le niveau si un nouveau seuil est franchi. Ne rétrograde jamais. """
+    niveaux = ['débutant', 'intermédiaire', 'avancé', 'expert']
+    points = profil.points
+    niveau_actuel = profil.niveau_experience
+
+    if points >= 10 and niveaux.index(niveau_actuel) < niveaux.index('expert'):
         profil.niveau_experience = 'expert'
-        profil.user.is_staff = True  # ✅ Devient admin Django
+        profil.user.is_staff = True  # Devient admin
         profil.user.save()
-    elif p >= 5 and profil.niveau_experience != 'avancé':
+
+    elif points >= 5 and niveaux.index(niveau_actuel) < niveaux.index('avancé'):
         profil.niveau_experience = 'avancé'
-    elif p >= 3 and profil.niveau_experience != 'intermédiaire':
+
+    elif points >= 3 and niveaux.index(niveau_actuel) < niveaux.index('intermédiaire'):
         profil.niveau_experience = 'intermédiaire'
-    else:
+
+    elif points >= 1 and niveaux.index(niveau_actuel) < niveaux.index('débutant'):
         profil.niveau_experience = 'débutant'
-    
+
     profil.save()
+
+
 
 
 # ===================== FONCTIONNALITÉS ====================
@@ -610,6 +626,7 @@ def performances(request):
 @login_required
 def personnalisation(request):
     ajouter_points(request, 2, 'visited_perso')
+
     zone_filtre = request.GET.get('filtre_zone')
     type_filtre = request.GET.get('filtre_type')
 
@@ -620,6 +637,7 @@ def personnalisation(request):
 
     if type_filtre:
         objets_query = objets_query.filter(type__iexact=type_filtre)
+
     reservations = ObjetSelectionne.objects.exclude(utilisateur=request.user)
     objets_reserves_ids = [
         r.objet.id for r in reservations
@@ -636,8 +654,6 @@ def personnalisation(request):
 
     ambiance = ObjetSelectionne.objects.filter(utilisateur=request.user).order_by('-id').first()
 
-
-
     if request.method == 'POST':
         objet_id = request.POST.get('objet_id')
         action = request.POST.get('action')
@@ -651,86 +667,87 @@ def personnalisation(request):
             objet.est_disponible = False
             objet.save()
 
+            # ✅ Ajout de points : 1 point par objet ajouté
+            profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
+            profil.points += 1
+            profil.save()
+            verifier_niveau(profil)
 
         elif action == 'remove':
             ObjetSelectionne.objects.filter(utilisateur=request.user, objet=objet).delete()
             objet.est_disponible = True
             objet.save()
+
         return redirect(reverse('personnalisation') + '#objets')
-    # Calculer l’ambiance préférée
+
+    # Calcul ambiance préférée
     ambiance_preferee = (
-    HistoriqueAmbiance.objects
-    .filter(utilisateur=request.user)
-    .values('ambiance')
-    .annotate(total=Count('ambiance'))
-    .order_by('-total')
-    .first()
+        HistoriqueAmbiance.objects
+        .filter(utilisateur=request.user)
+        .values('ambiance')
+        .annotate(total=Count('ambiance'))
+        .order_by('-total')
+        .first()
     )
-    # Musique préférée
+
     musique_preferee = (
-    HistoriqueAmbiance.objects
-    .filter(utilisateur=request.user)
-    .values('musique')
-    .annotate(total=Count('musique'))
-    .order_by('-total')
-    .first()
+        HistoriqueAmbiance.objects
+        .filter(utilisateur=request.user)
+        .values('musique')
+        .annotate(total=Count('musique'))
+        .order_by('-total')
+        .first()
     )
 
-    # Lumière préférée
     lumiere_preferee = (
-    HistoriqueAmbiance.objects
-    .filter(utilisateur=request.user)
-    .values('lumiere')
-    .annotate(total=Count('lumiere'))
-    .order_by('-total')
-    .first()
+        HistoriqueAmbiance.objects
+        .filter(utilisateur=request.user)
+        .values('lumiere')
+        .annotate(total=Count('lumiere'))
+        .order_by('-total')
+        .first()
     )
 
-    # Climatisation la plus utilisée
     clim_preferee = (
-    HistoriqueAmbiance.objects
-    .filter(utilisateur=request.user)
-    .values('climatisation')
-    .annotate(total=Count('climatisation'))
-    .order_by('-total')
-    .first()
+        HistoriqueAmbiance.objects
+        .filter(utilisateur=request.user)
+        .values('climatisation')
+        .annotate(total=Count('climatisation'))
+        .order_by('-total')
+        .first()
     )
 
-    # Température moyenne si clim = 'on'
     temperature_moyenne = (
-    HistoriqueAmbiance.objects
-    .filter(utilisateur=request.user, climatisation='on', temperature__isnull=False)
-    .aggregate(moyenne=Avg('temperature'))['moyenne']
+        HistoriqueAmbiance.objects
+        .filter(utilisateur=request.user, climatisation='on', temperature__isnull=False)
+        .aggregate(moyenne=Avg('temperature'))['moyenne']
     )
-    # Top 3 des objets les plus utilisés par l’utilisateur
+
     top_objets = (
-    ObjetSelectionne.objects
-    .filter(utilisateur=request.user)
-    .values(
-        nom=F('objet__nom'),
-        image=F('objet__image')
+        ObjetSelectionne.objects
+        .filter(utilisateur=request.user)
+        .values(
+            nom=F('objet__nom'),
+            image=F('objet__image')
+        )
+        .annotate(total=Count('objet'))
+        .order_by('-total')[:3]
     )
-    .annotate(total=Count('objet'))
-    .order_by('-total')[:3]
-    )
-
-
-    
 
     return render(request, 'personnalisation.html', {
-    'objets': objets,
-    'selectionnes': selectionnes,
-    'selectionnes_ids': [s.objet.id for s in selectionnes],
-    'ambiance': ambiance,
-    'ambiance_preferee': ambiance_preferee,
-    'musique_preferee': musique_preferee,
-    'lumiere_preferee': lumiere_preferee,
-    'clim_preferee': clim_preferee,
-    'temperature_moyenne': temperature_moyenne,
-    'top_objets': top_objets,
-    'now': timezone.now(),
+        'objets': objets,
+        'selectionnes': selectionnes,
+        'selectionnes_ids': [s.objet.id for s in selectionnes],
+        'ambiance': ambiance,
+        'ambiance_preferee': ambiance_preferee,
+        'musique_preferee': musique_preferee,
+        'lumiere_preferee': lumiere_preferee,
+        'clim_preferee': clim_preferee,
+        'temperature_moyenne': temperature_moyenne,
+        'top_objets': top_objets,
+        'now': timezone.now(),
+    })
 
-})
 
 
 

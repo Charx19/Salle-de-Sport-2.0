@@ -3,18 +3,25 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
 
-
 class ProfilUtilisateur(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    sexe = models.CharField(max_length=10, null=True, blank=True)
     date_naissance = models.DateField(null=True, blank=True)
-    niveau_experience = models.CharField(max_length=50, default='débutant')
-    photo_profil = models.ImageField(upload_to='photos_profil/', null=True, blank=True)
-    points = models.IntegerField(default=1)  # Débutant a 1 point par défaut
-
+    sexe = models.CharField(max_length=10, blank=True)
+    photo_profil = models.ImageField(upload_to='profils/', blank=True, null=True)
+    points = models.IntegerField(default=1)
+    niveau_experience = models.CharField(
+        max_length=20,
+        default='débutant',
+        choices=[
+            ('débutant', 'Débutant'),
+            ('intermédiaire', 'Intermédiaire'),
+            ('avancé', 'Avancé'),
+            ('expert', 'Expert'),
+        ]
+    )
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}"
+        return f"Profil de {self.user.username}"
 
 TYPE_CHOICES = [
     ('tapis', 'Tapis de course'),
@@ -57,7 +64,7 @@ class ObjetConnecte(models.Model):
     connectivite = models.CharField(max_length=100)
     couleur = models.CharField(max_length=50, null=True, blank=True)
     derniere_maintenance = models.DateField(null=True, blank=True)
-    image = models.URLField(max_length=300, blank=True, null=True)
+    image = models.URLField(max_length=300, null=True, blank=True)
     inclinaison_max = models.CharField(max_length=50, null=True, blank=True)
     marque = models.CharField(max_length=100)
     puissance = models.CharField(max_length=50, null=True, blank=True)
@@ -204,11 +211,4 @@ class DemandeSuppressionObjet(models.Model):
     def __str__(self):
         return f"Demande de {self.utilisateur.username} pour {self.objet.nom}"
 
-    def save(self, *args, **kwargs):
-        # Si instance existante, vérifier changement de 'traite'
-        if self.pk:
-            orig = DemandeSuppressionObjet.objects.get(pk=self.pk)
-            if not orig.traite and self.traite:
-                # supprime l’objet connecté
-                self.objet.delete()
-        super().save(*args, **kwargs)
+

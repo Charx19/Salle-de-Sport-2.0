@@ -345,19 +345,52 @@
             </div>
         </form>
         {% else %}
-        <!-- Section : Mes infos -->
-        <div id="section-infos">
-            <div class="info">
-                <p><strong>Nom :</strong> {{ user.last_name }}</p>
-                <p><strong>Prénom :</strong> {{ user.first_name }}</p>
-                <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
-                <p><strong>Email :</strong> {{ user.email }}</p>
-            </div>
-            <div style="margin-top: 15px; background-color: #eef2ff; padding: 0.3rem; border-radius: 7px;">
-                <p><strong>Type de profil :</strong> <span style="color: #6a00ff;">{{ profil.niveau_experience|capfirst
-                        }}</span></p>
-            </div>
-        </div>
+    <!-- Section : Mes infos -->
+<div id="section-infos">
+    <div class="info">
+        <p><strong>Nom :</strong> {{ user.last_name }}</p>
+        <p><strong>Prénom :</strong> {{ user.first_name }}</p>
+        <p><strong>Nom d’utilisateur :</strong> {{ user.username }}</p>
+        <p><strong>Email :</strong> {{ user.email }}</p>
+    </div>
+
+    {% if profil.niveau_experience %}
+    <div style="margin-top: 15px; background-color: #eef2ff; padding: 0.3rem; border-radius: 7px;">
+        <p><strong>Type de profil :</strong>
+            <span style="color: #6a00ff;">{{ profil.niveau_experience|capfirst }}</span>
+        </p>
+    </div>
+    {% else %}
+    <div style="margin-top: 15px; background-color: #fff3cd; padding: 0.3rem; border-radius: 7px;">
+        <p><strong>Type de profil :</strong>
+            <span style="color: #856404;">Non défini</span>
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% if profil.points >= 10 %}
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/admin/" class="btn success"
+           style="background-color: #4caf50; color: white; padding: 10px 18px; border-radius: 8px;
+                  font-weight: bold; text-decoration: none;">
+            Accéder à l’espace admin
+        </a>
+        <p style="margin-top: 5px; font-size: 0.9rem; color: #555;">Vous avez atteint le niveau expert ({{ profil.points }} points).</p>
+    </div>
+{% endif %}
+
+{% if profil.points >= 10 %}
+    <div style="margin-top: 20px; text-align: center;">
+        <a href="/admin/" class="btn success"
+           style="background-color: #4caf50; color: white; padding: 10px 18px; border-radius: 8px;
+                  font-weight: bold; text-decoration: none;">
+            Accéder à l’espace admin
+        </a>
+        <p style="margin-top: 5px; font-size: 0.9rem; color: #555;">Vous avez atteint le niveau expert ({{ profil.points }} points).</p>
+    </div>
+{% endif %}
+
+
 
         <!-- Section : Liste des utilisateurs -->
         <div id="section-utilisateurs" style="display: none;">

@@ -32,7 +32,6 @@ class DemandeSuppressionAdmin(admin.ModelAdmin):
     search_fields = ('objet__nom', 'utilisateur__username')
     actions = ['valider_et_supprimer_objet']
 
-    # Bouton cliquable par ligne dans le tableau admin
     def valider_et_supprimer_lien(self, obj):
         if not obj.traite:
             return format_html(
@@ -42,18 +41,17 @@ class DemandeSuppressionAdmin(admin.ModelAdmin):
         return "Déjà traité"
     valider_et_supprimer_lien.short_description = "Action"
 
-    # Action groupée sur plusieurs lignes sélectionnées
-    @admin.action(description="Valider les demandes et supprimer les objets")
+    @admin.action(description="Valider la demande et supprimer l'objet")
     def valider_et_supprimer_objet(self, request, queryset):
         for demande in queryset:
             if not demande.traite:
-                objet_nom = str(demande.objet)
+                # Stocker le nom avant suppression
+                objet_nom = demande.objet.nom
                 demande.objet.delete()
-                demande.traite = True
-                demande.save(update_fields=["traite"])
-        self.message_user(request, "Les objets sélectionnés ont été supprimés avec succès.")
+                # Utiliser update() pour éviter le problème d'objet supprimé
+                DemandeSuppressionObjet.objects.filter(pk=demande.pk).update(traite=True)
+        self.message_user(request, "Suppression(s) validée(s) avec succès.")
 
-    # Routes personnalisées admin
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -65,21 +63,14 @@ class DemandeSuppressionAdmin(admin.ModelAdmin):
         ]
         return custom_urls + urls
 
-    # Vue appelée par le bouton personnalisé
     def valider_suppression_objet(self, request, demande_id):
-        demande = DemandeSuppressionObjet.objects.filter(id=demande_id).first()
-        if not demande:
-            self.message_user(request, "Cette demande n'existe pas.", level=messages.ERROR)
-            return redirect('admin:App_django_ConnectedGym_demandesuppressionobjet_changelist')
-
+        demande = get_object_or_404(DemandeSuppressionObjet, id=demande_id)
         if not demande.traite:
-            objet = demande.objet  # stocker avant suppression
-            objet_nom = str(objet)
-            objet.delete()
-            demande.traite = True
-            demande.save(update_fields=["traite"])
-            self.message_user(request, f"L'objet « {objet_nom} » a été supprimé avec succès.")
+            objet_nom = demande.objet.nom
+            demande.objet.delete()
+            # mise à jour sécurisée sans save()
+            DemandeSuppressionObjet.objects.filter(pk=demande.pk).update(traite=True)
+            self.message_user(request, f"L'objet « {objet_nom} » a été supprimé.")
         else:
             self.message_user(request, "Cette demande a déjà été traitée.", level=messages.WARNING)
-
         return redirect('admin:App_django_ConnectedGym_demandesuppressionobjet_changelist')

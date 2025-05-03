@@ -228,7 +228,7 @@
         </div>
 
 
-        <form method="post" action="{% url 'modif_objet' objet.id %}">
+        <form method="post" action="{% url 'modif_objet' objet.id %}" enctype="multipart/form-data">
             {% csrf_token %}
 
             <!-- INFOS DE BASE -->

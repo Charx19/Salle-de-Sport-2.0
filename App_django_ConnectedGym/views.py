@@ -125,7 +125,7 @@ def horaires(request):
 TYPES_CHOICE = ["Tapis de course", "Stepper", "Vélo", "Rameur", "Elliptique"]
 
 from datetime import datetime, time
-
+import random
 @login_required
 def modif_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, pk=objet_id)
@@ -186,12 +186,23 @@ def modif_objet(request, objet_id):
         if ancien_statut != "maintenance" and nouvel_statut == "maintenance":
             objet.derniere_maintenance = datetime.today().date()
 
-        image = request.POST.get("image", objet.image)
-        if image and not image.startswith("http") and not image.startswith("/"):
-            image = f"/static/images/{image}"
-        objet.image = image
         
-        image_est_url = objet.image and (objet.image.startswith("http") or objet.image.startswith("/"))
+        images_disponibles = list(
+            ObjetConnecte.objects
+            .filter(type=objet.type)
+            .exclude(image=None)
+            .values_list('image', flat=True)
+        )
+
+        # 🎲 Choisir une image au hasard dans la liste
+        if images_disponibles:
+            image_choisie = random.choice(images_disponibles)
+            objet.image = image_choisie
+        else:
+            objet.image = None
+            messages.warning(request, "Aucune image disponible pour ce type.")
+
+
         try:
             objet.save()
             try:
@@ -229,7 +240,20 @@ def modif_objet(request, objet_id):
                 'statut_choices': STATUT_CHOICES,
             })
     else:
-        image_est_url = objet.image and (objet.image.startswith("http") or objet.image.startswith("/"))
+        images_disponibles = list(
+            ObjetConnecte.objects
+            .filter(type=objet.type)
+            .exclude(image=None)
+            .values_list('image', flat=True)
+        )
+
+        # 🎲 Choisir une image au hasard dans la liste
+        if images_disponibles:
+            image_choisie = random.choice(images_disponibles)
+            objet.image = image_choisie
+        else:
+            objet.image = None
+            messages.warning(request, "Aucune image disponible pour ce type.")
     return render(request, 'modif_objet.html', {
         'objet': objet,
         'zone_choices': ZONE_CHOICES,
@@ -243,13 +267,17 @@ def modif_objet(request, objet_id):
 def ajouter_objet(request):
     if request.method == 'POST':
         type_choisi = request.POST.get('type')
-        if type_choisi not in TYPES_CHOICE:
-            messages.error(request, "Type non autorisé.")
+        if not type_choisi:  # Vérifie si un type a été sélectionné
+            messages.error(request, "Veuillez sélectionner un type d'objet.")
             return redirect('ajouter_objet')
 
         # Champs généraux
         nom = request.POST.get('nom')
-        attribut = request.POST.get('attribut')
+        if not nom:  # Validation du nom
+            messages.error(request, "Le nom de l'objet est obligatoire.")
+            return redirect('ajouter_objet')
+
+        attribut = request.POST.get('attribut', '')
         zone = request.POST.get('zone')
         etat = request.POST.get('etat')
         statut = request.POST.get('statut')
@@ -274,40 +302,45 @@ def ajouter_objet(request):
         amorti = request.POST.get('amorti')
         ventilation_frontale = request.POST.get('vf') == "on" or request.POST.get('vf_') == "on"
         est_disponible = True
-        nouvel_objet = ObjetConnecte(
-            nom=nom,
-            type=type_choisi.lower(),
-            attribut=attribut,
-            zone=zone,
-            etat=etat,
-            statut=statut,
-            connectivite=connectivite,
-            marque=marque,
-            couleur=couleur,
-            annee_achat=annee_achat,
-            annee_fin=annee_fin,
-            image=image,
-            intensite=intensite,
-            puissance=puissance,
-            vitesse_max=vitesse_max,
-            inclinaison_max=inclinaison_max,
-            hauteur_marche=hauteur_marche,
-            longueur_rail=longueur_rail,
-            longueur_pas=longueur_pas,
-            type_mouvement=type_mouvement,
-            type_transmission=type_transmission,
-            type_resistance=type_resistance,
-            amorti=amorti,
-            ventilation_frontale=ventilation_frontale,
-            est_disponible=est_disponible,
-        )
 
-        nouvel_objet.save()
-        messages.success(request, "Objet ajouté avec succès !")
-        return redirect('objets_connectes')
+        try:
+            nouvel_objet = ObjetConnecte(
+                nom=nom,
+                type=type_choisi.lower(),
+                attribut=attribut,
+                zone=zone,
+                etat=etat,
+                statut=statut,
+                connectivite=connectivite,
+                marque=marque,
+                couleur=couleur,
+                annee_achat=annee_achat,
+                annee_fin=annee_fin,
+                image=image,
+                intensite=intensite,
+                puissance=puissance,
+                vitesse_max=vitesse_max,
+                inclinaison_max=inclinaison_max,
+                hauteur_marche=hauteur_marche,
+                longueur_rail=longueur_rail,
+                longueur_pas=longueur_pas,
+                type_mouvement=type_mouvement,
+                type_transmission=type_transmission,
+                type_resistance=type_resistance,
+                amorti=amorti,
+                ventilation_frontale=ventilation_frontale,
+                est_disponible=est_disponible,
+            )
+            
+            nouvel_objet.save()
+            messages.success(request, "Objet ajouté avec succès !")
+            return redirect('objets_connectes')
+            
+        except Exception as e:
+            messages.error(request, f"Erreur lors de l'ajout de l'objet: {str(e)}")
+            return redirect('ajouter_objet')
 
     return render(request, 'ajouter_objet.html', {'types_autorises': TYPES_CHOICE})
-
 
 
 def visite(request):

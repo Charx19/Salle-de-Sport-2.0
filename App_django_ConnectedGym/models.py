@@ -56,7 +56,7 @@ class ObjetConnecte(models.Model):
     connectivite = models.CharField(max_length=100)
     couleur = models.CharField(max_length=50, null=True, blank=True)
     derniere_maintenance = models.DateField(null=True, blank=True)
-    image = models.URLField(max_length=300, null=True, blank=True)
+    image = models.URLField(max_length=300, blank=True, null=True)
     inclinaison_max = models.CharField(max_length=50, null=True, blank=True)
     marque = models.CharField(max_length=100)
     puissance = models.CharField(max_length=50, null=True, blank=True)

@@ -638,11 +638,21 @@ def performances(request):
 @login_required
 def personnalisation(request):
     ajouter_points(request, 2, 'visited_perso')
+    # Nettoyage : supprimer les sélections expirées et libérer les objets
+    now = timezone.now()
+    selections = ObjetSelectionne.objects.all()
+
+    for sel in selections:
+        fin = sel.date_debut + timedelta(hours=sel.duree_heures)
+        if now > fin:
+            sel.objet.est_disponible = True
+            sel.objet.save()
+            sel.delete()
 
     zone_filtre = request.GET.get('filtre_zone')
     type_filtre = request.GET.get('filtre_type')
 
-    objets_query = ObjetConnecte.objects.filter(est_disponible=True)
+    objets_query = ObjetConnecte.objects.all()
 
     if zone_filtre:
         objets_query = objets_query.filter(zone__iexact=zone_filtre)
@@ -656,7 +666,12 @@ def personnalisation(request):
         if timezone.now() < r.date_debut + timedelta(hours=r.duree_heures)
     ]
 
-    objets = objets_query.exclude(id__in=objets_reserves_ids)
+    objets = list(objets_query)
+    objets_reserves_ids = [
+        r.objet.id for r in ObjetSelectionne.objects.exclude(utilisateur=request.user)
+        if timezone.now() < r.date_debut + timedelta(hours=r.duree_heures)
+    ]
+
 
     selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
     now = timezone.now()
@@ -750,6 +765,7 @@ def personnalisation(request):
         'objets': objets,
         'selectionnes': selectionnes,
         'selectionnes_ids': [s.objet.id for s in selectionnes],
+        'objets_reserves_ids': objets_reserves_ids,
         'ambiance': ambiance,
         'ambiance_preferee': ambiance_preferee,
         'musique_preferee': musique_preferee,

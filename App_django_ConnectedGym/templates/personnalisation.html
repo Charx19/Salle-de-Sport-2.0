@@ -377,12 +377,19 @@
                                 {% if obj.id in selectionnes_ids %}
                                 <input type="hidden" name="action" value="remove">
                                 <button class="btn danger">Retirer</button>
+
+                                {% elif obj.id in objets_reserves_ids %}
+                                <button class="btn primary" disabled style="cursor: not-allowed;">En
+                                    utilisation</button>
+
                                 {% elif obj.statut != 'actif' %}
                                 <button class="btn primary" disabled style="cursor: not-allowed;">Indisponible</button>
+
                                 {% else %}
                                 <input type="hidden" name="action" value="add">
                                 <button class="btn success">Ajouter</button>
                                 {% endif %}
+
                             </form>
                         </div>
                     </div>

@@ -31,6 +31,12 @@ from .models import HistoriqueUtilisation
 from django.contrib.auth.decorators import login_required
 from App_django_ConnectedGym.models import HistoriqueUtilisation
 from django.db.models import Count, Avg, F, Sum
+from datetime import datetime, time
+import random
+from.models import HistoriquePoints
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from .models import ProfilUtilisateur
 
 
 
@@ -93,6 +99,7 @@ def connexion(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            accorder_permissions_admin_expert(user)  # 👈 Ajout ici
             messages.success(request, f"Bienvenue {user.first_name} ! Vous êtes connecté.")
             return redirect('acceuil')
         else:
@@ -124,8 +131,7 @@ def horaires(request):
 
 TYPES_CHOICE = ["Tapis de course", "Stepper", "Vélo", "Rameur", "Elliptique"]
 
-from datetime import datetime, time
-import random
+
 @login_required
 def modif_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, pk=objet_id)
@@ -343,34 +349,36 @@ def ajouter_objet(request):
     return render(request, 'ajouter_objet.html', {'types_autorises': TYPES_CHOICE})
 
 
+
 def visite(request):
     objets = ObjetConnecte.objects.all()
-    # Si utilisateur connecté : recherche par mot-clé
+
+    # ✅ Ajout de points à la première visite (2 pts max)
     if request.user.is_authenticated:
+        ajouter_points(request, 2, 'visited_visite')
+
+        # Recherche par mot-clé
         query = request.GET.get('q')
         if query:
             filtres = Q(nom__icontains=query) | Q(type__icontains=query) | Q(etat__icontains=query) | \
                       Q(zone__icontains=query) | Q(connectivite__icontains=query) | Q(marque__icontains=query) | \
                       Q(statut__icontains=query) | Q(couleur__icontains=query) | Q(attribut__icontains=query) | \
                       Q(intensite__icontains=query)
-
             try:
-                # si la recherche est un nombre (int ou float), on l'inclut aussi dans les champs numériques
                 num = float(query)
                 filtres |= Q(vitesse_max=num) | Q(duree_max_jour=num)
             except ValueError:
                 pass
-
             objets = objets.filter(filtres)
     else:
-        # Utilisateur non connecté : filtres doubles
-        
-        filtre_zone = request.GET.get("filtre1")  # ex: ambiance
-        filtre_statut = request.GET.get("filtre2")  # ex: actif
-
+        # Non connecté → filtres standards
+        filtre_zone = request.GET.get("filtre1")
+        filtre_statut = request.GET.get("filtre2")
         if filtre_zone and filtre_statut:
             objets = objets.filter(zone__iexact=filtre_zone, statut__iexact=filtre_statut)
+
     return render(request, 'visite.html', {'objets': objets})
+
 
 
 
@@ -495,7 +503,7 @@ def demander_suppression(request, objet_id):
     return redirect('objets_connectes')
 # ============ SYSTEME DE POINTS AUTOMATIQUE =============
 
-from.models import HistoriquePoints
+
 def ajouter_points(request, points, cle_session):
     """Ajoute des points pour une action donnée une seule fois, sans dépasser 10 points"""
     if request.user.is_authenticated:
@@ -521,40 +529,87 @@ def ajouter_points(request, points, cle_session):
 
 
 def verifier_niveau(profil):
-    """ Met à jour le niveau si un nouveau seuil est franchi. Ne rétrograde jamais. """
+    """ Met à jour le niveau si un nouveau seuil est franchi ou régressé. """
     niveaux = ['débutant', 'intermédiaire', 'avancé', 'expert']
     points = profil.points
-    niveau_actuel = profil.niveau_experience
+    ancien_niveau = profil.niveau_experience
 
-    if points >= 10 and niveaux.index(niveau_actuel) < niveaux.index('expert'):
-        profil.niveau_experience = 'expert'
-        profil.user.is_staff = True  # Devient admin
-        profil.user.save()
+    if points >= 10:
+        nouveau_niveau = 'expert'
+    elif points >= 7:
+        nouveau_niveau = 'avancé'
+    elif points >= 3:
+        nouveau_niveau = 'intermédiaire'
+    elif points >= 1:
+        nouveau_niveau = 'débutant'
+    else:
+        nouveau_niveau = ancien_niveau  # inchangé si 0 point
 
-    elif points >= 5 and niveaux.index(niveau_actuel) < niveaux.index('avancé'):
-        profil.niveau_experience = 'avancé'
-
-    elif points >= 3 and niveaux.index(niveau_actuel) < niveaux.index('intermédiaire'):
-        profil.niveau_experience = 'intermédiaire'
-
-    elif points >= 1 and niveaux.index(niveau_actuel) < niveaux.index('débutant'):
-        profil.niveau_experience = 'débutant'
+    # Met à jour si changement de niveau
+    if nouveau_niveau != ancien_niveau:
+        profil.niveau_experience = nouveau_niveau
+        mettre_a_jour_permissions_admin(profil.user, nouveau_niveau)
 
     profil.save()
+
+
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+def mettre_a_jour_permissions_admin(user, niveau):
+    """
+    Attribue toutes les permissions si expert, les retire sinon.
+    """
+    if not user.is_authenticated:
+        return
+
+    if niveau == 'expert':
+        permissions = Permission.objects.all()
+        user.user_permissions.set(permissions)
+        user.is_staff = True
+    else:
+        user.user_permissions.clear()
+        user.is_staff = False
+
+    user.save()
+
 
 
 
 
 # ===================== FONCTIONNALITÉS ====================
 
+from django.contrib import messages
+from django.shortcuts import redirect
+from .models import ProfilUtilisateur, ObjetConnecte
+
+def niveau_requis(min_points):
+    """Décorateur pour restreindre l’accès à une vue selon les points"""
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                return redirect('connexion')
+
+            profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
+            if profil.points < min_points:
+                messages.warning(request, f"⚠️ Cette page nécessite au moins {min_points} points pour y accéder.")
+                return redirect('acceuil')
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
+
+
 @login_required
+@niveau_requis(min_points=3)
 def objets_connectes(request):
-    ajouter_points(request, 2, 'visited_objets')
+    ajouter_points(request, 2, 'visited_objets')  # 2 pts une seule fois
     objets = ObjetConnecte.objects.all()
     return render(request, 'objets_connectes.html', {'objets': objets})
 
 
+
 @login_required
+@niveau_requis(min_points=5)
 def performances(request):
     user = request.user
 
@@ -573,10 +628,7 @@ def performances(request):
     data_frequence = []
 
     for h in historiques:
-        if h.date:
-            label = h.date.strftime('%Y-%m-%d')
-        else:
-            label = f"#{h.id}"
+        label = h.date.strftime('%Y-%m-%d') if h.date else f"#{h.id}"
 
         # 🔥 Calories brûlées
         calories = getattr(h.objet, 'calories_brulees', None)
@@ -590,7 +642,7 @@ def performances(request):
             labels_progression.append(label)
             data_progression.append(duree)
 
-        # ❤️ Fréquence cardiaque (intensité dans historique)
+        # ❤️ Fréquence cardiaque (intensité)
         frequence = getattr(h, 'intensite', None)
         if frequence is not None:
             labels_frequence.append(label)
@@ -634,8 +686,8 @@ def performances(request):
     return render(request, 'performances.html', context)
 
 
-
 @login_required
+@niveau_requis(min_points=5)
 def personnalisation(request):
     ajouter_points(request, 2, 'visited_perso')
     # Nettoyage : supprimer les sélections expirées et libérer les objets
@@ -672,9 +724,7 @@ def personnalisation(request):
         if timezone.now() < r.date_debut + timedelta(hours=r.duree_heures)
     ]
 
-
     selectionnes = ObjetSelectionne.objects.filter(utilisateur=request.user)
-    now = timezone.now()
     for s in selectionnes:
         fin = s.date_debut + timedelta(hours=s.duree_heures)
         s.expiration_datetime = fin
@@ -777,8 +827,6 @@ def personnalisation(request):
     })
 
 
-
-
 @login_required
 def personnalisation_ambiance(request):
     if request.method == 'POST':
@@ -872,3 +920,17 @@ def demande_suppression_objet(request, objet_id):
         else:
             messages.info(request, "Vous avez déjà envoyé une demande pour cet objet.")
     return redirect('objets_connectes')
+
+
+
+def accorder_permissions_admin_expert(user):
+    if user.is_authenticated:
+        try:
+            profil = ProfilUtilisateur.objects.get(user=user)
+            if profil.niveau_experience == 'expert':
+                # Récupère tous les content types (tous les modèles)
+                for content_type in ContentType.objects.all():
+                    permissions = Permission.objects.filter(content_type=content_type)
+                    user.user_permissions.add(*permissions)
+        except ProfilUtilisateur.DoesNotExist:
+            pass

@@ -99,6 +99,16 @@
 <!-- Fonctionnalités -->
 <section class="features-section">
     <h2 class="section-title">Nos services</h2>
+    {% if messages %}
+  <div class="alertes-messages" style="margin-top: 20px;">
+    {% for message in messages %}
+      <div class="alert" style="color: red; font-weight: bold;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
     <div class="features-container">
 
         <!-- 1. Objets connectés -->

@@ -150,6 +150,21 @@
 </head>
 
 <body>
+
+    {% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %}
+  <div class="alert alert-warning" style="color: red; font-weight: bold;">
+    🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
+  </div>
+{% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %}
+  <div class="alert alert-warning" style="color: red; font-weight: bold;">
+    🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
+  </div>
+{% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %}
+  <div class="alert alert-warning" style="color: red; font-weight: bold;">
+    🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
+  </div>
+{% endif %}
+
     <!-- Barre du haut -->
     <header class="main-nav">
         <div class="container nav-container">

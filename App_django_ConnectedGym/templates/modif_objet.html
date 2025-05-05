@@ -3,11 +3,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
+<!--Page pour modifier les objets-->
 
 <head>
     <meta charset="UTF-8">
     <title>Modifier objet</title>
+    <!--CSS de base-->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!--CSS spécifique-->
     <style>
         body {
             padding-top: 100px;
@@ -143,13 +146,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- paneau lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -227,11 +230,11 @@
 
         </div>
 
-
+        <!--formulaire de modification qui s'adapte en fonction du type de l'objet-->
         <form method="post" action="{% url 'modif_objet' objet.id %}" enctype="multipart/form-data">
             {% csrf_token %}
 
-            <!-- INFOS DE BASE -->
+            <!-- modif des infos generales-->
             <h3>Informations générales</h3>
             <label for="nom">Nom :</label>
             <input type="text" name="nom" id="nom" value="{{ objet.nom }}">
@@ -281,8 +284,6 @@
             <input type="text" id="derniere_maintenance" value="{{ objet.derniere_maintenance }}" disabled>
 
 
-
-            <!-- STATUT -->
             <h3>Statut de fonctionnement</h3>
             <label for="statut">Statut :</label>
             <select name="statut" id="statut">
@@ -293,7 +294,7 @@
                 {% endwith %}
             </select>
 
-            <!-- CHAMPS SPÉCIFIQUES AU TYPE -->
+            <!-- champs specifique en fonction du type -->
             <h3>Spécifications</h3>
             <div id="champs-specifiques">
 
@@ -531,7 +532,7 @@
 
 
 
-        <!-- ACTIONS -->
+        <!-- les autres actions possibles-->
         <div class="actions">
             <a href="{% url 'historique_objet' objet.id %}" class="btn-ajouter"> Voir l’historique</a>
 
@@ -588,7 +589,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -605,7 +606,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 
@@ -653,13 +654,13 @@
 
             const bloc = typeMapping[type];
 
-            // 🔄 1. Supprimer TOUS les name et required au début
+            //  Supprimer TOUS les name et required au début
             document.querySelectorAll('[data-name]').forEach(input => {
                 input.removeAttribute('name');
                 input.removeAttribute('required');
             });
 
-            // ✅ 2. Activer le bloc correspondant au type
+            // Activer le bloc correspondant au type
             if (bloc) {
                 const el = document.querySelector(bloc);
                 if (el) {

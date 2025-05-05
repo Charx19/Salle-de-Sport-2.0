@@ -56,13 +56,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- paneau lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -136,10 +136,11 @@
             style="background-color: rgba(255, 255, 255, 0.9); padding: 40px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
             <h2 class="title">À propos de ConnectedGym</h2>
             <p>
-                <strong>ConnectedGym</strong> révolutionne l'entraînement sportif en alliant machines intelligentes et
-                suivi personnalisé.
-                Notre salle connectée est conçue pour offrir à chacun une expérience d'entraînement moderne, fluide et
-                motivante.
+                <strong>ConnectedGym</strong> est une plateforme intelligente de gestion d'une salle de sport connectée.
+                Grâce à
+                l'intégration d'objets connectés (tapis de course, vélos, rameurs, steppers, systèmes d’ambiance...),
+                nous offrons
+                aux utilisateurs une expérience interactive, autonome et sur-mesure.
             </p>
 
             <h3 class="subtitle">Nos objectifs</h3>
@@ -212,7 +213,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu 
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -229,7 +230,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

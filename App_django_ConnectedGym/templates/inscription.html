@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="fr">
+<!-- Page d'inscription -->
 
 <head>
     <meta charset="UTF-8">
@@ -130,6 +131,8 @@
     </style>
 </head>
 
+<!-- Contenu principal -->
+
 <body>
 
     <header>
@@ -150,6 +153,8 @@
             {% endif %}
 
             <h1>Inscription</h1>
+            <!-- Formulaire d'inscription -->
+            {% if form.non_field_errors %}
             <form method="post" action="{% url 'inscription' %}">
                 {% csrf_token %}
 

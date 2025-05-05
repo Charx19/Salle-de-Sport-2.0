@@ -1,5 +1,6 @@
 {% load static %}
 {% block content %}
+<!--page de presentation d'un objet avec ses specificite-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
@@ -7,7 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Visite de la salle</title>
+    <!-- CSS de base -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- CSS spécifique -->
     <style>
         .objet-details-container {
             display: flex;
@@ -46,7 +49,6 @@
 
         .objet-details-container {
             margin-top: 100px;
-            /* ou 120px si ta barre est plus haute */
         }
 
         .btn-ajouter {
@@ -69,13 +71,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- panneau lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -98,6 +100,7 @@
                         </div>
 
 
+                        <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                         {% if user.is_authenticated %}
                         <a href="{% url 'profil' %}">Mon espace</a>
@@ -127,6 +130,7 @@
 
 
 
+                <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'profil' %}">Mon espace</a>
@@ -185,9 +189,7 @@
                 <ul>
                     <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -219,7 +221,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -236,7 +238,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

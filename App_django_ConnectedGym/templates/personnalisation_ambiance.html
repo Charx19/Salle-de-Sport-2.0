@@ -3,10 +3,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
+<!--page de personnalisation de l'ambiance-->
 
 <head>
     <meta charset="UTF-8">
     <title>Personnalisation</title>
+    <!--CSS de base-->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <style>
         .ambiance-container {
@@ -91,13 +93,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -162,6 +164,8 @@
 
         </div>
     </header>
+
+    <!--banniere esthetique-->
     <section class="hero-full" style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
         <div class="overlay">
             <div class="container hero-content">
@@ -173,8 +177,10 @@
             </div>
         </div>
     </section>
+    <!--Contenu principal-->
     <section class="features-section" id="objets">
         <div class="ambiance-container">
+            <!-- Formulaire de personnalisation de l'ambiance -->
             <form method="POST">
                 {% csrf_token %}
 
@@ -240,9 +246,7 @@
                 <ul>
                     <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -274,7 +278,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu 
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -291,7 +295,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

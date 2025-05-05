@@ -3,11 +3,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
+<!--page qui presente les stats de l'objet en terme d'utilisation par l'utilisateur-->
 
 <head>
     <meta charset="UTF-8">
     <title>Personnalisation</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!--CSS specifique-->
     <style>
         .stats-wrapper {
             display: flex;
@@ -64,13 +66,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton lateral -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -135,6 +137,7 @@
 
         </div>
     </header>
+    <!--Banniere esthetique-->
     <section class="hero-full" style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
         <div class="overlay">
             <div class="container hero-content">
@@ -149,6 +152,7 @@
 
     <!--Contenu de la page-->
     <div class="stats-wrapper">
+        <!--graph par type-->
         {% if par_type %}
 
         <div class="stat-card">
@@ -189,6 +193,7 @@
             });
         </script>
         {%endif%}
+        <!--graph par zone-->
         {% if par_zone %}
         <div class="stat-card">
             <h3>Répartition des sélections par zone</h3>
@@ -226,7 +231,7 @@
             });
         </script>
         {% endif %}
-
+        <!--graph par duree de chaque type-->
         {% if duree_par_type %}
         <div class="stat-card">
             <h3>Durée d'utilisation</h3>
@@ -288,9 +293,7 @@
                 <ul>
                     <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -322,7 +325,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu 
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -339,7 +342,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

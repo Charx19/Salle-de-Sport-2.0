@@ -43,7 +43,7 @@ from .models import ProfilUtilisateur
 User = get_user_model()
 
 # ============ VUES PRINCIPALES =============
-
+#fonction pour s'inscrire et envoyer le mail avec le lien pour activer le compte
 def inscription(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -75,7 +75,7 @@ def inscription(request):
         form = CustomUserCreationForm()
     return render(request, 'inscription.html', {'form': form})
 
-
+#fonction pour activer le compte grace au lien 
 def activation_compte(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -92,6 +92,7 @@ def activation_compte(request, uidb64, token):
         messages.error(request, "Le lien d'activation est invalide ou a expiré.")
         return redirect('connexion')
 
+#fonction qui verifie les champs pour se connecter et qui accrorde les permissions 
 def connexion(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -99,39 +100,39 @@ def connexion(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            accorder_permissions_admin_expert(user)  # 👈 Ajout ici
+            accorder_permissions_admin_expert(user)  
             messages.success(request, f"Bienvenue {user.first_name} ! Vous êtes connecté.")
             return redirect('acceuil')
         else:
             messages.error(request, "Nom d'utilisateur ou mot de passe incorrect.")
     return render(request, 'connexion.html')
 
-
+#affiche la page d'accueil
 def acceuil(request):
     return render(request, 'acceuil.html')
 
-
+#deconnecte et redirige l'utilisateur en page d'accueil
 def deconnexion(request):
     logout(request)
     messages.success(request, "Vous avez été déconnecté.")
     return redirect('acceuil')
 
-
+#affiche page d'equipe
 def equipe(request):
     return render(request, 'equipe.html')
-
+#affiche page d'objectif
 def objectif(request):
     return render(request, 'objectif.html')
-
+#affiche page de reglement
 def reglement(request):
     return render(request, 'reglement.html')
-
+#affiche page d'horaires
 def horaires(request):
     return render(request, 'horaires.html')
 
 TYPES_CHOICE = ["Tapis de course", "Stepper", "Vélo", "Rameur", "Elliptique"]
 
-
+#fonction permet de modifier un objet d'enregistrer ces modif et de creer un historique de modification
 @login_required
 def modif_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, pk=objet_id)
@@ -200,7 +201,7 @@ def modif_objet(request, objet_id):
             .values_list('image', flat=True)
         )
 
-        # 🎲 Choisir une image au hasard dans la liste
+        #  Choisir une image au hasard dans la liste
         if images_disponibles:
             image_choisie = random.choice(images_disponibles)
             objet.image = image_choisie
@@ -253,7 +254,7 @@ def modif_objet(request, objet_id):
             .values_list('image', flat=True)
         )
 
-        # 🎲 Choisir une image au hasard dans la liste
+        #  Choisir une image au hasard dans la liste
         if images_disponibles:
             image_choisie = random.choice(images_disponibles)
             objet.image = image_choisie
@@ -268,7 +269,7 @@ def modif_objet(request, objet_id):
     })
 
 
-
+#fonction pour ajouter un objet avec champs specifiques en fonction du type de l'objet
 @login_required
 def ajouter_objet(request):
     if request.method == 'POST':
@@ -349,11 +350,11 @@ def ajouter_objet(request):
     return render(request, 'ajouter_objet.html', {'types_autorises': TYPES_CHOICE})
 
 
-
+#affiche tous les objets avec recherche et filtre (si pas connecté)
 def visite(request):
     objets = ObjetConnecte.objects.all()
 
-    # ✅ Ajout de points à la première visite (2 pts max)
+    #  Ajout de points à la première visite (2 pts max)
     if request.user.is_authenticated:
         ajouter_points(request, 2, 'visited_visite')
 
@@ -381,7 +382,7 @@ def visite(request):
 
 
 
-
+#affiche l'historique des modification de l'objet avec en plus des graphs
 def historique_objet(request, objet_id):
     historique = HistoriqueUtilisation.objects.filter(objet_id=objet_id).order_by('-date')
 
@@ -441,17 +442,17 @@ def historique_objet(request, objet_id):
 
 
 
-
+#affiche les infos detaillees d'un objet
 def info_objet(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, id=objet_id)
     return render(request, 'info_objet.html', {'objet': objet})
 
-
+#affiche le profil utilisateur et permet de le modifier
 @login_required
 def profil(request):
     profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
 
-    # ✅ Synchronise le niveau à chaque affichage du profil
+    #  Synchronise le niveau à chaque affichage du profil
     verifier_niveau(profil)
 
     edit_mode = request.GET.get('edit') == '1'
@@ -462,7 +463,7 @@ def profil(request):
         if form.is_valid():
             form.save()
 
-            # ✅ Gestion du changement de mot de passe
+            #  Gestion du changement de mot de passe
             new_password1 = request.POST.get('new_password1')
             new_password2 = request.POST.get('new_password2')
 
@@ -489,17 +490,14 @@ def profil(request):
 @login_required
 def dashboard(request):
     return render(request, 'dashboard.html')
-
+#
 @login_required
 def demander_suppression(request, objet_id):
     objet = get_object_or_404(ObjetConnecte, pk=objet_id)
 
-    # Ici, on pourrait enregistrer la demande dans une table dédiée
-    # ou envoyer un mail à un admin. Pour l'instant, on marque l'objet comme "en attente de suppression"
     objet.statut = "suppression_demande"
     objet.save()
 
-    messages.success(request, f"La demande de suppression pour « {objet.nom} » a été enregistrée.")
     return redirect('objets_connectes')
 # ============ SYSTEME DE POINTS AUTOMATIQUE =============
 
@@ -630,25 +628,25 @@ def performances(request):
     for h in historiques:
         label = h.date.strftime('%Y-%m-%d') if h.date else f"#{h.id}"
 
-        # 🔥 Calories brûlées
+        #  Calories brûlées
         calories = getattr(h.objet, 'calories_brulees', None)
         if calories is not None:
             labels.append(label)
             calories_data.append(float(calories))
 
-        # 📈 Progression
+        #  Progression
         duree = getattr(h.objet, 'duree_utilisation', None)
         if duree is not None:
             labels_progression.append(label)
             data_progression.append(duree)
 
-        # ❤️ Fréquence cardiaque (intensité)
+        #  Fréquence cardiaque (intensité)
         frequence = getattr(h, 'intensite', None)
         if frequence is not None:
             labels_frequence.append(label)
             data_frequence.append(frequence)
 
-    # ✅ Statistiques globales
+    #  Statistiques globales
     global_historiques = (
         HistoriqueUtilisation.objects
         .select_related('objet')
@@ -744,7 +742,7 @@ def personnalisation(request):
             objet.est_disponible = False
             objet.save()
 
-            # ✅ Ajout de points : 1 point par objet ajouté
+            #  Ajout de points : 1 point par objet ajouté
             profil, _ = ProfilUtilisateur.objects.get_or_create(user=request.user)
             profil.points += 1
             profil.save()

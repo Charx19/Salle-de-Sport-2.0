@@ -1,5 +1,6 @@
 {% load static %}
 {% block content %}
+<!--page historique des objets connectés-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
@@ -7,7 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Historique</title>
+    <!--CSS de base-->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!--CSS spécifique-->
     <style>
         header {
             position: fixed;
@@ -21,7 +24,6 @@
 
         body {
             padding-top: 90px;
-            /* décale tout le contenu sous la navbar */
         }
 
         .btn-ajouter {
@@ -44,13 +46,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- panneau lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -74,6 +76,7 @@
 
 
 
+                        <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                         {% if user.is_authenticated %}
                         <a href="{% url 'profil' %}">Mon espace</a>
@@ -103,6 +106,7 @@
 
 
 
+                <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'profil' %}">Mon espace</a>
@@ -117,6 +121,7 @@
     </header>
 
     <!-- Contenu principal -->
+    <!--affiche les infos sur l'objets selectionne-->
     <section class="bloc-objet-technique" style="text-align:center; margin-bottom: 20px;">
         <h2>Suivi technique de l’objet : {{ historique.0.objet.nom }}</h2>
         <p>Type : {{ historique.0.objet.get_type_display }} — Zone : {{ historique.0.objet.zone }}
@@ -128,7 +133,7 @@
 
     </section>
 
-
+    <!--Affiche l'historique de chaque objet en focntion de ses specificité-->
 
     {% if historique.0.objet.type == "Velo" %}
     <table style="width:90%; margin: 0 auto; border-collapse: collapse;">
@@ -280,7 +285,7 @@
     {% endif %}
 
 
-
+    <!--Affiche des graphiques en focntion de l'historique-->
     <section style="margin: 40px auto; text-align: center;">
         <h3>Analyse visuelle</h3>
         <p>Évolution des performances de l’objet connecté</p>
@@ -308,11 +313,8 @@
             <div class="footer-col">
                 <h4>Service & Info</h4>
                 <ul>
-                    <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -344,7 +346,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            // Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -361,7 +363,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile 
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

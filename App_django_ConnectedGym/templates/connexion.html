@@ -1,4 +1,5 @@
 {% load static %}
+<!--Page de connexion-->
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -6,6 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
+    <!--CSS specifique-->
     <style>
         body {
             margin: 0;
@@ -119,7 +121,7 @@
             <img src="{% static 'images/altere.png' %}" alt="Accueil">
         </a>
     </header>
-
+    <!--Formulaire pour la connexion-->
     <div class="form-container">
         <div class="form-box">
             <h1>Connexion</h1>
@@ -133,6 +135,7 @@
 
                 <button type="submit">Se connecter</button>
             </form>
+            <!--lien vers inscription-->
             <p class="link">Pas encore inscrit ? <a href="{% url 'inscription' %}">S'inscrire</a></p>
         </div>
     </div>

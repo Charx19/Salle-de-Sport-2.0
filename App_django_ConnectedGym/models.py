@@ -103,7 +103,7 @@ class HistoriqueUtilisation(models.Model):
 
 
 
-    # Champs copiés depuis ObjetConnecte
+    
     vitesse_max = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     puissance = models.CharField(max_length=50, null=True, blank=True)
     inclinaison_max = models.CharField(max_length=50, null=True, blank=True)

@@ -1,12 +1,15 @@
 {% load static %}
 {% block content %}
+<!--page des horaires de la salle-->
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <title>Horaires - ConnectedGym</title>
+    <!-- CSS de base -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!--CSS specifique-->
     <style>
         .horaires-container {
             max-width: 900px;
@@ -51,13 +54,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu lateral -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- paneauu lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -80,6 +83,7 @@
                         </div>
 
 
+                        <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                         {% if user.is_authenticated %}
                         <a href="{% url 'profil' %}">Mon espace</a>
@@ -108,6 +112,7 @@
                 </div>
 
 
+                <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'profil' %}">Mon espace</a>
@@ -120,6 +125,8 @@
 
         </div>
     </header>
+
+    <!-- Contenu principal -->
     <section class="horaires-container">
         <h2>Horaires d'ouverture</h2>
         <table class="horaires-table">
@@ -205,7 +212,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -222,7 +229,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile (Nos services)
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

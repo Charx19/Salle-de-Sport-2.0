@@ -1,5 +1,6 @@
 {% load static %}
 {% block content %}
+<!--Page permettant aux utilisateurs de plus de 3 pts d’ajouter un nouvel objet connecté à la base de données de la salle.-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
@@ -7,7 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Ajouter un objet</title>
+    <!--CSS principal du site-->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!--CSS specifique à la page-->
     <style>
         .form-ajouter-objet {
             max-width: 700px;
@@ -76,13 +79,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton pour la version mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- Panneau lateral + Menu mobile -->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -105,8 +108,8 @@
                         </div>
 
 
-                        <a href="#">Contact</a>
 
+                        <!--adaptatif en fonction de la connexion de l'utilisateur-->
                         {% if user.is_authenticated %}
                         <a href="{% url 'profil' %}">Mon espace</a>
                         <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
@@ -134,7 +137,8 @@
                 </div>
 
 
-                <a href="#">Contact</a>
+
+                <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'profil' %}">Mon espace</a>
@@ -152,16 +156,17 @@
     <!-- Contenu principal -->
     <section class="form-ajouter-objet">
         <h2>Ajouter un nouvel objet connecté</h2>
+        <!--Formulaire avc des champs specifiques en fonction du type de l'objet-->
         <form method="post" enctype="multipart/form-data">
 
             {% csrf_token %}
-
+            <!--Champs commun a tous les objets-->
             <label for="nom">Nom :</label>
             <input type="text" name="nom" id="nom" required>
 
             <label for="type">Type :</label>
             <select name="type" id="type">
-                <option value="">-- Choisir un type --</option>
+                <option value=""> Choisir un type </option>
                 <option value="velo">Vélo</option>
                 <option value="tapis">Tapis de course</option>
                 <option value="stepper">Stepper</option>
@@ -179,7 +184,7 @@
 
             <label for="zone">Zone :</label>
             <select name="zone" id="zone" required>
-                <option value="">-- Choisir une zone --</option>
+                <option value=""> Choisir une zone </option>
                 <option value="cardio">Cardio</option>
                 <option value="ambiance">Ambiance</option>
                 <option value="détente">Détente</option>
@@ -187,7 +192,7 @@
 
             <label for="etat">État :</label>
             <select name="etat" id="etat" required>
-                <option value="">-- Choisir l'état --</option>
+                <option value=""> Choisir l'état </option>
                 <option value="neuf">Neuf</option>
                 <option value="tres_bon">Très bon état</option>
                 <option value="bon">Bon état</option>
@@ -204,7 +209,7 @@
 
             <label for="connectivite">Connectivité :</label>
             <select name="connectivite" id="connectivite" required>
-                <option value="">-- Choisir la connectivité --</option>
+                <option value=""> Choisir la connectivité </option>
                 <option value="Wi-Fi">Wi-Fi</option>
                 <option value="Bluetooth">Bluetooth</option>
                 <option value="Zigbee">Zigbee</option>
@@ -219,7 +224,7 @@
 
             <label for="annee_fin">Année de fin :</label>
             <input type="number" name="annee_fin" id="annee_fin" min="2024" max="2100" required>
-            <!-- CHAMPS SPÉCIFIQUES AU TYPE -->
+            <!-- Champs specifique en fonction du type -->
             <h3>Spécifications</h3>
             <div id="champs-specifiques">
 
@@ -297,7 +302,7 @@
 
                     <label for="amorti">Amorti :</label>
                     <small class="note"> Basique (usage occasionnel), Renforcé (confort articulations), Professionnel
-                        (absorption maximale)</small>
+                    </small>
                     {% with a=objet.amorti|default:"" %}
                     <select data-name="amorti" id="amorti">
                         <option value="basique" {% if "basique" in a %}selected{% endif %}>Basique</option>
@@ -450,6 +455,7 @@
 
 
             </div>
+            <!--Validation qui emmene à la page des objets connectés-->
             <button type="submit">Ajouter l'objet</button>
         </form>
     </section>
@@ -464,11 +470,8 @@
             <div class="footer-col">
                 <h4>Service & Info</h4>
                 <ul>
-                    <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -500,7 +503,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -517,7 +520,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile pour nos services
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 
@@ -588,7 +591,7 @@
             // Événement sur changement du type
             typeSelect.addEventListener("change", updateChampsSpecifiques);
 
-            // Init si un type est prérempli (ex : en cas d’erreur retour POST)
+            // Init si un type est prérempli 
             updateChampsSpecifiques();
         });
     </script>

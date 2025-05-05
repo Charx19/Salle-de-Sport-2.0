@@ -1,5 +1,6 @@
 {% load static %}
 {% block content %}
+<!--Page de presentation des membres du projet-->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
@@ -7,7 +8,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Équipe</title>
+    <!-- CSS de base -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- CSS specifique -->
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -15,7 +18,7 @@
             background-color: #c6daf0;
         }
 
-        /* Logo */
+        /* icone des profils*/
         .logo {
             font-weight: bold;
             font-size: 1.4rem;
@@ -47,7 +50,7 @@
             color: #222;
         }
 
-        /* Cartes membres */
+
         .team {
             display: flex;
             flex-wrap: wrap;
@@ -84,7 +87,6 @@
             font-size: 0.9rem;
         }
 
-        /* Profil individuel (si besoin plus tard) */
         .profile-container {
             max-width: 800px;
             margin: 3rem auto;
@@ -112,7 +114,6 @@
             font-size: 1rem;
         }
 
-        /* Boutons */
         .btn {
             background-color: #3a00c2;
             color: white;
@@ -135,13 +136,13 @@
         <div class="container nav-container">
             <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
+            <!-- Bouton menu mobile -->
             <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
                 <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
 
             </button>
 
-            <!-- Overlay + Menu mobile -->
+            <!-- Menu mobile + panneau lateral-->
             <div class="mobile-menu" id="mobileMenu">
                 <div class="menu-overlay" id="menuOverlay"></div>
                 <div class="menu-panel">
@@ -165,6 +166,7 @@
 
 
 
+                        <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                         {% if user.is_authenticated %}
                         <a href="{% url 'profil' %}">Mon espace</a>
@@ -193,6 +195,7 @@
                 </div>
 
 
+                <!--adaptatif en fonction de la connexion de l'utilisateur-->
 
                 {% if user.is_authenticated %}
                 <a href="{% url 'profil' %}">Mon espace</a>
@@ -206,11 +209,12 @@
         </div>
     </header>
 
-
+    <!--Contenu principal-->
     <section class="team-section">
         <div class="team-container">
             <h1>Notre équipe</h1>
             <div class="team">
+                <!--Cartes des membres de l'equipe-->
                 <div class="member">
                     <img src="{% static 'images/profil2.png' %}" alt="Asma">
                     <h3>Asma Yazidi</h3>
@@ -241,11 +245,8 @@
             <div class="footer-col">
                 <h4>Service & Info</h4>
                 <ul>
-                    <li><a href="#">Service client</a></li>
                     <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
+                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
                 </ul>
             </div>
             <div class="footer-col">
@@ -277,7 +278,7 @@
     </footer>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
+            //  Menu mobile
             const burger = document.getElementById("hamburgerBtn");
             const menu = document.getElementById("mobileMenu");
             const close = document.getElementById("closeMenu");
@@ -294,7 +295,7 @@
             close?.addEventListener("click", closeMenu);
             overlay?.addEventListener("click", closeMenu);
 
-            // ✅ Menu déroulant mobile (Nos services)
+            //  Menu déroulant mobile (Nos services)
             const trigger = document.getElementById("servicesToggle");
             const dropdown = document.getElementById("dropdownServices");
 

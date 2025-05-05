@@ -3,57 +3,58 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <!DOCTYPE html>
 <html lang="fr">
+<!--page avec tous les objets connecte-->
 
 <head>
     <meta charset="UTF-8">
     <title>Objets connectés</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+    <!--CSS specifique-->
     <style>
         .header-objets {
             text-align: center;
             margin-top: 80px;
         }
-    
+
         .header-objets h1 {
             font-size: 2.5em;
             color: #4a00e0;
             margin-bottom: 15px;
         }
-    
+
         .header-objets p {
             font-size: 1.2em;
             color: #555;
         }
-    
+
         .objet-item {
             text-align: center;
             transition: transform 0.3s;
         }
-    
+
         .objet-item img {
             width: 100%;
             height: auto;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-    
+
         .objet-item:hover {
             transform: scale(1.05);
         }
-    
+
         .objet-item h3 {
             margin-top: 10px;
             font-size: 1.1em;
             color: #333;
         }
-    
+
         a {
             text-decoration: none;
             color: inherit;
         }
-    
+
         .btn-ajouter {
             display: inline-block;
             margin-bottom: 30px;
@@ -65,11 +66,11 @@
             border-radius: 8px;
             transition: background-color 0.3s;
         }
-    
+
         .btn-ajouter:hover {
             background-color: #4a00e0;
         }
-    
+
         .objets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -77,11 +78,12 @@
             padding: 20px;
             justify-items: center;
         }
-    
+
         .objet-card {
             background: white;
             width: 250px;
-            height: 420px; /* 🔼 hauteur augmentée pour le 4e bouton */
+            height: 420px;
+            /* 🔼 hauteur augmentée pour le 4e bouton */
             border-radius: 12px;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
@@ -91,26 +93,26 @@
             justify-content: space-between;
             padding: 20px;
         }
-    
+
         .objet-image img {
             width: 100%;
             height: 150px;
             object-fit: contain;
             border-radius: 8px;
         }
-    
+
         .objet-content h3 {
             margin: 15px 0 10px;
             font-size: 1.3em;
             color: #333;
         }
-    
+
         .objet-buttons {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-    
+
         .btn-action {
             background-color: #6a00ff;
             color: white;
@@ -122,15 +124,15 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-    
+
         .btn-action:hover {
             background-color: #4a00cc;
         }
-    
+
         .suppression-form {
             margin: 0;
         }
-    
+
         .suppression-form button {
             background-color: crimson;
             color: white;
@@ -141,266 +143,271 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-    
+
         .suppression-form button:hover {
             background-color: darkred;
         }
     </style>
-    
+
 </head>
 
 <body>
+    <!-- Vérification des points pour l'accès aux sections -->
+    {% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %} <div class="alert alert-warning"
+        style="color: red; font-weight: bold;">
+        🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
+        </div>
+        {% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %} <div
+            class="alert alert-warning" style="color: red; font-weight: bold;">
+            🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
+            </div>
+            {% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %} <div
+                class="alert alert-warning" style="color: red; font-weight: bold;">
+                🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
+                </div>
+                {% endif %}
 
-    {% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
-  </div>
-{% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
-  </div>
-{% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
-  </div>
-{% endif %}
+                <!-- Barre du haut -->
+                <header class="main-nav">
+                    <div class="container nav-container">
+                        <div class="logo">ConnectedGym</div>
 
-    <!-- Barre du haut -->
-    <header class="main-nav">
-        <div class="container nav-container">
-            <div class="logo">ConnectedGym</div>
+                        <!-- Bouton menu -->
+                        <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                            <img src="{% static 'images/altere.png' %}" alt="Accueil"
+                                style="height: 35px; width: auto;">
 
-            <!-- Bouton burger -->
-            <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
-                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+                        </button>
 
-            </button>
+                        <!--  Menu mobile -->
+                        <div class="mobile-menu" id="mobileMenu">
+                            <div class="menu-overlay" id="menuOverlay"></div>
+                            <div class="menu-panel">
+                                <div class="menu-header">
+                                    <span class="logo">ConnectedGym</span>
+                                    <button class="close-menu" id="closeMenu">✕</button>
+                                </div>
 
-            <!-- Overlay + Menu mobile -->
-            <div class="mobile-menu" id="mobileMenu">
-                <div class="menu-overlay" id="menuOverlay"></div>
-                <div class="menu-panel">
-                    <div class="menu-header">
-                        <span class="logo">ConnectedGym</span>
-                        <button class="close-menu" id="closeMenu">✕</button>
-                    </div>
+                                <nav class="menu-body">
+                                    <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                                    <a href="{% url 'equipe' %}">Notre équipe</a>
 
-                    <nav class="menu-body">
-                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-                        <a href="{% url 'equipe' %}">Notre équipe</a>
+                                    <div class="dropdown-mobile">
+                                        <a href="#" id="servicesToggle">Nos services</a>
+                                        <div class="dropdown-content-mobile" id="dropdownServices">
+                                            <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                                            <a href="{% url 'performances' %}">Suivi des performances</a>
+                                            <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                        </div>
+                                    </div>
 
-                        <div class="dropdown-mobile">
-                            <a href="#" id="servicesToggle">Nos services</a>
-                            <div class="dropdown-content-mobile" id="dropdownServices">
-                                <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
-                                <a href="{% url 'performances' %}">Suivi des performances</a>
-                                <a href="{% url 'personnalisation' %}">Personnalisation</a>
+
+
+
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'profil' %}">Mon espace</a>
+                                    <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                                    {% else %}
+                                    <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                                    <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                                    {% endif %}
+                                </nav>
+
+
                             </div>
                         </div>
+                        <!-- Menu desktop -->
+                        <nav class="nav-links desktop-only">
+                            <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                            <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                            <div class="dropdown">
+                                <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                                <div class="dropdown-content" id="dropdown-services">
+                                    <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                                    <a href="{% url 'performances' %}">Suivi des performances</a>
+                                    <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                </div>
+                            </div>
 
 
 
 
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'profil' %}">Mon espace</a>
-                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-                        {% else %}
-                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-                        {% endif %}
-                    </nav>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'profil' %}">Mon espace</a>
+                            <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                            {% else %}
+                            <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                            <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                            {% endif %}
+                        </nav>
 
-
-                </div>
-            </div>
-            <!-- Menu desktop -->
-            <nav class="nav-links desktop-only">
-                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-                <a href="{% url 'equipe' %}">Notre équipe</a>
-
-                <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
-                    <div class="dropdown-content" id="dropdown-services">
-                        <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
-                        <a href="{% url 'performances' %}">Suivi des performances</a>
-                        <a href="{% url 'personnalisation' %}">Personnalisation</a>
                     </div>
+                </header>
+
+                <!-- Contenu principal-->
+                <section class="hero-full">
+                    <div class="overlay" style="background: rgba(0,0,0,0.5); padding: 50px;">
+                        <div class="container hero-content" style="text-align: center; color: white;">
+                            <h1>Gérer les objets connectés</h1>
+                            <p style="margin-bottom: 20px;">Sélectionnez un objet pour consulter, modifier ses
+                                informations ou gérer
+                                ses paramètres.</p>
+                            <a href="#objets" class="btn light">
+                                Commencer la gestion <span class="arrow">→</span>
+                            </a>
+
+
+                        </div>
+                    </div>
+                </section>
+                <!--Cartes presentant les objets-->
+                <div class="objets-grid" id="objets">
+                    {% for obj in objets %}
+                    <div class="objet-card">
+                        <div class="objet-image">
+                            {% if obj.image %}
+                            <img src="{{ obj.image }}" alt="{{ obj.nom }}">
+                            {% else %}
+                            <img src="{% static 'images/default_objet.png' %}" alt="Image par défaut">
+                            {% endif %}
+                        </div>
+
+                        <div class="objet-content">
+                            <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                {{ obj.nom }}
+                            </h3>
+
+                            {% if "actif" in obj.statut %}
+                            <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                                <span style="color: limegreen;"> Actif</span>
+                            </p>
+                            {% elif "maintenance" in obj.statut %}
+                            <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                                <span style="color: orange;"> Maintenance</span>
+                            </p>
+                            {% elif "inactif" in obj.statut %}
+                            <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                                <span style="color: crimson;"> Inactif</span>
+                            </p>
+                            {% else %}
+                            <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
+                                <span style="color: gray;"> Inconnu</span>
+                            </p>
+                            {% endif %}
+                            <!--boutons pour agir sur les objets-->
+                            <div class="objet-buttons">
+                                <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
+                                <a href="{% url 'modif_objet' obj.id %}" class="btn-action">Modifier</a>
+                                <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
+
+
+                                <form method="post" action="{% url 'demande_suppression_objet' obj.id %}"
+                                    style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-action" style="background-color: crimson;">Demander
+                                        suppression</button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
 
 
-
-
-                {% if user.is_authenticated %}
-                <a href="{% url 'profil' %}">Mon espace</a>
-                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-                {% else %}
-                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-                {% endif %}
-            </nav>
-
-        </div>
-    </header>
-
-    <!-- Contenu principal-->
-    <section class="hero-full">
-        <div class="overlay" style="background: rgba(0,0,0,0.5); padding: 50px;">
-            <div class="container hero-content" style="text-align: center; color: white;">
-                <h1>Gérer les objets connectés</h1>
-                <p style="margin-bottom: 20px;">Sélectionnez un objet pour consulter, modifier ses informations ou gérer
-                    ses paramètres.</p>
-                <a href="#objets" class="btn light">
-                    Commencer la gestion <span class="arrow">→</span>
-                </a>
-
-
-            </div>
-        </div>
-    </section>
-
-    <div class="objets-grid" id="objets">
-        {% for obj in objets %}
-        <div class="objet-card">
-            <div class="objet-image">
-                {% if obj.image %}
-                <img src="{{ obj.image }}" alt="{{ obj.nom }}">
-                {% else %}
-                <img src="{% static 'images/default_objet.png' %}" alt="Image par défaut">
-                {% endif %}
-            </div>
-
-            <div class="objet-content">
-                <h3 style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    {{ obj.nom }}
-                </h3>
-    
-                {% if "actif" in obj.statut %}
-                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
-                    <span style="color: limegreen;"> Actif</span>
-                </p>
-                {% elif "maintenance" in obj.statut %}
-                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
-                    <span style="color: orange;"> Maintenance</span>
-                </p>
-                {% elif "inactif" in obj.statut %}
-                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
-                    <span style="color: crimson;"> Inactif</span>
-                </p>
-                {% else %}
-                <p style="font-size: 0.9em; margin-top: -10px; margin-bottom: 10px;">
-                    <span style="color: gray;"> Inconnu</span>
-                </p>
-                {% endif %}
-    
-                <div class="objet-buttons">
-                    <a href="{% url 'info_objet' obj.id %}" class="btn-action">Voir les infos</a>
-                    <a href="{% url 'modif_objet' obj.id %}" class="btn-action">Modifier</a>
-                    <a href="{% url 'historique_objet' obj.id %}" class="btn-action">Historique</a>
-                    
-    
-                    <form method="post" action="{% url 'demande_suppression_objet' obj.id %}" style="display: inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-action" style="background-color: crimson;">Demander suppression</button>
-                    </form>
-                    
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
                 </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    
 
-    <div style="text-align: center; margin-top: 40px;">
-        <a href="{% url 'ajouter_objet' %}" class="btn-ajouter"> Ajouter un nouvel objet</a>
-    </div>
+                <!-- Footer -->
+                <footer class="footer-section">
+                    <div class="footer-container">
+                        <div class="footer-col">
+                            <h4>Service & Info</h4>
+                            <ul>
+                                <li><a href="#">Service client</a></li>
+                                <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                                <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>À propos</h4>
+                            <ul>
+                                <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                                <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Nos clubs</h4>
+                            <ul>
+                                <li><a href="#">Paris</a></li>
+                                <li><a href="#">Cergy</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Suivez-nous</h4>
+                            <div class="social-icons">
+                                <a href="https://www.facebook.com/?locale=fr_FR"><i
+                                        class="fa-brands fa-facebook"></i></a>
+                                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+                    </div>
+                </footer>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        //  Menu 
+                        const burger = document.getElementById("hamburgerBtn");
+                        const menu = document.getElementById("mobileMenu");
+                        const close = document.getElementById("closeMenu");
+                        const overlay = document.getElementById("menuOverlay");
 
-    <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-container">
-            <div class="footer-col">
-                <h4>Service & Info</h4>
-                <ul>
-                    <li><a href="#">Service client</a></li>
-                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="{% url 'horaires' %}">Horaires</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>À propos</h4>
-                <ul>
-                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
-                    <li><a href="{% url 'objectif' %}">Objectifs</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Nos clubs</h4>
-                <ul>
-                    <li><a href="#">Paris</a></li>
-                    <li><a href="#">Cergy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Suivez-nous</h4>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
-        </div>
-    </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
-            const burger = document.getElementById("hamburgerBtn");
-            const menu = document.getElementById("mobileMenu");
-            const close = document.getElementById("closeMenu");
-            const overlay = document.getElementById("menuOverlay");
+                        function closeMenu() {
+                            menu.classList.remove("active");
+                        }
 
-            function closeMenu() {
-                menu.classList.remove("active");
-            }
+                        burger?.addEventListener("click", () => {
+                            menu.classList.add("active");
+                        });
 
-            burger?.addEventListener("click", () => {
-                menu.classList.add("active");
-            });
+                        close?.addEventListener("click", closeMenu);
+                        overlay?.addEventListener("click", closeMenu);
 
-            close?.addEventListener("click", closeMenu);
-            overlay?.addEventListener("click", closeMenu);
+                        // Menu déroulant mobile 
+                        const trigger = document.getElementById("servicesToggle");
+                        const dropdown = document.getElementById("dropdownServices");
 
-            // ✅ Menu déroulant mobile (Nos services)
-            const trigger = document.getElementById("servicesToggle");
-            const dropdown = document.getElementById("dropdownServices");
+                        trigger?.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            if (dropdown.style.display === "flex") {
+                                dropdown.style.display = "none";
+                            } else {
+                                dropdown.style.display = "flex";
+                            }
+                        });
 
-            trigger?.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (dropdown.style.display === "flex") {
-                    dropdown.style.display = "none";
-                } else {
-                    dropdown.style.display = "flex";
-                }
-            });
-
-            // Fermer si on clique ailleurs
-            document.addEventListener("click", function (e) {
-                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.style.display = "none";
-                }
-            });
-            // Si un paramètre de recherche est présent dans l’URL
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
-                // Scroller vers la section avec id="objets"
-                const objetsSection = document.getElementById("objets");
-                if (objetsSection) {
-                    objetsSection.scrollIntoView({ behavior: "smooth" });
-                }
-            }
-        });
-    </script>
+                        // Fermer si on clique ailleurs
+                        document.addEventListener("click", function (e) {
+                            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                                dropdown.style.display = "none";
+                            }
+                        });
+                        // Si un paramètre de recherche est présent dans l’URL
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                            // Scroller vers la section avec id="objets"
+                            const objetsSection = document.getElementById("objets");
+                            if (objetsSection) {
+                                objetsSection.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }
+                    });
+                </script>
 </body>
 {% endblock %}
 

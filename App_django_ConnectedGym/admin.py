@@ -36,7 +36,7 @@ class CustomUserAdmin(UserAdmin):
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
-# Admin du profil utilisateur (✅ avec mise à jour des points et permissions)
+# Admin du profil utilisateur ( avec mise à jour des points et permissions)
 @admin.register(ProfilUtilisateur)
 class ProfilUtilisateurAdmin(admin.ModelAdmin):
     list_display = ('user', 'sexe', 'date_naissance', 'niveau_experience', 'points')

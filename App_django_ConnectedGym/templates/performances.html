@@ -2,371 +2,372 @@
 {% load static %}
 {% block title %}Suivi des Performances - ConnectedGym{% endblock %}
 {% block content %}
+<!--page des performances de l'utilisateurs-->
+<!--  HEADER  -->
 
-<!-- ✅ HEADER (fixe, intégré) -->
-
-{% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
+{% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %} <div class="alert alert-warning"
+    style="color: red; font-weight: bold;">
     🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
-  </div>
-{% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
-  </div>
-{% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
-  </div>
-{% endif %}
+    </div>
+    {% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %} <div class="alert alert-warning"
+        style="color: red; font-weight: bold;">
+        🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
+        </div>
+        {% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %} <div
+            class="alert alert-warning" style="color: red; font-weight: bold;">
+            🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
+            </div>
+            {% endif %}
 
-<header class="main-nav">
-    <div class="container nav-container">
-        <div class="logo">ConnectedGym</div>
+            <header class="main-nav">
+                <div class="container nav-container">
+                    <div class="logo">ConnectedGym</div>
 
-        <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
-            <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
-        </button>
+                    <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                        <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+                    </button>
 
-        <!-- Menu mobile -->
-        <div class="mobile-menu" id="mobileMenu">
-            <div class="menu-overlay" id="menuOverlay"></div>
-            <div class="menu-panel">
-                <div class="menu-header">
-                    <span class="logo">ConnectedGym</span>
-                    <button class="close-menu" id="closeMenu">✕</button>
-                </div>
+                    <!-- Menu mobile -->
+                    <div class="mobile-menu" id="mobileMenu">
+                        <div class="menu-overlay" id="menuOverlay"></div>
+                        <div class="menu-panel">
+                            <div class="menu-header">
+                                <span class="logo">ConnectedGym</span>
+                                <button class="close-menu" id="closeMenu">✕</button>
+                            </div>
 
-                <nav class="menu-body">
-                    <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-                    <a href="{% url 'equipe' %}">Notre équipe</a>
+                            <nav class="menu-body">
+                                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                                <a href="{% url 'equipe' %}">Notre équipe</a>
 
-                    <div class="dropdown-mobile">
-                        <a href="#" id="servicesToggle">Nos services</a>
-                        <div class="dropdown-content-mobile" id="dropdownServices">
-                            <a href="{% url 'objets_connectes' %}">Nos équipements</a>
-                            <a href="{% url 'performances' %}">Suivi des performances</a>
-                            <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                <div class="dropdown-mobile">
+                                    <a href="#" id="servicesToggle">Nos services</a>
+                                    <div class="dropdown-content-mobile" id="dropdownServices">
+                                        <a href="{% url 'objets_connectes' %}">Nos équipements</a>
+                                        <a href="{% url 'performances' %}">Suivi des performances</a>
+                                        <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                    </div>
+                                </div>
+
+
+                                {% if user.is_authenticated %}
+                                <a href="{% url 'profil' %}">Mon espace</a>
+                                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                                {% else %}
+                                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                                {% endif %}
+                            </nav>
                         </div>
                     </div>
 
+                    <!-- Desktop -->
+                    <nav class="nav-links desktop-only">
+                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                        <a href="{% url 'equipe' %}">Notre équipe</a>
 
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'profil' %}">Mon espace</a>
-                    <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-                    {% else %}
-                    <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-                    <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-                    {% endif %}
-                </nav>
-            </div>
-        </div>
+                        <div class="dropdown">
+                            <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                            <div class="dropdown-content" id="dropdown-services">
+                                <a href="{% url 'objets_connectes' %}">Nos équipements</a>
+                                <a href="{% url 'performances' %}">Suivi des performances</a>
+                                <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                            </div>
+                        </div>
 
-        <!-- Desktop -->
-        <nav class="nav-links desktop-only">
-            <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-            <a href="{% url 'equipe' %}">Notre équipe</a>
 
-            <div class="dropdown">
-                <a href="#" onclick="toggleDropdown(event)">Nos services</a>
-                <div class="dropdown-content" id="dropdown-services">
-                    <a href="{% url 'objets_connectes' %}">Nos équipements</a>
-                    <a href="{% url 'performances' %}">Suivi des performances</a>
-                    <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'profil' %}">Mon espace</a>
+                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                        {% else %}
+                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                        {% endif %}
+                    </nav>
                 </div>
-            </div>
+            </header>
+
+            <!--  HERO -->
+            <section class="hero-full"
+                style="background-image: url('{% static 'images/performance.jpg' %}'); background-size: cover;">
+                <div class="overlay">
+                    <div class="container hero-content">
+                        <h1>Suivez vos performances en temps réel</h1>
+                        <p>Visualisez vos progrès grâce à nos équipements connectés et vos données personnalisées.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!--  donnees specifiques a l'utilisateur -->
+            <section class="features-section">
+                <h2 class="section-title">Vos données sportives</h2>
+                <div class="features-container"
+                    style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+
+                    <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
+                        <h3 style="text-align: center;">Fréquence cardiaque</h3>
+                        <canvas id="chartFrequence" style="width: 100%; height: auto;"></canvas>
+                    </div>
+
+                    <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
+                        <h3 style="text-align: center;">Calories brûlées</h3>
+                        <canvas id="caloriesChart" style="width: 100%; height: auto;"></canvas>
+                    </div>
+
+                    <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
+                        <h3 style="text-align: center;">Progression</h3>
+                        <canvas id="progressionChart" style="width: 100%; height: auto;"></canvas>
+                    </div>
+
+                </div>
+            </section>
 
 
-            {% if user.is_authenticated %}
-            <a href="{% url 'profil' %}">Mon espace</a>
-            <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-            {% else %}
-            <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-            <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-            {% endif %}
-        </nav>
-    </div>
-</header>
+            <!--  stat globales -->
+            <section class="features-section" style="margin-top: 60px;">
+                <div class="container">
+                    <h2 class="section-title">Statistiques globales de ConnectedGym</h2>
 
-<!-- ✅ HERO -->
-<section class="hero-full"
-    style="background-image: url('{% static 'images/performance.jpg' %}'); background-size: cover;">
-    <div class="overlay">
-        <div class="container hero-content">
-            <h1>Suivez vos performances en temps réel</h1>
-            <p>Visualisez vos progrès grâce à nos équipements connectés et vos données personnalisées.</p>
-        </div>
-    </div>
-</section>
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 40px;">
+                        <div style="flex: 1 1 400px;">
+                            <h3 style="text-align:center;">Calories brûlées (tous les utilisateurs)</h3>
+                            <canvas id="globalCaloriesChart" height="250"></canvas>
+                        </div>
 
-<!-- ✅ DONNÉES SPORTIVES -->
-<section class="features-section">
-    <h2 class="section-title">Vos données sportives</h2>
-    <div class="features-container" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 30px;">
+                        <div style="flex: 1 1 400px;">
+                            <h3 style="text-align:center;">Distance parcourue (km)</h3>
+                            <canvas id="globalDistanceChart" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
-            <h3 style="text-align: center;">Fréquence cardiaque</h3>
-            <canvas id="chartFrequence" style="width: 100%; height: auto;"></canvas>
-        </div>
+            <!--graphiques-->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const labels = {{ labels| safe }};
 
-        <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
-            <h3 style="text-align: center;">Calories brûlées</h3>
-            <canvas id="caloriesChart" style="width: 100%; height: auto;"></canvas>
-        </div>
-
-        <div class="feature-card" style="flex: 1 1 300px; max-width: 500px;">
-            <h3 style="text-align: center;">Progression</h3>
-            <canvas id="progressionChart" style="width: 100%; height: auto;"></canvas>
-        </div>
-
-    </div>
-</section>
-
-
-<!-- ✅ STATISTIQUES GLOBALES CONNECTEDGYM -->
-<section class="features-section" style="margin-top: 60px;">
-    <div class="container">
-        <h2 class="section-title">Statistiques globales de ConnectedGym</h2>
-
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-around; gap: 40px;">
-            <div style="flex: 1 1 400px;">
-                <h3 style="text-align:center;">Calories brûlées (tous les utilisateurs)</h3>
-                <canvas id="globalCaloriesChart" height="250"></canvas>
-            </div>
-
-            <div style="flex: 1 1 400px;">
-                <h3 style="text-align:center;">Distance parcourue (km)</h3>
-                <canvas id="globalDistanceChart" height="250"></canvas>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const labels = {{ labels| safe }};
-
-    // 🔥 Calories brûlées
-    new Chart(document.getElementById('caloriesChart'), {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: 'Calories brûlées',
-                data: {{ calories_data| safe }
-    },
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-        borderRadius: 6
-            }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-            legend: { display: false },
-            title: {
-                display: true,
-                text: 'Calories brûlées (kcal)'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-    });
-
-    // 📈 Progression (Durée d'utilisation)
-    new Chart(document.getElementById('progressionChart'), {
-        type: 'line',
-        data: {
-            labels: {{ labels_progression| safe }},
-        datasets: [{
-            label: 'Durée d’utilisation (min)',
-            data: {{ data_progression| safe }},
-        borderWidth: 2,
-        borderColor: 'rgba(58, 0, 194, 0.8)',
-        backgroundColor: 'rgba(58, 0, 194, 0.1)',
-        fill: true,
-        tension: 0.4
-            }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Progression de la durée d’utilisation'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: "Durée (min)"
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: "Date"
-                }
-            }
-        }
-    }
-    });
-
-    // ❤️ Fréquence cardiaque
-    new Chart(document.getElementById('chartFrequence'), {
-        type: 'line',
-        data: {
-            labels: {{ labels_frequence| safe }},
-        datasets: [{
-            label: 'Fréquence cardiaque (bpm)',
-            data: {{ data_frequence| safe }},
-        borderWidth: 2,
-        borderColor: 'rgba(255, 165, 0, 0.8)',
-        backgroundColor: 'rgba(255, 165, 0, 0.1)',
-        fill: true,
-        tension: 0.3
-            }]
-        },
-        options: {
-        responsive: true,
-        plugins: {
-            title: {
-                display: true,
-                text: 'Suivi de la fréquence cardiaque'
-            }
-        },
-        scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    text: "BPM"
-                }
-            },
-            x: {
-                title: {
-                    display: true,
-                    text: "Date"
-                }
-            }
-        }
-    }
-    });
-</script>
-
-
-<!-- ✅ JS pour la stat globale -->
-<script>
-    const globalLabels = {{ global_labels| safe }};
-    const globalCalories = {{ global_calories| safe }};
-    const globalDistances = {{ global_distances| safe }};
-
-    // 🔥 Global calories chart
-    new Chart(document.getElementById('globalCaloriesChart'), {
-        type: 'bar',
-        data: {
-            labels: globalLabels,
-            datasets: [{
-                label: 'Calories brûlées',
-                data: globalCalories,
-                backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                borderRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Calories brûlées par jour'
+                //  Calories brûlées
+                new Chart(document.getElementById('caloriesChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Calories brûlées',
+                            data: {{ calories_data| safe }
                 },
-                legend: {
-                    display: false
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-    // 📏 Global distance chart
-    new Chart(document.getElementById('globalDistanceChart'), {
-        type: 'line',
-        data: {
-            labels: globalLabels,
-            datasets: [{
-                label: 'Distance parcourue (km)',
-                data: globalDistances,
-                fill: true,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.1)',
-                tension: 0.4,
-                pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                    borderRadius: 6
             }]
         },
-        options: {
-            responsive: true,
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Distance totale parcourue'
+                    options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Calories brûlées (kcal)'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
                 }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
     });
-</script>
+
+                //  Progression (Durée d'utilisation)
+                new Chart(document.getElementById('progressionChart'), {
+                    type: 'line',
+                    data: {
+                        labels: {{ labels_progression| safe }},
+                    datasets: [{
+                        label: 'Durée d’utilisation (min)',
+                        data: {{ data_progression| safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgba(58, 0, 194, 0.8)',
+                    backgroundColor: 'rgba(58, 0, 194, 0.1)',
+                    fill: true,
+                    tension: 0.4
+            }]
+        },
+                    options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Progression de la durée d’utilisation'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Durée (min)"
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Date"
+                            }
+                        }
+                    }
+                }
+    });
+
+                //  Fréquence cardiaque
+                new Chart(document.getElementById('chartFrequence'), {
+                    type: 'line',
+                    data: {
+                        labels: {{ labels_frequence| safe }},
+                    datasets: [{
+                        label: 'Fréquence cardiaque (bpm)',
+                        data: {{ data_frequence| safe }},
+                    borderWidth: 2,
+                    borderColor: 'rgba(255, 165, 0, 0.8)',
+                    backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                    fill: true,
+                    tension: 0.3
+            }]
+        },
+                    options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Suivi de la fréquence cardiaque'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "BPM"
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Date"
+                            }
+                        }
+                    }
+                }
+    });
+            </script>
+
+
+            <!--  graphiques pour la stat globale -->
+            <script>
+                const globalLabels = {{ global_labels| safe }};
+                const globalCalories = {{ global_calories| safe }};
+                const globalDistances = {{ global_distances| safe }};
+
+                //  Global calories chart
+                new Chart(document.getElementById('globalCaloriesChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: globalLabels,
+                        datasets: [{
+                            label: 'Calories brûlées',
+                            data: globalCalories,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Calories brûlées par jour'
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                //  Global distance chart
+                new Chart(document.getElementById('globalDistanceChart'), {
+                    type: 'line',
+                    data: {
+                        labels: globalLabels,
+                        datasets: [{
+                            label: 'Distance parcourue (km)',
+                            data: globalDistances,
+                            fill: true,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.1)',
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Distance totale parcourue'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            </script>
 
 
 
-<!-- ✅ FOOTER -->
-<footer class="footer-section">
-    <div class="footer-container">
-        <div class="footer-col">
-            <h4>Service & Info</h4>
-            <ul>
-                <li><a href="#">Service client</a></li>
-                <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                <li><a href="{% url 'horaires' %}">Horaires</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>À propos</h4>
-            <ul>
-                <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
-                <li><a href="{% url 'objectif' %}">Objectifs</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Nos clubs</h4>
-            <ul>
-                <li><a href="#">Paris</a></li>
-                <li><a href="#">Cergy</a></li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h4>Suivez-nous</h4>
-            <div class="social-icons">
-                <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
-                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="footer-bottom">
-        <p>© 2025 ConnectedGym. Tous droits réservés.</p>
-    </div>
-</footer>
+            <!--  FOOTER -->
+            <footer class="footer-section">
+                <div class="footer-container">
+                    <div class="footer-col">
+                        <h4>Service & Info</h4>
+                        <ul>
+                            <li><a href="#">Service client</a></li>
+                            <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                            <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>À propos</h4>
+                        <ul>
+                            <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                            <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Nos clubs</h4>
+                        <ul>
+                            <li><a href="#">Paris</a></li>
+                            <li><a href="#">Cergy</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Suivez-nous</h4>
+                        <div class="social-icons">
+                            <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
+                            <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                            <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+                </div>
+            </footer>
 
-{% endblock %}
+            {% endblock %}

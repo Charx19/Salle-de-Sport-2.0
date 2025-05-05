@@ -209,401 +209,411 @@
 
 <body>
 
-    {% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
-  </div>
-{% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
-  </div>
-{% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %}
-  <div class="alert alert-warning" style="color: red; font-weight: bold;">
-    🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
-  </div>
-{% endif %}
+    {% if profil.points < 3 and request.resolver_match.view_name == 'objets_connectes' %} <div class="alert alert-warning"
+        style="color: red; font-weight: bold;">
+        🚫 Cette section est bloquée. Gagne au moins 3 points pour y accéder.
+        </div>
+        {% elif profil.points < 5 and request.resolver_match.view_name == 'performances' %} <div
+            class="alert alert-warning" style="color: red; font-weight: bold;">
+            🚫 Cette section est bloquée. Atteins 5 points pour débloquer le suivi de performances.
+            </div>
+            {% elif profil.points < 7 and request.resolver_match.view_name == 'personnalisation' %} <div
+                class="alert alert-warning" style="color: red; font-weight: bold;">
+                🚫 Cette section est bloquée. Il te faut 7 points pour personnaliser ton expérience.
+                </div>
+                {% endif %}
 
-    <!-- Barre du haut -->
-    <header class="main-nav">
-        <div class="container nav-container">
-            <div class="logo">ConnectedGym</div>
+                <!-- Barre du haut -->
+                <header class="main-nav">
+                    <div class="container nav-container">
+                        <div class="logo">ConnectedGym</div>
 
-            <!-- Bouton burger -->
-            <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
-                <img src="{% static 'images/altere.png' %}" alt="Accueil" style="height: 35px; width: auto;">
+                        <!-- Bouton burger -->
+                        <button class="hamburger-toggle" id="hamburgerBtn" aria-label="Menu">
+                            <img src="{% static 'images/altere.png' %}" alt="Accueil"
+                                style="height: 35px; width: auto;">
 
-            </button>
+                        </button>
 
-            <!-- Overlay + Menu mobile -->
-            <div class="mobile-menu" id="mobileMenu">
-                <div class="menu-overlay" id="menuOverlay"></div>
-                <div class="menu-panel">
-                    <div class="menu-header">
-                        <span class="logo">ConnectedGym</span>
-                        <button class="close-menu" id="closeMenu">✕</button>
+                        <!-- Overlay + Menu mobile -->
+                        <div class="mobile-menu" id="mobileMenu">
+                            <div class="menu-overlay" id="menuOverlay"></div>
+                            <div class="menu-panel">
+                                <div class="menu-header">
+                                    <span class="logo">ConnectedGym</span>
+                                    <button class="close-menu" id="closeMenu">✕</button>
+                                </div>
+
+                                <nav class="menu-body">
+                                    <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                                    <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                                    <div class="dropdown-mobile">
+                                        <a href="#" id="servicesToggle">Nos services</a>
+                                        <div class="dropdown-content-mobile" id="dropdownServices">
+                                            <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                                            <a href="{% url 'performances' %}">Suivi des performances</a>
+                                            <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    {% if user.is_authenticated %}
+                                    <a href="{% url 'profil' %}">Mon espace</a>
+                                    <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                                    {% else %}
+                                    <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                                    <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                                    {% endif %}
+                                </nav>
+
+
+                            </div>
+                        </div>
+                        <!-- Menu desktop -->
+                        <nav class="nav-links desktop-only">
+                            <a href="{% url 'acceuil' %}">Accueil Sportif</a>
+                            <a href="{% url 'equipe' %}">Notre équipe</a>
+
+                            <div class="dropdown">
+                                <a href="#" onclick="toggleDropdown(event)">Nos services</a>
+                                <div class="dropdown-content" id="dropdown-services">
+                                    <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
+                                    <a href="{% url 'performances' %}">Suivi des performances</a>
+                                    <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                                </div>
+                            </div>
+
+
+
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'profil' %}">Mon espace</a>
+                            <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
+                            {% else %}
+                            <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
+                            <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
+                            {% endif %}
+                        </nav>
+
+                    </div>
+                </header>
+
+                <section class="hero-full"
+                    style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
+                    <div class="overlay">
+                        <div class="container hero-content">
+                            <h1>Personnalisez votre expérience</h1>
+                            <p>Choisissez votre salle et vos équipements connectés préférés.</p>
+                            <a href="#objets" class="btn light">
+                                Commencer la personnalisation <span class="arrow">→</span>
+                            </a>
+                        </div>
+
                     </div>
 
-                    <nav class="menu-body">
-                        <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-                        <a href="{% url 'equipe' %}">Notre équipe</a>
+                    <form method="get" action="{% url 'personnalisation' %}"
+                        style="margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
+                        <div>
+                            <label for="filtre_zone">Zone :</label>
+                            {% with z=request.GET.filtre_zone %}
+                            <select name="filtre_zone" id="filtre_zone">
+                                <option value="">Toutes</option>
+                                <option value="ambiance" {% if "ambiance" in z%}selected{% endif %}>Ambiance</option>
+                                <option value="cardio" {% if "cardio" in z%}selected{% endif %}>Cardio</option>
+                                <option value="détente" {% if "détente" in z%}selected{% endif %}>Détente</option>
+                            </select>
+                            {% endwith %}
 
-                        <div class="dropdown-mobile">
-                            <a href="#" id="servicesToggle">Nos services</a>
-                            <div class="dropdown-content-mobile" id="dropdownServices">
-                                <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
-                                <a href="{% url 'performances' %}">Suivi des performances</a>
-                                <a href="{% url 'personnalisation' %}">Personnalisation</a>
+                        </div>
+
+                        <div>
+                            <label for="filtre_type">Type :</label>
+                            {% with t=request.GET.filtre_type %}
+                            <select name="filtre_type" id="filtre_type">
+                                <option value="">Tous</option>
+                                <option value="velo" {% if "velo" in t%}selected{% endif %}>Vélo</option>
+                                <option value="tapis" {% if "tapis" in t %}selected{% endif %}>Tapis</option>
+                                <option value="stepper" {% if "stepper" in t%}selected{% endif %}>Stepper</option>
+                                <option value="rameur" {% if "rameur" in t%}selected{% endif %}>Rameur</option>
+                                <option value="elliptique" {% if "elliptique" in t%}selected{% endif %}>Elliptique
+                                </option>
+                            </select>
+                            {% endwith %}
+
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn success">Filtrer</button>
+                            <a href="{% url 'personnalisation' %}" class="btn success"
+                                style="margin-left: 10px;">Réinitialiser</a>
+                        </div>
+                    </form>
+
+                </section>
+
+                <section class="features-section" id="objets">
+                    <div class="layout-wrapper">
+                        <!-- Colonne gauche : liste des objets disponibles -->
+                        <div class="objets-list">
+                            <div class="objets-header">
+                                <h2>Objets disponibles</h2>
+                            </div>
+
+                            <div id="objets" class="objets-cartes">
+                                {% for obj in objets %}
+                                <div class="objet-card horizontal"
+                                    style="flex-direction: column; align-items: center; text-align: center;">
+                                    <div class="objet-image">
+                                        <img src="{{ obj.image|default:'/static/images/default_objet.png' }}"
+                                            alt="{{ obj.nom }}"
+                                            style="width: 140px; height: auto; object-fit: contain; border-radius: 8px;">
+                                    </div>
+                                    <div class="objet-info" style="margin-top: 0.5rem; width: 100%;">
+                                        <h3 style="margin-bottom: 0.3rem;">{{ obj.nom }}</h3>
+                                        <p style="font-size: 0.9rem; color: 
+                                {% if obj.statut == 'actif' %}green
+                                {% elif obj.statut == 'inactif' %}red
+                                {% else %}orange{% endif %};
+                                margin-bottom: 0.6rem;">
+                                            {% if obj.statut == 'actif' %}Actif
+                                            {% elif obj.statut == 'inactif' %}Inactif
+                                            {% else %}En maintenance{% endif %}
+                                        </p>
+                                        <!--specification des boutons en fonction de l'etat de l'objet pour permettre/empecher l'utilisateur de l'utiliser-->
+                                        <form method="POST">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="objet_id" value="{{ obj.id }}">
+
+                                            {% if obj.id not in selectionnes_ids and obj.statut == 'actif' %}
+                                            <label for="duree_heures_{{ obj.id }}"
+                                                style="font-size: 0.9rem; font-weight: 500;">Durée (en heures, max 10)
+                                                :</label>
+                                            <input type="number" name="duree_heures" id="duree_heures_{{ obj.id }}"
+                                                value="1" min="1" max="10"
+                                                style="width: 100%; padding: 6px; margin: 6px 0 10px 0; border: 1px solid #ccc; border-radius: 6px;">
+                                            {% endif %}
+
+                                            {% if obj.id in selectionnes_ids %}
+                                            <input type="hidden" name="action" value="remove">
+                                            <button class="btn danger">Retirer</button>
+
+                                            {% elif obj.id in objets_reserves_ids %}
+                                            <button class="btn primary" disabled style="cursor: not-allowed;">En
+                                                utilisation</button>
+
+                                            {% elif obj.statut != 'actif' %}
+                                            <button class="btn primary" disabled
+                                                style="cursor: not-allowed;">Indisponible</button>
+
+                                            {% else %}
+                                            <input type="hidden" name="action" value="add">
+                                            <button class="btn success">Ajouter</button>
+                                            {% endif %}
+
+                                        </form>
+                                    </div>
+                                </div>
+
+                                {% endfor %}
                             </div>
                         </div>
 
 
 
+                        <!-- Colonne droite : objets sélectionnés -->
+                        <div class="resume-selection">
+                            <h2> Objets sélectionnés</h2>
+                            {% if selectionnes %}
+                            {% for s in selectionnes %}
+                            <div class="resume-card">
+                                <h4>{{ s.objet.nom }}</h4>
 
-                        {% if user.is_authenticated %}
-                        <a href="{% url 'profil' %}">Mon espace</a>
-                        <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-                        {% else %}
-                        <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-                        <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-                        {% endif %}
-                    </nav>
+                                <p><strong>Zone</strong> : {{ s.objet.zone }}</p>
+                                <p><strong>Type</strong> : {{ s.objet.get_type_display }}</p>
+                                <p><strong>Attribut</strong> : {{ s.objet.attribut }}</p>
+                                <p><strong>Temps restant</strong> :
+                                    {% if s.expiration_datetime > now %}
+                                    {{ s.expiration_datetime|timeuntil }}
+                                    {% else %}
+                                    <span style="color:red;">Expiré</span>
+                                    {% endif %}
 
-
-                </div>
-            </div>
-            <!-- Menu desktop -->
-            <nav class="nav-links desktop-only">
-                <a href="{% url 'acceuil' %}">Accueil Sportif</a>
-                <a href="{% url 'equipe' %}">Notre équipe</a>
-
-                <div class="dropdown">
-                    <a href="#" onclick="toggleDropdown(event)">Nos services</a>
-                    <div class="dropdown-content" id="dropdown-services">
-                        <a href="{% url 'objets_connectes' %}">Objets Connectés</a>
-                        <a href="{% url 'performances' %}">Suivi des performances</a>
-                        <a href="{% url 'personnalisation' %}">Personnalisation</a>
-                    </div>
-                </div>
+                                </p>
 
 
+                                <img src="{{ s.objet.image }}" alt="Image de {{ s.objet.nom }}"
+                                    style="max-height: 80px; border-radius: 8px;">
 
-                {% if user.is_authenticated %}
-                <a href="{% url 'profil' %}">Mon espace</a>
-                <a href="{% url 'deconnexion' %}" class="btn small">Déconnexion</a>
-                {% else %}
-                <a href="{% url 'connexion' %}" class="btn small">Se connecter</a>
-                <a href="{% url 'inscription' %}" class="btn small">S'inscrire</a>
-                {% endif %}
-            </nav>
 
-        </div>
-    </header>
+                            </div>
+                            {% endfor %}
+                            {% else %}
+                            <p>Aucun objet sélectionné pour le moment.</p>
+                            {% endif %}
 
-    <section class="hero-full" style="background-image: url({% static 'images/perso.jpg' %}); background-size: cover;">
-        <div class="overlay">
-            <div class="container hero-content">
-                <h1>Personnalisez votre expérience</h1>
-                <p>Choisissez votre salle et vos équipements connectés préférés.</p>
-                <a href="#objets" class="btn light">
-                    Commencer la personnalisation <span class="arrow">→</span>
-                </a>
-            </div>
 
-        </div>
 
-        <form method="get" action="{% url 'personnalisation' %}"
-            style="margin-bottom: 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center;">
-            <div>
-                <label for="filtre_zone">Zone :</label>
-                {% with z=request.GET.filtre_zone %}
-                <select name="filtre_zone" id="filtre_zone">
-                    <option value="">Toutes</option>
-                    <option value="ambiance" {% if "ambiance" in z%}selected{% endif %}>Ambiance</option>
-                    <option value="cardio" {% if "cardio" in z%}selected{% endif %}>Cardio</option>
-                    <option value="détente" {% if "détente" in z%}selected{% endif %}>Détente</option>
-                </select>
-                {% endwith %}
-
-            </div>
-
-            <div>
-                <label for="filtre_type">Type :</label>
-                {% with t=request.GET.filtre_type %}
-                <select name="filtre_type" id="filtre_type">
-                    <option value="">Tous</option>
-                    <option value="velo" {% if "velo" in t%}selected{% endif %}>Vélo</option>
-                    <option value="tapis" {% if "tapis" in t %}selected{% endif %}>Tapis</option>
-                    <option value="stepper" {% if "stepper" in t%}selected{% endif %}>Stepper</option>
-                    <option value="rameur" {% if "rameur" in t%}selected{% endif %}>Rameur</option>
-                    <option value="elliptique" {% if "elliptique" in t%}selected{% endif %}>Elliptique</option>
-                </select>
-                {% endwith %}
-
-            </div>
-
-            <div>
-                <button type="submit" class="btn success">Filtrer</button>
-                <a href="{% url 'personnalisation' %}" class="btn success" style="margin-left: 10px;">Réinitialiser</a>
-            </div>
-        </form>
-
-    </section>
-
-    <section class="features-section" id="objets">
-        <div class="layout-wrapper">
-            <!-- Colonne gauche : liste des objets -->
-            <div class="objets-list">
-                <div class="objets-header">
-                    <h2>Objets disponibles</h2>
-                </div>
-
-                <div id="objets" class="objets-cartes">
-                    {% for obj in objets %}
-                    <div class="objet-card horizontal"
-                        style="flex-direction: column; align-items: center; text-align: center;">
-                        <div class="objet-image">
-                            <img src="{{ obj.image|default:'/static/images/default_objet.png' }}" alt="{{ obj.nom }}"
-                                style="width: 140px; height: auto; object-fit: contain; border-radius: 8px;">
                         </div>
-                        <div class="objet-info" style="margin-top: 0.5rem; width: 100%;">
-                            <h3 style="margin-bottom: 0.3rem;">{{ obj.nom }}</h3>
-                            <p style="font-size: 0.9rem; color: 
-                                {% if obj.statut == 'actif' %}green
-                                {% elif obj.statut == 'inactif' %}red
-                                {% else %}orange{% endif %};
-                                margin-bottom: 0.6rem;">
-                                {% if obj.statut == 'actif' %}Actif
-                                {% elif obj.statut == 'inactif' %}Inactif
-                                {% else %}En maintenance{% endif %}
-                            </p>
 
-                            <form method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="objet_id" value="{{ obj.id }}">
 
-                                {% if obj.id not in selectionnes_ids and obj.statut == 'actif' %}
-                                <label for="duree_heures_{{ obj.id }}"
-                                    style="font-size: 0.9rem; font-weight: 500;">Durée (en heures, max 10) :</label>
-                                <input type="number" name="duree_heures" id="duree_heures_{{ obj.id }}" value="1"
-                                    min="1" max="10"
-                                    style="width: 100%; padding: 6px; margin: 6px 0 10px 0; border: 1px solid #ccc; border-radius: 6px;">
-                                {% endif %}
 
-                                {% if obj.id in selectionnes_ids %}
-                                <input type="hidden" name="action" value="remove">
-                                <button class="btn danger">Retirer</button>
 
-                                {% elif obj.id in objets_reserves_ids %}
-                                <button class="btn primary" disabled style="cursor: not-allowed;">En
-                                    utilisation</button>
-
-                                {% elif obj.statut != 'actif' %}
-                                <button class="btn primary" disabled style="cursor: not-allowed;">Indisponible</button>
-
-                                {% else %}
-                                <input type="hidden" name="action" value="add">
-                                <button class="btn success">Ajouter</button>
-                                {% endif %}
-
-                            </form>
-                        </div>
                     </div>
+                    <!--Section qui presente les ambiance prefere de l'utilisateur-->
+                    {% if ambiance_preferee %}
+                    <div
+                        style="background:#fff8dc; padding: 1rem; border-radius: 10px; margin: 2rem auto; max-width: 600px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                        <p style="margin:0; font-weight: bold; font-size: 1.1rem;">🏆 Ambiance préférée</p>
+                        <p style="margin-top: 0.5rem;">
+                            {{ ambiance_preferee.ambiance|capfirst }} ({{ ambiance_preferee.total }} fois enregistrée)
+                        </p>
+                    </div>
+                    {% endif %}
+                    {% if musique_preferee %}
+                    <div
+                        style="background:#f0f8ff; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+                        <strong>Musique préférée</strong> : {{ musique_preferee.musique|capfirst }} ({{
+                        musique_preferee.total }}
+                        fois)
+                    </div>
+                    {% endif %}
 
-                    {% endfor %}
-                </div>
-            </div>
+                    {% if lumiere_preferee %}
+                    <div
+                        style="background:#f9fbe7; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+                        <strong>Lumière préférée</strong> : {{ lumiere_preferee.lumiere|capfirst }} ({{
+                        lumiere_preferee.total }}
+                        fois)
+                    </div>
+                    {% endif %}
 
+                    {% if clim_preferee %}
+                    <div
+                        style="background:#e1f5fe; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+                        <strong>Climatisation préférée</strong> : {{ clim_preferee.climatisation|upper }}
+                        ({{ clim_preferee.total}} fois)
+                    </div>
+                    {% endif %}
 
-
-            <!-- Colonne droite : objets sélectionnés -->
-            <div class="resume-selection">
-                <h2> Objets sélectionnés</h2>
-                {% if selectionnes %}
-                {% for s in selectionnes %}
-                <div class="resume-card">
-                    <h4>{{ s.objet.nom }}</h4>
-
-                    <p><strong>Zone</strong> : {{ s.objet.zone }}</p>
-                    <p><strong>Type</strong> : {{ s.objet.get_type_display }}</p>
-                    <p><strong>Attribut</strong> : {{ s.objet.attribut }}</p>
-                    <p><strong>Temps restant</strong> :
-                        {% if s.expiration_datetime > now %}
-                        {{ s.expiration_datetime|timeuntil }}
-                        {% else %}
-                        <span style="color:red;">Expiré</span>
+                    {% if temperature_moyenne %}
+                    <div
+                        style="background:#ffe0b2; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
+                        <strong>Température moyenne enregistrée</strong> : {{ temperature_moyenne|floatformat:1 }} °C
+                    </div>
+                    {% endif %}
+                    <!--Section qui presente la selection faite par l'utilisateur pour sa seance-->
+                    {% if ambiance %}
+                    <section class="ambiance-recap" style="max-width: 500px; margin: 2rem auto; text-align: center;">
+                        <h3>Ambiance de votre séance</h3>
+                        <p><strong>Ambiance</strong> : {{ ambiance.get_ambiance_display }}</p>
+                        <p><strong>Musique</strong> : {{ ambiance.get_musique_display }}</p>
+                        <p><strong>Lumière</strong> : {{ ambiance.get_lumiere_display }}</p>
+                        <p><strong>Climatisation</strong> : {{ ambiance.get_climatisation_display }}</p>
+                        {% if ambiance.climatisation == 'on' and ambiance.temperature %}
+                        <p><strong>Température</strong> : {{ ambiance.temperature }} °C</p>
                         {% endif %}
 
-                    </p>
+                    </section>
+                    {% endif %}
+                    <div style="text-align:center; margin-top: 20px;">
+                        <a href="{% url 'personnalisation_ambiance' %}" class="btn success">Étape suivante :
+                            Ambiance</a>
+                    </div>
+                    <div style="text-align:center; margin-top: 20px;">
+                        <a href="{% url 'stats_objets' %}" class="btn success">Statistiques d'utilisation</a>
+                </section>
 
 
-                    <img src="{{ s.objet.image }}" alt="Image de {{ s.objet.nom }}"
-                        style="max-height: 80px; border-radius: 8px;">
+                <!-- Footer -->
+                <footer class="footer-section">
+                    <div class="footer-container">
+                        <div class="footer-col">
+                            <h4>Service & Info</h4>
+                            <ul>
+                                <li><a href="#">Service client</a></li>
+                                <li><a href="{% url 'reglement' %}">Règlement</a></li>
+                                <li><a href="{% url 'horaires' %}">Horaires</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>À propos</h4>
+                            <ul>
+                                <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
+                                <li><a href="{% url 'objectif' %}">Objectifs</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Nos clubs</h4>
+                            <ul>
+                                <li><a href="#">Paris</a></li>
+                                <li><a href="#">Cergy</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-col">
+                            <h4>Suivez-nous</h4>
+                            <div class="social-icons">
+                                <a href="https://www.facebook.com/?locale=fr_FR"><i
+                                        class="fa-brands fa-facebook"></i></a>
+                                <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
+                                <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>© 2025 ConnectedGym. Tous droits réservés.</p>
+                    </div>
+                </footer>
+                <script>
+                    document.addEventListener("DOMContentLoaded", function () {
+                        //  Menu 
+                        const burger = document.getElementById("hamburgerBtn");
+                        const menu = document.getElementById("mobileMenu");
+                        const close = document.getElementById("closeMenu");
+                        const overlay = document.getElementById("menuOverlay");
 
+                        function closeMenu() {
+                            menu.classList.remove("active");
+                        }
 
-                </div>
-                {% endfor %}
-                {% else %}
-                <p>Aucun objet sélectionné pour le moment.</p>
-                {% endif %}
+                        burger?.addEventListener("click", () => {
+                            menu.classList.add("active");
+                        });
 
+                        close?.addEventListener("click", closeMenu);
+                        overlay?.addEventListener("click", closeMenu);
 
+                        //  Menu déroulant mobile 
+                        const trigger = document.getElementById("servicesToggle");
+                        const dropdown = document.getElementById("dropdownServices");
 
-            </div>
+                        trigger?.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            if (dropdown.style.display === "flex") {
+                                dropdown.style.display = "none";
+                            } else {
+                                dropdown.style.display = "flex";
+                            }
+                        });
 
-
-
-
-        </div>
-        {% if ambiance_preferee %}
-        <div
-            style="background:#fff8dc; padding: 1rem; border-radius: 10px; margin: 2rem auto; max-width: 600px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-            <p style="margin:0; font-weight: bold; font-size: 1.1rem;">🏆 Ambiance préférée</p>
-            <p style="margin-top: 0.5rem;">
-                {{ ambiance_preferee.ambiance|capfirst }} ({{ ambiance_preferee.total }} fois enregistrée)
-            </p>
-        </div>
-        {% endif %}
-        {% if musique_preferee %}
-        <div
-            style="background:#f0f8ff; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
-            <strong>Musique préférée</strong> : {{ musique_preferee.musique|capfirst }} ({{ musique_preferee.total }}
-            fois)
-        </div>
-        {% endif %}
-
-        {% if lumiere_preferee %}
-        <div
-            style="background:#f9fbe7; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
-            <strong>Lumière préférée</strong> : {{ lumiere_preferee.lumiere|capfirst }} ({{ lumiere_preferee.total }}
-            fois)
-        </div>
-        {% endif %}
-
-        {% if clim_preferee %}
-        <div
-            style="background:#e1f5fe; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
-            <strong>Climatisation préférée</strong> : {{ clim_preferee.climatisation|upper }}
-            ({{ clim_preferee.total}} fois)
-        </div>
-        {% endif %}
-
-        {% if temperature_moyenne %}
-        <div
-            style="background:#ffe0b2; padding: 1rem; border-radius: 10px; margin: 1rem auto; max-width: 600px; text-align: center;">
-            <strong>Température moyenne enregistrée</strong> : {{ temperature_moyenne|floatformat:1 }} °C
-        </div>
-        {% endif %}
-
-        {% if ambiance %}
-        <section class="ambiance-recap" style="max-width: 500px; margin: 2rem auto; text-align: center;">
-            <h3>Ambiance de votre séance</h3>
-            <p><strong>Ambiance</strong> : {{ ambiance.get_ambiance_display }}</p>
-            <p><strong>Musique</strong> : {{ ambiance.get_musique_display }}</p>
-            <p><strong>Lumière</strong> : {{ ambiance.get_lumiere_display }}</p>
-            <p><strong>Climatisation</strong> : {{ ambiance.get_climatisation_display }}</p>
-            {% if ambiance.climatisation == 'on' and ambiance.temperature %}
-            <p><strong>Température</strong> : {{ ambiance.temperature }} °C</p>
-            {% endif %}
-
-        </section>
-        {% endif %}
-        <div style="text-align:center; margin-top: 20px;">
-            <a href="{% url 'personnalisation_ambiance' %}" class="btn success">Étape suivante : Ambiance</a>
-        </div>
-        <div style="text-align:center; margin-top: 20px;">
-            <a href="{% url 'stats_objets' %}" class="btn success">Statistiques d'utilisation</a>
-    </section>
-
-
-    <!-- Footer -->
-    <footer class="footer-section">
-        <div class="footer-container">
-            <div class="footer-col">
-                <h4>Service & Info</h4>
-                <ul>
-                    <li><a href="#">Service client</a></li>
-                    <li><a href="{% url 'reglement' %}">Règlement</a></li>
-                    <li><a href="#">Horaires</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Promotions</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>À propos</h4>
-                <ul>
-                    <li><a href="{% url 'equipe' %}">Notre équipe</a></li>
-                    <li><a href="{% url 'objectif' %}">Objectifs</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Nos clubs</h4>
-                <ul>
-                    <li><a href="#">Paris</a></li>
-                    <li><a href="#">Cergy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Suivez-nous</h4>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/?locale=fr_FR"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i></a>
-                    <a href="https://x.com/?lang=fr"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2025 ConnectedGym. Tous droits réservés.</p>
-        </div>
-    </footer>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // 🍔 Menu Burger
-            const burger = document.getElementById("hamburgerBtn");
-            const menu = document.getElementById("mobileMenu");
-            const close = document.getElementById("closeMenu");
-            const overlay = document.getElementById("menuOverlay");
-
-            function closeMenu() {
-                menu.classList.remove("active");
-            }
-
-            burger?.addEventListener("click", () => {
-                menu.classList.add("active");
-            });
-
-            close?.addEventListener("click", closeMenu);
-            overlay?.addEventListener("click", closeMenu);
-
-            // ✅ Menu déroulant mobile (Nos services)
-            const trigger = document.getElementById("servicesToggle");
-            const dropdown = document.getElementById("dropdownServices");
-
-            trigger?.addEventListener("click", function (e) {
-                e.preventDefault();
-                if (dropdown.style.display === "flex") {
-                    dropdown.style.display = "none";
-                } else {
-                    dropdown.style.display = "flex";
-                }
-            });
-
-            // Fermer si on clique ailleurs
-            document.addEventListener("click", function (e) {
-                if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.style.display = "none";
-                }
-            });
-            // Si un paramètre de recherche est présent dans l’URL
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
-                // Scroller vers la section avec id="objets"
-                const objetsSection = document.getElementById("objets");
-                if (objetsSection) {
-                    objetsSection.scrollIntoView({ behavior: "smooth" });
-                }
-            }
-        });
-    </script>
+                        // Fermer si on clique ailleurs
+                        document.addEventListener("click", function (e) {
+                            if (!trigger.contains(e.target) && !dropdown.contains(e.target)) {
+                                dropdown.style.display = "none";
+                            }
+                        });
+                        // Si un paramètre de recherche est présent dans l’URL
+                        const urlParams = new URLSearchParams(window.location.search);
+                        if (urlParams.has("q") || (urlParams.has("filtre1") && urlParams.has("filtre2"))) {
+                            // Scroller vers la section avec id="objets"
+                            const objetsSection = document.getElementById("objets");
+                            if (objetsSection) {
+                                objetsSection.scrollIntoView({ behavior: "smooth" });
+                            }
+                        }
+                    });
+                </script>
 </body>
 {% endblock %}
 

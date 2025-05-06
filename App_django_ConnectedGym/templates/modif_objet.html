@@ -536,10 +536,7 @@
         <div class="actions">
             <a href="{% url 'historique_objet' objet.id %}" class="btn-ajouter"> Voir l’historique</a>
 
-            <form method="post" action="{% url 'demander_suppression' objet.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-supprimer"> Demander la suppression</button>
-            </form>
+            
 
             <a href="{% url 'objets_connectes' %}" class="btn-ajouter">↩ Retour aux objets</a>
         </div>

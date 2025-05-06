@@ -17,6 +17,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from datetime import datetime, time, timedelta
 from django.utils import timezone
+
 from django.contrib.auth import update_session_auth_hash
 from django.http import HttpResponseRedirect, JsonResponse
 import matplotlib.pyplot as plt
@@ -292,7 +293,9 @@ def ajouter_objet(request):
         marque = request.POST.get('marque')
         couleur = request.POST.get('couleur')
         annee_fin = request.POST.get('annee_fin')
-        image = request.FILES.get('image')
+        image_file = request.FILES.get('image')
+        image = f"https://ddqbthhirudcpswidgho.supabase.co/storage/v1/object/public/connectedgym-images/{image_file.name}" if image_file else None
+
         annee_achat = datetime.now().year
 
         # Champs spécifiques selon les types

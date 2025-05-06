@@ -151,7 +151,11 @@
                 <li>Présentation de la salle</li>
                 <li>Sans inscription requise</li>
             </ul>
+            {% if user.is_authenticated %}
+            <a href="{% url 'visite' %}" class="profile-btn">Visiter</a>
+            {% else %}
             <a href="{% url 'inscription' %}" class="profile-btn">Explorer</a>
+            {% endif %}
         </div>
 
         <div class="profile-card featured">
@@ -163,7 +167,11 @@
                 <li>Consulter les objets connectés</li>
                 <li>Explorer les outils et services disponibles</li>
             </ul>
+            {% if user.is_authenticated %}
+            <a href="{% url 'visite' %}" class="profile-btn">Visiter</a>
+            {% else %}
             <a href="{% url 'inscription' %}" class="profile-btn">Commencer</a>
+            {% endif %}
         </div>
 
         <div class="profile-card featured">
@@ -176,19 +184,28 @@
                 <li>Surveiller les performances</li>
                 <li>Accéder a vos statistiques</li>
             </ul>
+            {% if user.is_authenticated %}
+            <a href="{% url 'visite' %}" class="profile-btn">Visiter</a>
+            {% else %}
             <a href="{% url 'inscription' %}" class="profile-btn">Choisir</a>
+            {% endif %}
         </div>
+
 
         <div class="profile-card featured">
             <span class="badge">Nécessite 10 pts</span>
-            <h3>Avancé</h3>
-            <p class="profile-access">Prenez la main sur toute la plateforme</p>
+            <h3>Expert</h3>
+            <p class="profile-access">Vous avez tous les droits</p>
             <ul>
                 <li>Gérer les utilisateurs</li>
                 <li>Ajouter et modifier objets et services</li>
                 <li>Générer des rapports avancés</li>
             </ul>
+            {% if user.is_authenticated %}
+            <a href="{% url 'visite' %}" class="profile-btn">Visiter</a>
+            {% else %}
             <a href="{% url 'inscription' %}" class="profile-btn">S’entraîner</a>
+            {%endif%}
         </div>
     </div>
 </section>

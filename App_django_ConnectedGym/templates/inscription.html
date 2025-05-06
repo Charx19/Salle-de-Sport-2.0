@@ -154,7 +154,7 @@
 
             <h1>Inscription</h1>
             <!-- Formulaire d'inscription -->
-            {% if form.non_field_errors %}
+            
             <form method="post" action="{% url 'inscription' %}">
                 {% csrf_token %}
 
@@ -186,6 +186,7 @@
                 {{ form.niveau_experience }}
 
                 <button type="submit">S'inscrire</button>
+                
             </form>
 
             <p class="link">Déjà inscrit ? <a href="{% url 'connexion' %}">Se connecter</a></p>

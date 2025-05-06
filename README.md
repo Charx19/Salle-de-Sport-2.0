@@ -63,12 +63,12 @@ pip install -r requirements.txt
 
 
 
-🔧 GUIDE COMPLET GIT + GITHUB (VS CODE) — MOUSSA 💻
+🔧 GUIDE COMPLET GIT + GITHUB (VS CODE) 
 
 ===========================================
 1.  OUVRIR TON PROJET VS CODE
 ===========================================
-cd "C:\Users\mouss\OneDrive\Bureau\GITHUB\Salle-de-Sport-2.0"
+cd "chemin_vers_le_fichier\Salle-de-Sport-2.0"
 code .
 
 ===========================================

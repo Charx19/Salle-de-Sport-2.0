@@ -7,13 +7,25 @@ Elle permet à une salle de sport d’offrir une **expérience connectée** à s
 
 ## 🚀 Fonctionnalités principales
 
-- Authentification des utilisateurs (inscription / connexion / déconnexion)
-- Gestion des profils avec sexe, date de naissance, niveau d'expérience
-- Page d'accueil dynamique selon l’état de connexion
-- Affichage personnalisé : "Bienvenue Moussa" si connecté
-- Objets connectés centralisés (tapis, balance, lumière, etc.)
-- Historique des interactions utilisateurs ↔ équipements
-- Interface admin Django complète
+Authentification des utilisateurs (inscription, connexion, déconnexion)
+Système de validation par e-mail lors de l'inscription
+Gestion complète des profils (nom, prénom, sexe, date de naissance, photo, niveau d'expérience, points)
+Page d'accueil dynamique selon l’état de connexion, avec message "Bienvenue [Nom]"
+Système de points évolutif débloquant progressivement les fonctionnalités :
+Visite, objets connectés, performances, personnalisation
+Accès admin automatique à partir de 10 points
+Système de blocage/déblocage des pages selon le niveau (débutant → expert)
+Objets connectés (avec ajout, retrait, filtre par type ou zone, et durée d’utilisation)
+Page Performances avec graphiques personnalisés : calories, fréquence cardiaque, progression
+Page Personnalisation avec ambiance, objets favoris, recommandations, et statistiques visuelles
+Suivi des actions utilisateurs via HistoriqueUtilisation et HistoriqueAmbiance
+Interface admin Django personnalisée :
+Modification directe du niveau d’un utilisateur
+Suppression manuelle ou automatique des objets connectés (via demande)
+Statistiques interactives : répartition par zone, type et durée d’utilisation
+Export CSV des données de personnalisation
+Affichage conditionnel du bouton "Espace Admin" pour les experts
+Sécurité renforcée via vérification du niveau à chaque affichage de page protégée
 
 ---
 

@@ -142,123 +142,115 @@
                 </div>
             </section>
 
-            <!--graphiques-->
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
-                const labels = {{ labels| safe }};
-
-                //  Calories brûlées
+                const labels = {{ labels|safe }};
+                const caloriesData = {{ calories_data|safe }};
+                const progressionLabels = {{ labels_progression|safe }};
+                const progressionData = {{ data_progression|safe }};
+                const frequenceLabels = {{ labels_frequence|safe }};
+                const frequenceData = {{ data_frequence|safe }};
+            
+                // 🔥 Calories brûlées
                 new Chart(document.getElementById('caloriesChart'), {
                     type: 'bar',
                     data: {
                         labels: labels,
                         datasets: [{
                             label: 'Calories brûlées',
-                            data: {{ calories_data| safe }
-                },
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)',
-                    borderRadius: 6
-            }]
-        },
-                    options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Calories brûlées (kcal)'
-                        }
+                            data: caloriesData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderRadius: 6
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: true,
+                                text: 'Calories brûlées (kcal)'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
                         }
                     }
-                }
-    });
-
-                //  Progression (Durée d'utilisation)
+                });
+            
+                // 📈 Progression
                 new Chart(document.getElementById('progressionChart'), {
                     type: 'line',
                     data: {
-                        labels: {{ labels_progression| safe }},
-                    datasets: [{
-                        label: 'Durée d’utilisation (min)',
-                        data: {{ data_progression| safe }},
-                    borderWidth: 2,
-                    borderColor: 'rgba(58, 0, 194, 0.8)',
-                    backgroundColor: 'rgba(58, 0, 194, 0.1)',
-                    fill: true,
-                    tension: 0.4
-            }]
-        },
-                    options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Progression de la durée d’utilisation'
-                        }
+                        labels: progressionLabels,
+                        datasets: [{
+                            label: 'Durée d’utilisation (min)',
+                            data: progressionData,
+                            borderWidth: 2,
+                            borderColor: 'rgba(58, 0, 194, 0.8)',
+                            backgroundColor: 'rgba(58, 0, 194, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
+                    options: {
+                        responsive: true,
+                        plugins: {
                             title: {
                                 display: true,
-                                text: "Durée (min)"
+                                text: 'Progression de la durée d’utilisation'
                             }
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Date"
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: "Durée (min)" }
+                            },
+                            x: {
+                                title: { display: true, text: "Date" }
                             }
                         }
                     }
-                }
-    });
-
-                //  Fréquence cardiaque
+                });
+            
+                // ❤️ Fréquence cardiaque
                 new Chart(document.getElementById('chartFrequence'), {
                     type: 'line',
                     data: {
-                        labels: {{ labels_frequence| safe }},
-                    datasets: [{
-                        label: 'Fréquence cardiaque (bpm)',
-                        data: {{ data_frequence| safe }},
-                    borderWidth: 2,
-                    borderColor: 'rgba(255, 165, 0, 0.8)',
-                    backgroundColor: 'rgba(255, 165, 0, 0.1)',
-                    fill: true,
-                    tension: 0.3
-            }]
-        },
-                    options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Suivi de la fréquence cardiaque'
-                        }
+                        labels: frequenceLabels,
+                        datasets: [{
+                            label: 'Fréquence cardiaque (bpm)',
+                            data: frequenceData,
+                            borderWidth: 2,
+                            borderColor: 'rgba(255, 165, 0, 0.8)',
+                            backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
+                    options: {
+                        responsive: true,
+                        plugins: {
                             title: {
                                 display: true,
-                                text: "BPM"
+                                text: 'Suivi de la fréquence cardiaque'
                             }
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: "Date"
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: "BPM" }
+                            },
+                            x: {
+                                title: { display: true, text: "Date" }
                             }
                         }
                     }
-                }
-    });
+                });
             </script>
+            
 
 
             <!--  graphiques pour la stat globale -->
